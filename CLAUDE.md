@@ -14,7 +14,8 @@
 
 - **Framework**: SvelteKit with Svelte 5 (use runes: $state, $derived, $effect)
 - **TypeScript**: Strict mode enabled. All code must be fully typed
-- **Formatting**: Prettier with single quotes, no trailing commas, 100 char width, 2 spaces
+- **Formatting**: Prettier with single quotes, all trailing commas, 100 char width, 2 spaces
+  - **IMPORTANT**: ALWAYS run `npm run format` after making any code changes
 - **Imports**: Use `$lib` alias for src/lib imports (e.g., `import { foo } from '$lib/utils'`)
 - **Naming**: camelCase for variables/functions, PascalCase for components/types
 - **Components**: Use `.svelte` extension; TypeScript in `<script lang="ts">` tags
