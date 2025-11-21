@@ -1,6 +1,27 @@
-You are able to use the Svelte MCP server, where you have access to comprehensive Svelte 5 and SvelteKit documentation. Here's how to use the available tools effectively:
+# MoodLog - Agent Guidelines
 
-## Available MCP Tools:
+## Build/Lint/Test Commands
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run check` - Type-check TypeScript and Svelte files
+- `npm run check:watch` - Type-check in watch mode
+- `npm run lint` - Run Prettier and ESLint checks
+- `npm run format` - Format code with Prettier
+
+## Code Style
+
+- **Framework**: SvelteKit with Svelte 5 (use runes: $state, $derived, $effect)
+- **TypeScript**: Strict mode enabled. All code must be fully typed
+- **Formatting**: Prettier with single quotes, no trailing commas, 100 char width, 2 spaces
+- **Imports**: Use `$lib` alias for src/lib imports (e.g., `import { foo } from '$lib/utils'`)
+- **Naming**: camelCase for variables/functions, PascalCase for components/types
+- **Components**: Use `.svelte` extension; TypeScript in `<script lang="ts">` tags
+- **Error Handling**: Use try-catch for async operations; provide user-friendly error messages
+- **Linting**: Follow ESLint config (typescript-eslint + eslint-plugin-svelte)
+
+## Svelte MCP Tools
 
 ### 1. list-sections
 
