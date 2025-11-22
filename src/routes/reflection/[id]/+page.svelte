@@ -6,6 +6,7 @@
   import Navigation from '$lib/components/Navigation.svelte';
   import ReflectionSliders from '$lib/components/ReflectionSliders.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
+  import DeleteDialog from '$lib/components/DeleteDialog.svelte';
   import { reflectionStore } from '$lib/stores/reflections.svelte';
   import type { Reflection } from '$lib/types';
 
@@ -19,6 +20,9 @@
   let physicalActivity = $state(0);
   let socialInteractions = $state(0);
   let pressure = $state(0);
+
+  // Delete dialog state
+  let showDeleteDialog = $state(false);
 
   // Load reflection data
   onMount(() => {
@@ -65,12 +69,18 @@
   }
 
   function handleDelete() {
-    if (!reflection) return;
+    showDeleteDialog = true;
+  }
 
-    if (confirm('Are you sure you want to delete this reflection? This action cannot be undone.')) {
-      reflectionStore.deleteReflection(reflection.id);
-      goto('/');
-    }
+  function confirmDelete() {
+    if (!reflection) return;
+    reflectionStore.deleteReflection(reflection.id);
+    showDeleteDialog = false;
+    goto('/');
+  }
+
+  function cancelDelete() {
+    showDeleteDialog = false;
   }
 </script>
 
@@ -134,3 +144,10 @@
 
   <Navigation currentTab="reflections" />
 </div>
+
+<DeleteDialog
+  bind:isOpen={showDeleteDialog}
+  title="Delete reflection?"
+  onConfirm={confirmDelete}
+  onCancel={cancelDelete}
+/>

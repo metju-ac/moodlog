@@ -3,6 +3,7 @@
   import Navigation from '$lib/components/Navigation.svelte';
   import LabelCard from '$lib/components/LabelCard.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
+  import DeleteDialog from '$lib/components/DeleteDialog.svelte';
   import { labelStore } from '$lib/stores/labels.svelte';
   import type { Label } from '$lib/types';
   import { getIconComponent } from '$lib/utils';
@@ -12,6 +13,10 @@
   let editingLabel = $state<Label | null>(null);
   let labelName = $state('');
   let selectedIcon = $state('graduation-cap');
+
+  // Delete dialog state
+  let showDeleteDialog = $state(false);
+  let deletingLabelId = $state<string | null>(null);
 
   const availableIcons = [
     { name: 'graduation-cap', label: 'School' },
@@ -75,9 +80,21 @@
   }
 
   function deleteLabel(labelId: string) {
-    if (confirm('Are you sure you want to delete this label?')) {
-      labelStore.deleteLabel(labelId);
+    deletingLabelId = labelId;
+    showDeleteDialog = true;
+  }
+
+  function confirmDelete() {
+    if (deletingLabelId) {
+      labelStore.deleteLabel(deletingLabelId);
+      deletingLabelId = null;
     }
+    showDeleteDialog = false;
+  }
+
+  function cancelDelete() {
+    deletingLabelId = null;
+    showDeleteDialog = false;
   }
 </script>
 
@@ -197,3 +214,10 @@
     </div>
   </div>
 {/if}
+
+<DeleteDialog
+  bind:isOpen={showDeleteDialog}
+  title="Delete label?"
+  onConfirm={confirmDelete}
+  onCancel={cancelDelete}
+/>
