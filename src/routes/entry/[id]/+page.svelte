@@ -4,7 +4,9 @@
   import { Save, Trash2 } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodSlider from '$lib/components/MoodSlider.svelte';
-  import { moodEntryStore, mockLabels } from '$lib/stores/moodEntries.svelte';
+  import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
+  import { labelStore } from '$lib/stores/labels.svelte';
+  import { getIconComponent } from '$lib/utils';
   import { SvelteSet } from 'svelte/reactivity';
 
   // Get entry ID from URL
@@ -57,7 +59,7 @@
       return;
     }
 
-    const selectedLabelObjects = mockLabels.filter((label) => selectedLabels.has(label.id));
+    const selectedLabelObjects = labelStore.all.filter((label) => selectedLabels.has(label.id));
 
     moodEntryStore.updateEntry(entryId, {
       id: entry.id,
@@ -107,7 +109,8 @@
 
       <!-- Context Labels -->
       <div class="flex h-12 w-full flex-wrap items-center gap-1 py-2">
-        {#each mockLabels as label (label.id)}
+        {#each labelStore.all as label (label.id)}
+          {@const IconComponent = getIconComponent(label.icon)}
           <button
             onclick={() => toggleLabel(label.id)}
             class="flex h-8 items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors {selectedLabels.has(
@@ -116,7 +119,7 @@
               ? 'border-indigo-700 bg-indigo-50 text-indigo-900'
               : 'border-gray-300 text-gray-700 hover:bg-gray-50'}"
           >
-            <span>{label.icon}</span>
+            <svelte:component this={IconComponent} class="h-4 w-4" strokeWidth={2} />
             <span>{label.name}</span>
           </button>
         {/each}

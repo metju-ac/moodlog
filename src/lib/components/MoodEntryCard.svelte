@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { MoodEntry } from '$lib/types';
+  import { getIconComponent } from '$lib/utils';
 
   type Props = {
     entry: MoodEntry;
@@ -39,10 +40,11 @@
 
     <div class="flex flex-wrap items-center gap-1 py-2">
       {#each entry.labels as label (label.id)}
+        {@const IconComponent = getIconComponent(label.icon)}
         <div
           class="flex h-8 items-center gap-2 rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700"
         >
-          <span>{label.icon}</span>
+          <svelte:component this={IconComponent} class="h-4 w-4" strokeWidth={2} />
           <span>{label.name}</span>
         </div>
       {/each}
