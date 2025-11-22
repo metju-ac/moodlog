@@ -165,8 +165,14 @@ export const moodEntryStore = {
   setDate(date: Date) {
     selectedDate = date;
   },
+  getEntryById(id: string): MoodEntry | undefined {
+    return moodEntries.find((entry) => entry.id === id);
+  },
   addEntry(entry: MoodEntry) {
     moodEntries = [...moodEntries, entry];
+  },
+  updateEntry(id: string, updatedEntry: MoodEntry) {
+    moodEntries = moodEntries.map((entry) => (entry.id === id ? updatedEntry : entry));
   },
   deleteEntry(id: string) {
     moodEntries = moodEntries.filter((entry) => entry.id !== id);
