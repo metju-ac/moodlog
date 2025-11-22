@@ -2,7 +2,10 @@
   import { Calendar, ChevronLeft, ChevronRight, Plus } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodEntryCard from '$lib/components/MoodEntryCard.svelte';
+  import DatePicker from '$lib/components/DatePicker.svelte';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
+
+  let isDatePickerOpen = $state(false);
 
   const formattedDate = $derived(
     moodEntryStore.selectedDate.toLocaleDateString('en-GB', {
@@ -25,8 +28,15 @@
   }
 
   function openDatePicker() {
-    // TODO: Implement date picker modal
-    console.log('Open date picker');
+    isDatePickerOpen = true;
+  }
+
+  function closeDatePicker() {
+    isDatePickerOpen = false;
+  }
+
+  function handleDateSelect(date: Date) {
+    moodEntryStore.setDate(date);
   }
 
   function startReflection() {
@@ -118,4 +128,11 @@
   </main>
 
   <Navigation currentTab="reflections" />
+
+  <DatePicker
+    isOpen={isDatePickerOpen}
+    selectedDate={moodEntryStore.selectedDate}
+    onClose={closeDatePicker}
+    onSelectDate={handleDateSelect}
+  />
 </div>
