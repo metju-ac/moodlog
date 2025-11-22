@@ -78,9 +78,21 @@
 
       <!-- Mood Entry Cards -->
       <div class="flex w-full flex-col gap-4">
-        {#each moodEntryStore.entries as entry (entry.id)}
-          <MoodEntryCard {entry} />
-        {/each}
+        {#if moodEntryStore.entries.length === 0}
+          <div class="flex flex-col items-center justify-center gap-4 py-16 text-center">
+            <div class="text-6xl opacity-50">📝</div>
+            <div class="flex flex-col gap-2">
+              <h2 class="text-xl font-medium text-gray-900">No mood entries yet</h2>
+              <p class="text-sm text-gray-600">
+                Start tracking your mood by adding your first entry for this day
+              </p>
+            </div>
+          </div>
+        {:else}
+          {#each moodEntryStore.entries as entry (entry.id)}
+            <MoodEntryCard {entry} />
+          {/each}
+        {/if}
       </div>
     </div>
 
