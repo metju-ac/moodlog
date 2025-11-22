@@ -8,11 +8,14 @@
   let { entry }: Props = $props();
 
   // Calculate color based on numeric mood value (-10 to +10)
+  // 5 color levels: Red, Orange, Yellow, Light Green, Green
   const moodColor = $derived.by(() => {
     const mood = entry.moodLevel;
-    if (mood <= -3) return 'bg-red-400'; // Negative
-    if (mood >= 3) return 'bg-green-400'; // Positive
-    return 'bg-yellow-300'; // Neutral
+    if (mood <= -7) return 'bg-[#e57373]'; // Red: very negative
+    if (mood <= -3) return 'bg-[#ffb74d]'; // Orange: negative
+    if (mood <= 2) return 'bg-[#fff176]'; // Yellow: neutral
+    if (mood <= 6) return 'bg-[#aed581]'; // Light green: positive
+    return 'bg-[#66bb6a]'; // Green: very positive
   });
 </script>
 

@@ -9,6 +9,12 @@ MoodLog is a frontend-only SvelteKit application for mood tracking. All backend 
 - **Mood Entries**: Quick logs recorded throughout the day to capture mood and context (title, description, labels, mood level). These are the primary data points users create multiple times per day.
   - **Mood Level**: Stored as a number from **-10 to +10** (negative to positive)
   - **UI Slider**: Uses range **-100 to +100** for better UX (converted to -10 to +10 by dividing by 10)
+  - **Color Coding**: 5 levels based on mood value:
+    - **≤ -7**: Red (#e57373) - Very negative
+    - **-6 to -3**: Orange (#ffb74d) - Negative
+    - **-2 to +2**: Yellow (#fff176) - Neutral
+    - **+3 to +6**: Light green (#aed581) - Positive
+    - **≥ +7**: Green (#66bb6a) - Very positive
 - **Daily Reflections**: Comprehensive end-of-day reflections created based on the mood entries from that day. These provide deeper insights and analysis of the day's mood patterns.
 
 ## Build/Lint/Test Commands
