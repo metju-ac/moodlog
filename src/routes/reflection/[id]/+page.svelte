@@ -1,0 +1,136 @@
+<script lang="ts">
+  import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
+  import { onMount } from 'svelte';
+  import { Save, Trash2 } from '@lucide/svelte';
+  import Navigation from '$lib/components/Navigation.svelte';
+  import ReflectionSliders from '$lib/components/ReflectionSliders.svelte';
+  import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
+  import { reflectionStore } from '$lib/stores/reflections.svelte';
+  import type { Reflection } from '$lib/types';
+
+  // Get reflection ID from URL
+  const reflectionId = $derived($page.params.id || '');
+  let reflection = $state<Reflection | undefined>(undefined);
+
+  // Reactive state for editing
+  let notes = $state('');
+  let sleepQuality = $state(0); // -100 to 100 for slider
+  let physicalActivity = $state(0);
+  let socialInteractions = $state(0);
+  let pressure = $state(0);
+
+  // Load reflection data
+  onMount(() => {
+    const foundReflection = reflectionStore.all.find((r) => r.id === reflectionId);
+    if (!foundReflection) {
+      // If reflection not found, redirect to home
+      goto('/');
+      return;
+    }
+
+    reflection = foundReflection;
+    notes = foundReflection.notes;
+    // Convert -10 to +10 values to -100 to 100 for sliders
+    sleepQuality = foundReflection.sleepQuality * 10;
+    physicalActivity = foundReflection.physicalActivity * 10;
+    socialInteractions = foundReflection.socialInteractions * 10;
+    pressure = foundReflection.pressure * 10;
+  });
+
+  const formattedDate = $derived(
+    reflection
+      ? reflection.date.toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        })
+      : '',
+  );
+
+  function handleSave() {
+    if (!reflection) return;
+
+    const updatedReflection: Reflection = {
+      ...reflection,
+      sleepQuality: Math.round(sleepQuality / 10),
+      physicalActivity: Math.round(physicalActivity / 10),
+      socialInteractions: Math.round(socialInteractions / 10),
+      pressure: Math.round(pressure / 10),
+      notes: notes.trim(),
+    };
+
+    reflectionStore.updateReflection(reflection.id, updatedReflection);
+    goto('/');
+  }
+
+  function handleDelete() {
+    if (!reflection) return;
+
+    if (confirm('Are you sure you want to delete this reflection? This action cannot be undone.')) {
+      reflectionStore.deleteReflection(reflection.id);
+      goto('/');
+    }
+  }
+</script>
+
+<svelte:head>
+  <title>Edit Reflection - MoodLog</title>
+</svelte:head>
+
+<div class="flex h-screen flex-col bg-white">
+  <main class="flex flex-1 flex-col justify-between overflow-y-auto px-4 py-3">
+    <div class="flex w-full flex-col gap-6 px-0 py-3">
+      <!-- Title -->
+      <h1 class="text-center text-[22px] leading-7 font-normal text-black">
+        {formattedDate}
+      </h1>
+
+      <!-- Notes Textarea -->
+      <div class="relative w-full">
+        <textarea
+          bind:value={notes}
+          id="reflection-notes"
+          placeholder="Input"
+          rows="8"
+          class="w-full resize-none rounded border-[3px] border-indigo-700 px-4 py-3 text-base text-gray-900 transition-colors outline-none focus:border-indigo-800"
+        ></textarea>
+        <label
+          for="reflection-notes"
+          class="absolute -top-2.5 left-3 bg-white px-1 text-xs text-indigo-700"
+        >
+          Notes for this day
+        </label>
+      </div>
+
+      <!-- Sliders -->
+      <div class="flex w-full flex-col gap-8 py-3">
+        <ReflectionSliders
+          {sleepQuality}
+          {physicalActivity}
+          {socialInteractions}
+          {pressure}
+          onSleepQualityChange={(val) => (sleepQuality = val)}
+          onPhysicalActivityChange={(val) => (physicalActivity = val)}
+          onSocialInteractionsChange={(val) => (socialInteractions = val)}
+          onPressureChange={(val) => (pressure = val)}
+        />
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex w-full items-center justify-between pb-4">
+      <button
+        onclick={handleDelete}
+        class="flex h-14 w-14 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105 hover:bg-red-700 active:scale-95"
+        aria-label="Delete reflection"
+      >
+        <Trash2 class="h-6 w-6" strokeWidth={2} />
+      </button>
+
+      <FloatingActionButton icon={Save} onclick={handleSave} label="Save reflection" />
+    </div>
+  </main>
+
+  <Navigation currentTab="reflections" />
+</div>

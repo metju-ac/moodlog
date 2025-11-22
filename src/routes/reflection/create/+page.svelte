@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation';
   import { ChevronRight } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
-  import MoodSlider from '$lib/components/MoodSlider.svelte';
+  import ReflectionSliders from '$lib/components/ReflectionSliders.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
 
@@ -50,55 +50,16 @@
       </h1>
 
       <!-- Sliders -->
-      <div class="flex w-full flex-col gap-8">
-        <!-- Sleep Quality -->
-        <div class="flex flex-col gap-1">
-          <p class="text-sm font-medium text-black">How was your sleep?</p>
-          <MoodSlider
-            value={sleepQuality}
-            onValueChange={(val) => (sleepQuality = val)}
-            leftLabel="Very poor"
-            rightLabel="Excellent"
-            snapToCenter={false}
-          />
-        </div>
-
-        <!-- Physical Activity -->
-        <div class="flex flex-col gap-1">
-          <p class="text-sm font-medium text-black">How physically active were you?</p>
-          <MoodSlider
-            value={physicalActivity}
-            onValueChange={(val) => (physicalActivity = val)}
-            leftLabel="Sedentary"
-            rightLabel="Intense"
-            snapToCenter={false}
-          />
-        </div>
-
-        <!-- Social Interactions -->
-        <div class="flex flex-col gap-1">
-          <p class="text-sm font-medium text-black">How were your social interactions?</p>
-          <MoodSlider
-            value={socialInteractions}
-            onValueChange={(val) => (socialInteractions = val)}
-            leftLabel="Draining"
-            rightLabel="Energizing"
-            snapToCenter={false}
-          />
-        </div>
-
-        <!-- Pressure -->
-        <div class="flex flex-col gap-1">
-          <p class="text-sm font-medium text-black">Work/School pressure level?</p>
-          <MoodSlider
-            value={pressure}
-            onValueChange={(val) => (pressure = val)}
-            leftLabel="None"
-            rightLabel="Overwhelming"
-            snapToCenter={false}
-          />
-        </div>
-      </div>
+      <ReflectionSliders
+        {sleepQuality}
+        {physicalActivity}
+        {socialInteractions}
+        {pressure}
+        onSleepQualityChange={(val) => (sleepQuality = val)}
+        onPhysicalActivityChange={(val) => (physicalActivity = val)}
+        onSocialInteractionsChange={(val) => (socialInteractions = val)}
+        onPressureChange={(val) => (pressure = val)}
+      />
     </div>
 
     <!-- Next Button -->

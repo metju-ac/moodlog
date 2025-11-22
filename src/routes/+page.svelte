@@ -46,14 +46,15 @@
   }
 
   // Check if there's a reflection for the selected date
-  const hasReflection = $derived(
-    reflectionStore.getReflectionByDate(moodEntryStore.selectedDate) !== undefined,
+  const currentReflection = $derived(
+    reflectionStore.getReflectionByDate(moodEntryStore.selectedDate),
   );
+  const hasReflection = $derived(currentReflection !== undefined);
 
   function handleReflection() {
-    if (hasReflection) {
-      // TODO: Navigate to view/edit reflection page
-      console.log('View/edit reflection');
+    if (currentReflection) {
+      // Navigate to view/edit reflection page
+      window.location.href = `/reflection/${currentReflection.id}`;
     } else {
       // Navigate to create reflection page
       window.location.href = '/reflection/create';
