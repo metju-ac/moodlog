@@ -5,16 +5,15 @@
   import Navigation from '$lib/components/Navigation.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
   import { reflectionStore } from '$lib/stores/reflections.svelte';
-  import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
 
   let notes = $state('');
-  let reflectionData: {
+  let reflectionData = $state<{
     sleepQuality: number;
     physicalActivity: number;
     socialInteractions: number;
     pressure: number;
     date: string;
-  } | null = null;
+  } | null>(null);
 
   onMount(() => {
     const stored = sessionStorage.getItem('reflectionData');
@@ -69,7 +68,7 @@
     <div class="flex w-full flex-col gap-5 pt-2.5 pb-4">
       <!-- Title -->
       <h1 class="text-center text-[22px] leading-7 font-normal text-black">
-        Notes for {formattedDate}
+        Reflect on your day: {formattedDate}
       </h1>
 
       <!-- Notes Textarea -->
