@@ -5,6 +5,7 @@
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodSlider from '$lib/components/MoodSlider.svelte';
   import { moodEntryStore, mockLabels } from '$lib/stores/moodEntries.svelte';
+  import { SvelteSet } from 'svelte/reactivity';
 
   // Get entry ID from URL
   const entryId = $derived($page.params.id || '');
@@ -37,7 +38,7 @@
   const moodLevel = $derived(Math.round(moodValue / 10));
 
   function toggleLabel(labelId: string) {
-    const newSet = new Set(selectedLabels);
+    const newSet = new SvelteSet(selectedLabels);
     if (newSet.has(labelId)) {
       newSet.delete(labelId);
     } else {

@@ -4,6 +4,7 @@
   import MoodEntryCard from '$lib/components/MoodEntryCard.svelte';
   import DatePicker from '$lib/components/DatePicker.svelte';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
+  import { SvelteDate } from 'svelte/reactivity';
 
   let isDatePickerOpen = $state(false);
 
@@ -16,13 +17,13 @@
   );
 
   function previousDay() {
-    const newDate = new Date(moodEntryStore.selectedDate);
+    const newDate = new SvelteDate(moodEntryStore.selectedDate);
     newDate.setDate(newDate.getDate() - 1);
     moodEntryStore.setDate(newDate);
   }
 
   function nextDay() {
-    const newDate = new Date(moodEntryStore.selectedDate);
+    const newDate = new SvelteDate(moodEntryStore.selectedDate);
     newDate.setDate(newDate.getDate() + 1);
     moodEntryStore.setDate(newDate);
   }

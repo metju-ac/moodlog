@@ -4,7 +4,7 @@
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodSlider from '$lib/components/MoodSlider.svelte';
   import { moodEntryStore, mockLabels } from '$lib/stores/moodEntries.svelte';
-  import type { Label } from '$lib/types';
+  import { SvelteDate, SvelteSet } from 'svelte/reactivity';
 
   let title = $state('');
   let description = $state('');
@@ -15,7 +15,7 @@
   const moodLevel = $derived(Math.round(moodValue / 10));
 
   function toggleLabel(labelId: string) {
-    const newSet = new Set(selectedLabels);
+    const newSet = new SvelteSet(selectedLabels);
     if (newSet.has(labelId)) {
       newSet.delete(labelId);
     } else {
@@ -33,7 +33,7 @@
     const selectedLabelObjects = mockLabels.filter((label) => selectedLabels.has(label.id));
 
     // Combine selected date with current time
-    const entryDate = new Date(moodEntryStore.selectedDate);
+    const entryDate = new SvelteDate(moodEntryStore.selectedDate);
     const now = new Date();
     entryDate.setHours(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
 
