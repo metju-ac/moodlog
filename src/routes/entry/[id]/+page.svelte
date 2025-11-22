@@ -1,11 +1,10 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  import { Save } from '@lucide/svelte';
+  import { Save, Trash2 } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodSlider from '$lib/components/MoodSlider.svelte';
   import { moodEntryStore, mockLabels } from '$lib/stores/moodEntries.svelte';
-  import type { Label } from '$lib/types';
 
   // Get entry ID from URL
   const entryId = $derived($page.params.id || '');
@@ -70,6 +69,13 @@
 
     goto('/');
   }
+
+  function handleDelete() {
+    if (confirm('Are you sure you want to delete this mood entry? This action cannot be undone.')) {
+      moodEntryStore.deleteEntry(entryId);
+      goto('/');
+    }
+  }
 </script>
 
 <div class="flex h-screen flex-col bg-white">
@@ -133,8 +139,16 @@
       </div>
     </div>
 
-    <!-- Save Button -->
-    <div class="flex w-full items-center justify-end pb-4">
+    <!-- Action Buttons -->
+    <div class="flex w-full items-center justify-between pb-4">
+      <button
+        onclick={handleDelete}
+        class="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-red-600 transition-colors hover:bg-red-700"
+        aria-label="Delete mood entry"
+      >
+        <Trash2 class="h-6 w-6 text-white" />
+      </button>
+
       <button
         onclick={handleSave}
         class="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-indigo-700 transition-colors hover:bg-indigo-800"
