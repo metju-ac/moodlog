@@ -4,6 +4,7 @@
   import { Save } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
+  import DailyMoodOverview from '$lib/components/DailyMoodOverview.svelte';
   import { reflectionStore } from '$lib/stores/reflections.svelte';
 
   let notes = $state('');
@@ -65,11 +66,15 @@
 
 <div class="flex h-screen flex-col bg-white">
   <main class="flex flex-1 flex-col justify-between overflow-y-auto px-4 py-2.5">
-    <div class="flex w-full flex-col gap-5 pt-2.5 pb-4">
+    <div class="flex w-full flex-col gap-5.5 pt-2.5 pb-4">
       <!-- Title -->
       <h1 class="text-center text-[22px] leading-7 font-normal text-black">
         Reflect on your day: {formattedDate}
       </h1>
+
+      {#if reflectionData}
+        <DailyMoodOverview date={new Date(reflectionData.date)} />
+      {/if}
 
       <!-- Notes Textarea -->
       <div class="relative w-full">
@@ -77,14 +82,14 @@
           bind:value={notes}
           id="reflection-notes"
           placeholder="Write your thoughts about today..."
-          rows="18"
+          rows="8"
           class="w-full resize-none rounded border-[3px] border-indigo-700 px-4 py-3 text-base text-gray-900 transition-colors outline-none focus:border-indigo-800"
         ></textarea>
         <label
           for="reflection-notes"
           class="absolute -top-2.5 left-3 bg-white px-1 text-xs text-indigo-700"
         >
-          Notes for the day
+          Notes for this day
         </label>
       </div>
     </div>

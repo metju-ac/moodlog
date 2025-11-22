@@ -29,7 +29,7 @@
 
 <a
   href={`/entry/${entry.id}`}
-  class="flex w-full cursor-pointer items-start overflow-hidden rounded-xl bg-white shadow-md transition-shadow hover:shadow-lg"
+  class="flex w-full cursor-pointer items-start overflow-hidden rounded-xl bg-[#f4f3fa] shadow-md transition-shadow hover:shadow-lg"
 >
   <div class="flex flex-1 flex-col gap-1 p-4">
     <div class="flex items-center justify-between">

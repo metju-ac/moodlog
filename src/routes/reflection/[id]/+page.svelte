@@ -7,6 +7,7 @@
   import ReflectionSliders from '$lib/components/ReflectionSliders.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
   import DeleteDialog from '$lib/components/DeleteDialog.svelte';
+  import DailyMoodOverview from '$lib/components/DailyMoodOverview.svelte';
   import { reflectionStore } from '$lib/stores/reflections.svelte';
   import type { Reflection } from '$lib/types';
 
@@ -90,18 +91,22 @@
 
 <div class="flex h-screen flex-col bg-white">
   <main class="flex flex-1 flex-col justify-between overflow-y-auto px-4 py-3">
-    <div class="flex w-full flex-col gap-6 px-0 py-3">
+    <div class="flex w-full flex-col gap-5.5 px-0 py-3">
       <!-- Title -->
       <h1 class="text-center text-[22px] leading-7 font-normal text-black">
         {formattedDate}
       </h1>
+
+      {#if reflection}
+        <DailyMoodOverview date={reflection.date} />
+      {/if}
 
       <!-- Notes Textarea -->
       <div class="relative w-full">
         <textarea
           bind:value={notes}
           id="reflection-notes"
-          placeholder="Input"
+          placeholder="Write your thoughts about today..."
           rows="8"
           class="w-full resize-none rounded border-[3px] border-indigo-700 px-4 py-3 text-base text-gray-900 transition-colors outline-none focus:border-indigo-800"
         ></textarea>
