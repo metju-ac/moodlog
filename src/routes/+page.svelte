@@ -3,6 +3,7 @@
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodEntryCard from '$lib/components/MoodEntryCard.svelte';
   import DatePicker from '$lib/components/DatePicker.svelte';
+  import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
   import { SvelteDate } from 'svelte/reactivity';
 
@@ -117,13 +118,7 @@
         </span>
       </button>
 
-      <button
-        onclick={addMoodEntry}
-        class="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-indigo-700 transition-colors hover:bg-indigo-800"
-        aria-label="Add mood entry"
-      >
-        <Plus class="h-6 w-6 text-white" />
-      </button>
+      <FloatingActionButton icon={Plus} onclick={addMoodEntry} label="Add mood entry" />
     </div>
   </main>
 

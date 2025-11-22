@@ -4,6 +4,7 @@
   import { Save, Trash2 } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodSlider from '$lib/components/MoodSlider.svelte';
+  import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
   import { labelStore } from '$lib/stores/labels.svelte';
   import { getIconComponent } from '$lib/utils';
@@ -147,19 +148,13 @@
     <div class="flex w-full items-center justify-between pb-4">
       <button
         onclick={handleDelete}
-        class="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-red-600 transition-colors hover:bg-red-700"
+        class="flex h-14 w-[72px] items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105 hover:bg-red-700 active:scale-95"
         aria-label="Delete mood entry"
       >
-        <Trash2 class="h-6 w-6 text-white" />
+        <Trash2 class="h-6 w-6" strokeWidth={2} />
       </button>
 
-      <button
-        onclick={handleSave}
-        class="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-indigo-700 transition-colors hover:bg-indigo-800"
-        aria-label="Save mood entry"
-      >
-        <Save class="h-6 w-6 text-white" />
-      </button>
+      <FloatingActionButton icon={Save} onclick={handleSave} label="Save mood entry" />
     </div>
   </main>
 

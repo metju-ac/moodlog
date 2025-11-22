@@ -3,6 +3,7 @@
   import { Save } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodSlider from '$lib/components/MoodSlider.svelte';
+  import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
   import { labelStore } from '$lib/stores/labels.svelte';
   import { getIconComponent } from '$lib/utils';
@@ -118,13 +119,7 @@
 
     <!-- Save Button -->
     <div class="flex w-full items-center justify-end pb-4">
-      <button
-        onclick={handleSave}
-        class="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-indigo-700 transition-colors hover:bg-indigo-800"
-        aria-label="Save mood entry"
-      >
-        <Save class="h-6 w-6 text-white" />
-      </button>
+      <FloatingActionButton icon={Save} onclick={handleSave} label="Save mood entry" />
     </div>
   </main>
 

@@ -2,6 +2,7 @@
   import { Plus, X } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import LabelCard from '$lib/components/LabelCard.svelte';
+  import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
   import { labelStore } from '$lib/stores/labels.svelte';
   import type { Label } from '$lib/types';
   import { getIconComponent } from '$lib/utils';
@@ -95,14 +96,7 @@
     </div>
 
     <!-- Floating Action Button -->
-    <button
-      type="button"
-      onclick={openCreateDialog}
-      class="flex h-14 w-[72px] items-center justify-center rounded-full bg-[#485e92] text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
-      aria-label="Add new label"
-    >
-      <Plus class="h-6 w-6" strokeWidth={2} />
-    </button>
+    <FloatingActionButton icon={Plus} onclick={openCreateDialog} label="Add new label" />
   </main>
 
   <!-- Navigation -->
