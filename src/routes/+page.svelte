@@ -45,8 +45,7 @@
   }
 
   function addMoodEntry() {
-    // TODO: Navigate to quick add mood entry page
-    console.log('Add mood entry');
+    window.location.href = '/add';
   }
 </script>
 

@@ -1,5 +1,3 @@
-export type MoodLevel = 'positive' | 'neutral' | 'negative';
-
 export type Label = {
   id: string;
   name: string;
@@ -11,7 +9,7 @@ export type MoodEntry = {
   title: string;
   description: string;
   labels: Label[];
-  moodLevel: MoodLevel;
+  moodLevel: number; // -10 to +10
   date: Date;
 };
 

@@ -7,11 +7,13 @@
 
   let { entry }: Props = $props();
 
-  const moodColors = {
-    positive: 'bg-green-400',
-    neutral: 'bg-yellow-300',
-    negative: 'bg-red-400',
-  };
+  // Calculate color based on numeric mood value (-10 to +10)
+  const moodColor = $derived.by(() => {
+    const mood = entry.moodLevel;
+    if (mood <= -3) return 'bg-red-400'; // Negative
+    if (mood >= 3) return 'bg-green-400'; // Positive
+    return 'bg-yellow-300'; // Neutral
+  });
 </script>
 
 <a
@@ -34,5 +36,5 @@
     </div>
   </div>
 
-  <div class="h-full w-20 {moodColors[entry.moodLevel]} border-t border-r border-b"></div>
+  <div class="h-full w-20 {moodColor} border-t border-r border-b"></div>
 </a>
