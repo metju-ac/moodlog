@@ -1,0 +1,111 @@
+<script lang="ts">
+  import { goto } from '$app/navigation';
+  import { ChevronRight } from '@lucide/svelte';
+  import Navigation from '$lib/components/Navigation.svelte';
+  import MoodSlider from '$lib/components/MoodSlider.svelte';
+  import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
+  import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
+
+  // Reactive state for reflection metrics (-100 to 100 for slider, will be converted to -10 to +10)
+  let sleepQuality = $state(0);
+  let physicalActivity = $state(0);
+  let socialInteractions = $state(0);
+  let pressure = $state(0);
+
+  // Format date like in Figma: 03-11-2025
+  const formattedDate = $derived(
+    moodEntryStore.selectedDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }),
+  );
+
+  function handleNext() {
+    // Convert -100 to 100 slider values to -10 to +10 for storage
+    sessionStorage.setItem(
+      'reflectionData',
+      JSON.stringify({
+        sleepQuality: Math.round(sleepQuality / 10),
+        physicalActivity: Math.round(physicalActivity / 10),
+        socialInteractions: Math.round(socialInteractions / 10),
+        pressure: Math.round(pressure / 10),
+        date: moodEntryStore.selectedDate.toISOString(),
+      }),
+    );
+    goto('/reflection/notes');
+  }
+</script>
+
+<svelte:head>
+  <title>Reflection - MoodLog</title>
+</svelte:head>
+
+<div class="flex h-screen flex-col bg-white">
+  <main class="flex flex-1 flex-col justify-between overflow-y-auto px-4 py-3">
+    <div class="flex w-full flex-col gap-8 px-0 py-3">
+      <!-- Title -->
+      <h1 class="text-center text-[22px] leading-7 font-normal text-black">
+        Reflect on your day: {formattedDate}
+      </h1>
+
+      <!-- Sliders -->
+      <div class="flex w-full flex-col gap-8">
+        <!-- Sleep Quality -->
+        <div class="flex flex-col gap-1">
+          <p class="text-sm font-medium text-black">How was your sleep?</p>
+          <MoodSlider
+            value={sleepQuality}
+            onValueChange={(val) => (sleepQuality = val)}
+            leftLabel="Very poor"
+            rightLabel="Excellent"
+            snapToCenter={false}
+          />
+        </div>
+
+        <!-- Physical Activity -->
+        <div class="flex flex-col gap-1">
+          <p class="text-sm font-medium text-black">How physically active were you?</p>
+          <MoodSlider
+            value={physicalActivity}
+            onValueChange={(val) => (physicalActivity = val)}
+            leftLabel="Sedentary"
+            rightLabel="Intense"
+            snapToCenter={false}
+          />
+        </div>
+
+        <!-- Social Interactions -->
+        <div class="flex flex-col gap-1">
+          <p class="text-sm font-medium text-black">How were your social interactions?</p>
+          <MoodSlider
+            value={socialInteractions}
+            onValueChange={(val) => (socialInteractions = val)}
+            leftLabel="Draining"
+            rightLabel="Energizing"
+            snapToCenter={false}
+          />
+        </div>
+
+        <!-- Pressure -->
+        <div class="flex flex-col gap-1">
+          <p class="text-sm font-medium text-black">Work/School pressure level?</p>
+          <MoodSlider
+            value={pressure}
+            onValueChange={(val) => (pressure = val)}
+            leftLabel="None"
+            rightLabel="Overwhelming"
+            snapToCenter={false}
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Next Button -->
+    <div class="flex w-full items-center justify-end pb-4">
+      <FloatingActionButton icon={ChevronRight} onclick={handleNext} label="Next: Add notes" />
+    </div>
+  </main>
+
+  <Navigation currentTab="reflections" />
+</div>

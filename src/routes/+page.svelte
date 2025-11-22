@@ -5,6 +5,7 @@
   import DatePicker from '$lib/components/DatePicker.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
+  import { reflectionStore } from '$lib/stores/reflections.svelte';
   import { SvelteDate } from 'svelte/reactivity';
 
   let isDatePickerOpen = $state(false);
@@ -21,12 +22,14 @@
     const newDate = new SvelteDate(moodEntryStore.selectedDate);
     newDate.setDate(newDate.getDate() - 1);
     moodEntryStore.setDate(newDate);
+    reflectionStore.setDate(newDate);
   }
 
   function nextDay() {
     const newDate = new SvelteDate(moodEntryStore.selectedDate);
     newDate.setDate(newDate.getDate() + 1);
     moodEntryStore.setDate(newDate);
+    reflectionStore.setDate(newDate);
   }
 
   function openDatePicker() {
@@ -39,11 +42,22 @@
 
   function handleDateSelect(date: Date) {
     moodEntryStore.setDate(date);
+    reflectionStore.setDate(date);
   }
 
-  function startReflection() {
-    // TODO: Navigate to daily reflection creation page
-    console.log('Start reflection');
+  // Check if there's a reflection for the selected date
+  const hasReflection = $derived(
+    reflectionStore.getReflectionByDate(moodEntryStore.selectedDate) !== undefined,
+  );
+
+  function handleReflection() {
+    if (hasReflection) {
+      // TODO: Navigate to view/edit reflection page
+      console.log('View/edit reflection');
+    } else {
+      // Navigate to create reflection page
+      window.location.href = '/reflection/create';
+    }
   }
 
   function addMoodEntry() {
@@ -110,11 +124,17 @@
     <!-- Bottom Buttons -->
     <div class="flex w-full items-end justify-between py-4">
       <button
-        onclick={startReflection}
-        class="flex items-center justify-center rounded-full bg-indigo-100 px-6 py-4 transition-colors hover:bg-indigo-200"
+        onclick={handleReflection}
+        class="flex items-center justify-center rounded-full px-6 py-4 transition-colors {hasReflection
+          ? 'bg-[#485e92] hover:bg-[#3d4f7a]'
+          : 'bg-indigo-100 hover:bg-indigo-200'}"
       >
-        <span class="text-base font-medium tracking-[0.15px] text-indigo-900">
-          Start Reflection
+        <span
+          class="text-base font-medium tracking-[0.15px] {hasReflection
+            ? 'text-white'
+            : 'text-indigo-900'}"
+        >
+          {hasReflection ? 'Reflection' : 'Start Reflection'}
         </span>
       </button>
 

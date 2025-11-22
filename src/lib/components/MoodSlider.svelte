@@ -2,9 +2,18 @@
   type Props = {
     value: number; // -100 to 100
     onValueChange: (value: number) => void;
+    leftLabel?: string;
+    rightLabel?: string;
+    snapToCenter?: boolean; // Whether to snap to center (neutral zone)
   };
 
-  let { value = 0, onValueChange }: Props = $props();
+  let {
+    value = 0,
+    onValueChange,
+    leftLabel = 'Negative',
+    rightLabel = 'Positive',
+    snapToCenter = true,
+  }: Props = $props();
 
   let isDragging = $state(false);
   let sliderRef: HTMLDivElement;
@@ -58,7 +67,7 @@
   }
 
   // Snap to neutral zone (-10 to 10)
-  function snapToCenter(val: number): number {
+  function snapToCenterValue(val: number): number {
     if (val >= -10 && val <= 10) {
       return 0;
     }
@@ -66,8 +75,8 @@
   }
 
   $effect(() => {
-    if (!isDragging) {
-      const snapped = snapToCenter(value);
+    if (snapToCenter && !isDragging) {
+      const snapped = snapToCenterValue(value);
       if (snapped !== value) {
         onValueChange(snapped);
       }
@@ -78,8 +87,8 @@
 <div class="flex w-full flex-col gap-2">
   <!-- Labels -->
   <div class="flex items-center justify-between px-2.5 text-xs font-medium text-black">
-    <span>Negative</span>
-    <span>Positive</span>
+    <span>{leftLabel}</span>
+    <span>{rightLabel}</span>
   </div>
 
   <!-- Slider Track -->
