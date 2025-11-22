@@ -17,7 +17,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: 'I managed to get up before my alarm clock, and it felt amazing',
     labels: [mockLabels[0]],
     moodLevel: 8, // positive mood
-    date: new Date('2025-11-03'),
+    date: new Date('2025-11-03T07:30:00'),
   },
   {
     id: '2',
@@ -25,7 +25,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: 'I had to do stuff for school, outrageous',
     labels: [mockLabels[1]],
     moodLevel: -6, // negative mood
-    date: new Date('2025-11-03'),
+    date: new Date('2025-11-03T14:15:00'),
   },
   {
     id: '3',
@@ -33,7 +33,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: 'Rewatched my favorite movie "Na Plech" by the briliant director Marty Pohl',
     labels: [mockLabels[2], mockLabels[0]],
     moodLevel: 9, // very positive mood
-    date: new Date('2025-11-03'),
+    date: new Date('2025-11-03T20:45:00'),
   },
 
   // November 2, 2025
@@ -43,7 +43,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: 'Finished the project milestone ahead of schedule. Team was really happy!',
     labels: [mockLabels[2]],
     moodLevel: 7, // positive mood
-    date: new Date('2025-11-02'),
+    date: new Date('2025-11-02T10:00:00'),
   },
   {
     id: '5',
@@ -51,7 +51,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: "Had to pull an all-nighter for tomorrow's exam. Coffee is my best friend now.",
     labels: [mockLabels[1]],
     moodLevel: -1, // slightly negative/neutral
-    date: new Date('2025-11-02'),
+    date: new Date('2025-11-02T23:30:00'),
   },
 
   // November 1, 2025
@@ -61,7 +61,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: "Finally beat that boss I've been stuck on for weeks! So satisfying.",
     labels: [mockLabels[0]],
     moodLevel: 8, // positive mood
-    date: new Date('2025-11-01'),
+    date: new Date('2025-11-01T16:20:00'),
   },
   {
     id: '7',
@@ -69,7 +69,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: 'Forgot about the assignment due today. Professor was not happy.',
     labels: [mockLabels[1]],
     moodLevel: -7, // negative mood
-    date: new Date('2025-11-01'),
+    date: new Date('2025-11-01T09:00:00'),
   },
 
   // October 31, 2025
@@ -79,7 +79,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: 'Amazing costume party with friends. My vampire costume was a hit!',
     labels: [mockLabels[0]],
     moodLevel: 9, // very positive mood
-    date: new Date('2025-10-31'),
+    date: new Date('2025-10-31T19:00:00'),
   },
   {
     id: '9',
@@ -87,7 +87,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: 'Presented our research at the company conference. Got great feedback!',
     labels: [mockLabels[2]],
     moodLevel: 6, // positive mood
-    date: new Date('2025-10-31'),
+    date: new Date('2025-10-31T14:30:00'),
   },
 
   // October 30, 2025
@@ -97,7 +97,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: 'Traffic was terrible, arrived 30 minutes late to work.',
     labels: [mockLabels[2]],
     moodLevel: -5, // negative mood
-    date: new Date('2025-10-30'),
+    date: new Date('2025-10-30T08:45:00'),
   },
   {
     id: '11',
@@ -105,7 +105,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: 'Studied with classmates at the library. Finally understanding calculus!',
     labels: [mockLabels[1]],
     moodLevel: 7, // positive mood
-    date: new Date('2025-10-30'),
+    date: new Date('2025-10-30T18:00:00'),
   },
 
   // October 29, 2025
@@ -116,7 +116,7 @@ const initialMoodEntries: MoodEntry[] = [
       'Just relaxed, read a book, and watched some series. Sometimes doing nothing is the best.',
     labels: [mockLabels[0]],
     moodLevel: 5, // moderately positive
-    date: new Date('2025-10-29'),
+    date: new Date('2025-10-29T15:00:00'),
   },
   {
     id: '13',
@@ -124,7 +124,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: 'Got some harsh but fair criticism on my code. Need to improve my practices.',
     labels: [mockLabels[2]],
     moodLevel: 0, // neutral
-    date: new Date('2025-10-29'),
+    date: new Date('2025-10-29T11:15:00'),
   },
 
   // October 28, 2025
@@ -134,7 +134,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: 'Started the day with a great gym session. Feeling energized!',
     labels: [mockLabels[0]],
     moodLevel: 8, // positive mood
-    date: new Date('2025-10-28'),
+    date: new Date('2025-10-28T06:30:00'),
   },
   {
     id: '15',
@@ -142,7 +142,7 @@ const initialMoodEntries: MoodEntry[] = [
     description: "Today's quantum physics lecture went completely over my head.",
     labels: [mockLabels[1]],
     moodLevel: -6, // negative mood
-    date: new Date('2025-10-28'),
+    date: new Date('2025-10-28T13:00:00'),
   },
 ];
 
@@ -150,9 +150,11 @@ const initialMoodEntries: MoodEntry[] = [
 let moodEntries = $state<MoodEntry[]>(initialMoodEntries);
 let selectedDate = $state<Date>(new Date('2025-11-03'));
 
-// Derived state - filter mood entries by selected date
+// Derived state - filter mood entries by selected date and sort by time
 const filteredMoodEntries = $derived(
-  moodEntries.filter((entry) => entry.date.toDateString() === selectedDate.toDateString()),
+  moodEntries
+    .filter((entry) => entry.date.toDateString() === selectedDate.toDateString())
+    .sort((a, b) => a.date.getTime() - b.date.getTime()),
 );
 
 export const moodEntryStore = {

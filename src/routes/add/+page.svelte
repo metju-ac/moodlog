@@ -32,13 +32,18 @@
 
     const selectedLabelObjects = mockLabels.filter((label) => selectedLabels.has(label.id));
 
+    // Combine selected date with current time
+    const entryDate = new Date(moodEntryStore.selectedDate);
+    const now = new Date();
+    entryDate.setHours(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
+
     moodEntryStore.addEntry({
       id: Date.now().toString(),
       title: title.trim(),
       description: description.trim(),
       labels: selectedLabelObjects,
       moodLevel: moodLevel,
-      date: moodEntryStore.selectedDate,
+      date: entryDate,
     });
 
     goto('/');

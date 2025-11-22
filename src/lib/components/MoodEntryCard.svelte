@@ -17,6 +17,13 @@
     if (mood <= 6) return 'bg-[#aed581]'; // Light green: positive
     return 'bg-[#66bb6a]'; // Green: very positive
   });
+
+  // Format time as HH:mm
+  const formattedTime = $derived.by(() => {
+    const hours = entry.date.getHours().toString().padStart(2, '0');
+    const minutes = entry.date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  });
 </script>
 
 <a
@@ -24,7 +31,10 @@
   class="flex w-full cursor-pointer items-start overflow-hidden rounded-xl bg-white shadow-md transition-shadow hover:shadow-lg"
 >
   <div class="flex flex-1 flex-col gap-1 p-4">
-    <h3 class="text-base font-medium text-gray-900">{entry.title}</h3>
+    <div class="flex items-center justify-between">
+      <h3 class="text-base font-medium text-gray-900">{entry.title}</h3>
+      <span class="text-xs font-medium text-gray-500">{formattedTime}</span>
+    </div>
     <p class="text-sm text-gray-900">{entry.description}</p>
 
     <div class="flex flex-wrap items-center gap-1 py-2">
