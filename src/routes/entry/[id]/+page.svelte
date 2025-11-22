@@ -5,6 +5,7 @@
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodSlider from '$lib/components/MoodSlider.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
+  import DeleteDialog from '$lib/components/DeleteDialog.svelte';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
   import { labelStore } from '$lib/stores/labels.svelte';
   import { getIconComponent } from '$lib/utils';
@@ -13,6 +14,9 @@
   // Get entry ID from URL
   const entryId = $derived($page.params.id || '');
   const entry = $derived(moodEntryStore.getEntryById(entryId));
+
+  // Delete dialog state
+  let showDeleteDialog = $state(false);
 
   // If entry not found, redirect to home
   $effect(() => {
@@ -24,7 +28,7 @@
   // Initialize state
   let title = $state('');
   let description = $state('');
-  let moodValue = $state(0); // -100 to 100 for slider
+  let moodValue = $state(0);
   let selectedLabels = $state<Set<string>>(new Set());
 
   // Update state when entry changes
@@ -32,12 +36,11 @@
     if (entry) {
       title = entry.title;
       description = entry.description;
-      moodValue = entry.moodLevel * 10; // Convert stored -10 to +10 to slider -100 to +100
+      moodValue = entry.moodLevel * 10;
       selectedLabels = new Set(entry.labels.map((label) => label.id));
     }
   });
 
-  // Convert slider value (-100 to +100) to stored mood level (-10 to +10)
   const moodLevel = $derived(Math.round(moodValue / 10));
 
   function toggleLabel(labelId: string) {
@@ -68,17 +71,24 @@
       description: description.trim(),
       labels: selectedLabelObjects,
       moodLevel: moodLevel,
-      date: entry.date, // Keep the original date
+      date: entry.date,
     });
 
     goto('/');
   }
 
   function handleDelete() {
-    if (confirm('Are you sure you want to delete this mood entry? This action cannot be undone.')) {
-      moodEntryStore.deleteEntry(entryId);
-      goto('/');
-    }
+    showDeleteDialog = true;
+  }
+
+  function confirmDelete() {
+    moodEntryStore.deleteEntry(entryId);
+    showDeleteDialog = false;
+    goto('/');
+  }
+
+  function cancelDelete() {
+    showDeleteDialog = false;
   }
 </script>
 
@@ -160,3 +170,10 @@
 
   <Navigation currentTab="reflections" />
 </div>
+
+<DeleteDialog
+  bind:isOpen={showDeleteDialog}
+  title="Delete mood entry?"
+  onConfirm={confirmDelete}
+  onCancel={cancelDelete}
+/>
