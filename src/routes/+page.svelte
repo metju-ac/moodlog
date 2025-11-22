@@ -1,11 +1,11 @@
 <script lang="ts">
   import { Calendar, ChevronLeft, ChevronRight, Plus } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
-  import ReflectionCard from '$lib/components/ReflectionCard.svelte';
-  import { reflectionStore } from '$lib/stores/reflections.svelte';
+  import MoodEntryCard from '$lib/components/MoodEntryCard.svelte';
+  import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
 
   const formattedDate = $derived(
-    reflectionStore.selectedDate.toLocaleDateString('en-GB', {
+    moodEntryStore.selectedDate.toLocaleDateString('en-GB', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
@@ -13,15 +13,15 @@
   );
 
   function previousDay() {
-    const newDate = new Date(reflectionStore.selectedDate);
+    const newDate = new Date(moodEntryStore.selectedDate);
     newDate.setDate(newDate.getDate() - 1);
-    reflectionStore.setDate(newDate);
+    moodEntryStore.setDate(newDate);
   }
 
   function nextDay() {
-    const newDate = new Date(reflectionStore.selectedDate);
+    const newDate = new Date(moodEntryStore.selectedDate);
     newDate.setDate(newDate.getDate() + 1);
-    reflectionStore.setDate(newDate);
+    moodEntryStore.setDate(newDate);
   }
 
   function openDatePicker() {
@@ -30,13 +30,13 @@
   }
 
   function startReflection() {
-    // TODO: Navigate to reflection creation page
+    // TODO: Navigate to daily reflection creation page
     console.log('Start reflection');
   }
 
-  function addReflection() {
-    // TODO: Navigate to quick add reflection page
-    console.log('Add reflection');
+  function addMoodEntry() {
+    // TODO: Navigate to quick add mood entry page
+    console.log('Add mood entry');
   }
 </script>
 
@@ -76,10 +76,10 @@
         </div>
       </div>
 
-      <!-- Reflection Cards -->
+      <!-- Mood Entry Cards -->
       <div class="flex w-full flex-col gap-4">
-        {#each reflectionStore.reflections as reflection (reflection.id)}
-          <ReflectionCard {reflection} />
+        {#each moodEntryStore.entries as entry (entry.id)}
+          <MoodEntryCard {entry} />
         {/each}
       </div>
     </div>
@@ -96,9 +96,9 @@
       </button>
 
       <button
-        onclick={addReflection}
+        onclick={addMoodEntry}
         class="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-indigo-700 transition-colors hover:bg-indigo-800"
-        aria-label="Add reflection"
+        aria-label="Add mood entry"
       >
         <Plus class="h-6 w-6 text-white" />
       </button>

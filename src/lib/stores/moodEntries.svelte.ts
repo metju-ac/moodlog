@@ -1,4 +1,4 @@
-import type { Reflection, Label } from '$lib/types';
+import type { MoodEntry, Label } from '$lib/types';
 
 // Mock labels
 export const mockLabels: Label[] = [
@@ -7,8 +7,8 @@ export const mockLabels: Label[] = [
   { id: '3', name: 'Work', icon: '💼' },
 ];
 
-// Mock reflections data
-const initialReflections: Reflection[] = [
+// Mock mood entries - quick logs recorded throughout the day
+const initialMoodEntries: MoodEntry[] = [
   // November 3, 2025
   {
     id: '1',
@@ -146,17 +146,17 @@ const initialReflections: Reflection[] = [
 ];
 
 // Reactive state using Svelte 5 runes
-let reflections = $state<Reflection[]>(initialReflections);
+let moodEntries = $state<MoodEntry[]>(initialMoodEntries);
 let selectedDate = $state<Date>(new Date('2025-11-03'));
 
-// Derived state - filter reflections by selected date
-const filteredReflections = $derived(
-  reflections.filter((r) => r.date.toDateString() === selectedDate.toDateString()),
+// Derived state - filter mood entries by selected date
+const filteredMoodEntries = $derived(
+  moodEntries.filter((entry) => entry.date.toDateString() === selectedDate.toDateString()),
 );
 
-export const reflectionStore = {
-  get reflections() {
-    return filteredReflections;
+export const moodEntryStore = {
+  get entries() {
+    return filteredMoodEntries;
   },
   get selectedDate() {
     return selectedDate;
@@ -164,10 +164,10 @@ export const reflectionStore = {
   setDate(date: Date) {
     selectedDate = date;
   },
-  addReflection(reflection: Reflection) {
-    reflections = [...reflections, reflection];
+  addEntry(entry: MoodEntry) {
+    moodEntries = [...moodEntries, entry];
   },
-  deleteReflection(id: string) {
-    reflections = reflections.filter((r) => r.id !== id);
+  deleteEntry(id: string) {
+    moodEntries = moodEntries.filter((entry) => entry.id !== id);
   },
 };

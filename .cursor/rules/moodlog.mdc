@@ -4,6 +4,11 @@
 
 MoodLog is a frontend-only SvelteKit application for mood tracking. All backend functionality should be mocked using Svelte stores or local state management. Never implement real backend APIs - use Svelte runes and stores to simulate data persistence.
 
+### Data Model Distinction
+
+- **Mood Entries**: Quick logs recorded throughout the day to capture mood and context (title, description, labels, mood level). These are the primary data points users create multiple times per day.
+- **Daily Reflections**: Comprehensive end-of-day reflections created based on the mood entries from that day. These provide deeper insights and analysis of the day's mood patterns.
+
 ## Build/Lint/Test Commands
 
 - `npm run dev` - Start development server

@@ -6,7 +6,7 @@ export type Label = {
   icon: string;
 };
 
-export type Reflection = {
+export type MoodEntry = {
   id: string;
   title: string;
   description: string;
