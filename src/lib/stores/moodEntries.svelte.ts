@@ -1,152 +1,122 @@
 import type { MoodEntry } from '$lib/types';
 import { labelStore } from './labels.svelte';
+import { SvelteDate } from 'svelte/reactivity';
 
 // Helper to get labels by id
 function getLabelsById(ids: string[]) {
   return ids.map((id) => labelStore.getLabelById(id)).filter((label) => label !== undefined);
 }
 
+// Generate test data: 5 entries per day for the last 3 months
+function generateTestData(): MoodEntry[] {
+  const entries: MoodEntry[] = [];
+  const today = new SvelteDate();
+  today.setHours(0, 0, 0, 0);
+  const daysToGenerate = 90; // 3 months
+  const entriesPerDay = 5;
+
+  const titles = [
+    'Morning routine',
+    'Work meeting',
+    'Study session',
+    'Gym workout',
+    'Coffee break',
+    'Project deadline',
+    'Team collaboration',
+    'Evening walk',
+    'Weekend plans',
+    'Family time',
+    'Reading time',
+    'Coding challenge',
+    'Lunch with friends',
+    'Video call',
+    'Creative session',
+    'Problem solving',
+    'Relaxing evening',
+    'Busy afternoon',
+    'Productive morning',
+    'Quiet moment',
+    'Team standup',
+    'Quick snack',
+    'Phone call',
+    'Break time',
+    'Commute home',
+  ];
+
+  const descriptions = [
+    'Had a good day overall',
+    'Feeling productive and focused',
+    'Challenging but rewarding',
+    'Taking it easy today',
+    'Lots of energy and motivation',
+    'A bit tired but content',
+    'Stressed but managing',
+    'Peaceful and calm',
+    'Excited about progress',
+    'Need more rest',
+    'Making good progress',
+    'Feeling accomplished',
+    'Nice and relaxed',
+    'Bit overwhelmed',
+    'Going well so far',
+  ];
+
+  const labelIds = ['1', '2', '3', '4']; // School, Work, Free time, Sport
+
+  let entryId = 0;
+
+  for (let dayOffset = 0; dayOffset < daysToGenerate; dayOffset++) {
+    // Base date for this day
+    const dayDate = new SvelteDate(today);
+    dayDate.setDate(today.getDate() - dayOffset);
+
+    // Create 5 entries for this day at different times
+    const entryTimes = [
+      { hour: 7, minute: 30 }, // Morning
+      { hour: 11, minute: 15 }, // Late morning
+      { hour: 14, minute: 0 }, // Afternoon
+      { hour: 17, minute: 45 }, // Late afternoon
+      { hour: 20, minute: 30 }, // Evening
+    ];
+
+    for (let i = 0; i < entriesPerDay; i++) {
+      const entryDate = new SvelteDate(dayDate);
+      const time = entryTimes[i];
+      entryDate.setHours(time.hour, time.minute + Math.floor(Math.random() * 30), 0, 0);
+
+      // Random mood level between -10 and 10
+      const moodLevel = Math.floor(Math.random() * 21) - 10;
+
+      // Select 1-2 random labels
+      const numLabels = Math.random() > 0.5 ? 1 : 2;
+      const selectedLabels: string[] = [];
+      for (let j = 0; j < numLabels; j++) {
+        const labelId = labelIds[Math.floor(Math.random() * labelIds.length)];
+        if (!selectedLabels.includes(labelId)) {
+          selectedLabels.push(labelId);
+        }
+      }
+
+      entries.push({
+        id: `test-${entryId++}`,
+        title: titles[Math.floor(Math.random() * titles.length)],
+        description: descriptions[Math.floor(Math.random() * descriptions.length)],
+        labels: getLabelsById(selectedLabels),
+        moodLevel,
+        date: entryDate,
+      });
+    }
+  }
+
+  return entries.sort((a, b) => b.date.getTime() - a.date.getTime());
+}
+
 // Mock mood entries - quick logs recorded throughout the day
-const initialMoodEntries: MoodEntry[] = [
-  // November 3, 2025
-  {
-    id: '1',
-    title: 'Pleasant morning',
-    description: 'I managed to get up before my alarm clock, and it felt amazing',
-    labels: getLabelsById(['3']),
-    moodLevel: 8, // positive mood
-    date: new Date('2025-11-03T07:30:00'),
-  },
-  {
-    id: '2',
-    title: 'Zjb',
-    description: 'I had to do stuff for school, outrageous',
-    labels: getLabelsById(['1']),
-    moodLevel: -6, // negative mood
-    date: new Date('2025-11-03T14:15:00'),
-  },
-  {
-    id: '3',
-    title: 'Went to cinema with coleagues',
-    description: 'Rewatched my favorite movie "Na Plech" by the briliant director Marty Pohl',
-    labels: getLabelsById(['2', '3']),
-    moodLevel: 9, // very positive mood
-    date: new Date('2025-11-03T20:45:00'),
-  },
-
-  // November 2, 2025
-  {
-    id: '4',
-    title: 'Productive work session',
-    description: 'Finished the project milestone ahead of schedule. Team was really happy!',
-    labels: getLabelsById(['2']),
-    moodLevel: 7, // positive mood
-    date: new Date('2025-11-02T10:00:00'),
-  },
-  {
-    id: '5',
-    title: 'Late night studying',
-    description: "Had to pull an all-nighter for tomorrow's exam. Coffee is my best friend now.",
-    labels: getLabelsById(['1']),
-    moodLevel: -1, // slightly negative/neutral
-    date: new Date('2025-11-02T23:30:00'),
-  },
-
-  // November 1, 2025
-  {
-    id: '6',
-    title: 'Weekend gaming marathon',
-    description: "Finally beat that boss I've been stuck on for weeks! So satisfying.",
-    labels: getLabelsById(['3']),
-    moodLevel: 8, // positive mood
-    date: new Date('2025-11-01T16:20:00'),
-  },
-  {
-    id: '7',
-    title: 'Missed deadline',
-    description: 'Forgot about the assignment due today. Professor was not happy.',
-    labels: getLabelsById(['1']),
-    moodLevel: -7, // negative mood
-    date: new Date('2025-11-01T09:00:00'),
-  },
-
-  // October 31, 2025
-  {
-    id: '8',
-    title: 'Halloween party',
-    description: 'Amazing costume party with friends. My vampire costume was a hit!',
-    labels: getLabelsById(['3']),
-    moodLevel: 9, // very positive mood
-    date: new Date('2025-10-31T19:00:00'),
-  },
-  {
-    id: '9',
-    title: 'Conference presentation',
-    description: 'Presented our research at the company conference. Got great feedback!',
-    labels: getLabelsById(['2']),
-    moodLevel: 6, // positive mood
-    date: new Date('2025-10-31T14:30:00'),
-  },
-
-  // October 30, 2025
-  {
-    id: '10',
-    title: 'Stressful commute',
-    description: 'Traffic was terrible, arrived 30 minutes late to work.',
-    labels: getLabelsById(['2']),
-    moodLevel: -5, // negative mood
-    date: new Date('2025-10-30T08:45:00'),
-  },
-  {
-    id: '11',
-    title: 'Group study session',
-    description: 'Studied with classmates at the library. Finally understanding calculus!',
-    labels: getLabelsById(['1']),
-    moodLevel: 7, // positive mood
-    date: new Date('2025-10-30T18:00:00'),
-  },
-
-  // October 29, 2025
-  {
-    id: '12',
-    title: 'Quiet day at home',
-    description:
-      'Just relaxed, read a book, and watched some series. Sometimes doing nothing is the best.',
-    labels: getLabelsById(['3']),
-    moodLevel: 5, // moderately positive
-    date: new Date('2025-10-29T15:00:00'),
-  },
-  {
-    id: '13',
-    title: 'Code review feedback',
-    description: 'Got some harsh but fair criticism on my code. Need to improve my practices.',
-    labels: getLabelsById(['2']),
-    moodLevel: 0, // neutral
-    date: new Date('2025-10-29T11:15:00'),
-  },
-
-  // October 28, 2025
-  {
-    id: '14',
-    title: 'Morning workout',
-    description: 'Started the day with a great gym session. Feeling energized!',
-    labels: getLabelsById(['3']),
-    moodLevel: 8, // positive mood
-    date: new Date('2025-10-28T06:30:00'),
-  },
-  {
-    id: '15',
-    title: 'Difficult lecture',
-    description: "Today's quantum physics lecture went completely over my head.",
-    labels: getLabelsById(['1']),
-    moodLevel: -6, // negative mood
-    date: new Date('2025-10-28T13:00:00'),
-  },
-];
+const initialMoodEntries: MoodEntry[] = generateTestData();
 
 // Reactive state using Svelte 5 runes
 let moodEntries = $state<MoodEntry[]>(initialMoodEntries);
-let selectedDate = $state<Date>(new Date('2025-11-03'));
+let selectedDate = $state<Date>(new Date());
 
 // Derived state - filter mood entries by selected date and sort by time
 const filteredMoodEntries = $derived(
@@ -158,6 +128,9 @@ const filteredMoodEntries = $derived(
 export const moodEntryStore = {
   get entries() {
     return filteredMoodEntries;
+  },
+  get allEntries() {
+    return moodEntries;
   },
   get selectedDate() {
     return selectedDate;

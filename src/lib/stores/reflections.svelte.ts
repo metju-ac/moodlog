@@ -1,32 +1,52 @@
 import type { Reflection } from '$lib/types';
+import { SvelteDate } from 'svelte/reactivity';
+
+// Generate reflections for today and the day before yesterday
+function generateReflections(): Reflection[] {
+  const today = new SvelteDate();
+  today.setHours(0, 0, 0, 0);
+
+  const dayBeforeYesterday = new SvelteDate();
+  dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2);
+  dayBeforeYesterday.setHours(0, 0, 0, 0);
+
+  const reflectionNotes = [
+    'Had a productive day overall. Managed to balance work and personal time well. Feeling accomplished and ready for tomorrow.',
+    "Today was challenging but rewarding. Learned a lot from setbacks and interactions with others. Sleep could have been better, but I'm managing.",
+    'A balanced day with good energy levels. Social interactions were positive and uplifting. Looking forward to maintaining this momentum.',
+    'Felt a bit stressed today due to workload, but managed to stay focused. Exercise helped clear my mind. Need to prioritize rest.',
+    'Great day with plenty of physical activity and quality time with others. Felt energized and motivated throughout the day.',
+    'Not the best day sleep-wise, which affected my energy. However, I pushed through and accomplished what I set out to do. Tomorrow will be better.',
+  ];
+
+  return [
+    {
+      id: '1',
+      date: today,
+      sleepQuality: Math.floor(Math.random() * 13) - 6, // Random between -6 and 6
+      physicalActivity: Math.floor(Math.random() * 13) - 6,
+      socialInteractions: Math.floor(Math.random() * 13) - 6,
+      pressure: Math.floor(Math.random() * 13) - 6,
+      notes: reflectionNotes[Math.floor(Math.random() * reflectionNotes.length)],
+    },
+    {
+      id: '2',
+      date: dayBeforeYesterday,
+      sleepQuality: Math.floor(Math.random() * 13) - 6,
+      physicalActivity: Math.floor(Math.random() * 13) - 6,
+      socialInteractions: Math.floor(Math.random() * 13) - 6,
+      pressure: Math.floor(Math.random() * 13) - 6,
+      notes: reflectionNotes[Math.floor(Math.random() * reflectionNotes.length)],
+    },
+  ];
+}
 
 // Mock reflections data
-const initialReflections: Reflection[] = [
-  {
-    id: '1',
-    date: new Date('2025-11-03'),
-    sleepQuality: 8, // Good sleep
-    physicalActivity: 6, // Moderate activity
-    socialInteractions: 7, // Pleasant interactions
-    pressure: 0, // Neutral pressure
-    notes:
-      'Had a great day overall. Morning run felt energizing and the team meeting was productive. Felt a bit stressed about the upcoming deadline, but managed to stay focused.',
-  },
-  {
-    id: '2',
-    date: new Date('2025-11-02'),
-    sleepQuality: 0, // Neutral sleep
-    physicalActivity: -7, // Low activity
-    socialInteractions: -6, // Awkward interactions
-    pressure: 8, // High pressure
-    notes:
-      "Didn't sleep well due to stress. Spent most of the day sitting. Social interactions felt a bit draining. High pressure from multiple deadlines.",
-  },
-];
+const initialReflections: Reflection[] = generateReflections();
 
 // Reactive state using Svelte 5 runes
 let reflections = $state<Reflection[]>(initialReflections);
-let selectedDate = $state<Date>(new Date('2025-11-03'));
+let selectedDate = $state<Date>(new Date());
 
 export const reflectionStore = {
   get all() {
