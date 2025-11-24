@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import type { MoodEntry } from '$lib/types';
   import { getIconComponent } from '$lib/utils';
 
@@ -28,7 +29,7 @@
 </script>
 
 <a
-  href={`/entry/${entry.id}`}
+  href={`${base}/entry/${entry.id}`}
   class="flex w-full cursor-pointer items-start overflow-hidden rounded-xl bg-[#f4f3fa] shadow-md transition-shadow hover:shadow-lg"
 >
   <div class="flex flex-1 flex-col gap-1 p-4">

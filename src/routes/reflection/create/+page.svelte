@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
+  import { goto } from '$lib/navigation';
   import { ChevronRight } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import ReflectionSliders from '$lib/components/ReflectionSliders.svelte';

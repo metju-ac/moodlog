@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Calendar, ChevronLeft, ChevronRight, Plus } from '@lucide/svelte';
+  import { base } from '$app/paths';
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodEntryCard from '$lib/components/MoodEntryCard.svelte';
   import DatePicker from '$lib/components/DatePicker.svelte';
@@ -41,114 +42,118 @@
   }
 
   function handleDateSelect(date: Date) {
-    moodEntryStore.setDate(date);
-    reflectionStore.setDate(date);
-  }
-
-  // Check if there's a reflection for the selected date
-  const currentReflection = $derived(
-    reflectionStore.getReflectionByDate(moodEntryStore.selectedDate),
-  );
-  const hasReflection = $derived(currentReflection !== undefined);
-
-  function handleReflection() {
-    if (currentReflection) {
-      // Navigate to view/edit reflection page
-      window.location.href = `/reflection/${currentReflection.id}`;
-    } else {
-      // Navigate to create reflection page
-      window.location.href = '/reflection/create';
-    }
+    const selectedDate = new SvelteDate(date);
+    moodEntryStore.setDate(selectedDate);
+    reflectionStore.setDate(selectedDate);
+    closeDatePicker();
   }
 
   function addMoodEntry() {
-    window.location.href = '/add';
+    window.location.href = `${base}/add`;
   }
 </script>
 
 <div class="flex h-screen flex-col bg-white">
-  <main class="flex flex-1 flex-col justify-between overflow-y-auto px-4 py-2.5">
-    <div class="flex w-full flex-col">
-      <!-- Date Bar -->
-      <div class="flex items-center justify-between px-0 py-2.5">
-        <h1 class="text-[28px] leading-9 font-normal text-black">
-          {formattedDate}
-        </h1>
-
-        <div class="flex items-center gap-1.5">
+  <main class="flex flex-1 flex-col overflow-y-auto px-4 py-2.5">
+    <div class="flex w-full flex-col gap-5 pt-2.5 pb-24">
+      <!-- Header -->
+      <div class="flex w-full flex-col gap-2.5">
+        <h1 class="text-center text-[22px] leading-7 font-normal text-black">MoodLog</h1>
+        <!-- Date selector -->
+        <div class="flex w-full items-center justify-between gap-2">
           <button
-            onclick={openDatePicker}
-            class="flex h-12 w-[52px] items-center justify-center rounded-full bg-indigo-100 transition-colors hover:bg-indigo-200"
-            aria-label="Open date picker"
+            onclick={previousDay}
+            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 active:bg-gray-300"
+            aria-label="Previous day"
           >
-            <Calendar class="h-6 w-6 text-indigo-900" />
+            <ChevronLeft class="h-6 w-6" />
           </button>
 
           <button
-            onclick={previousDay}
-            class="flex h-12 w-[52px] items-center justify-center rounded-full bg-indigo-100 transition-colors hover:bg-indigo-200"
-            aria-label="Previous day"
+            onclick={openDatePicker}
+            class="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300"
+            aria-label="Select date"
           >
-            <ChevronLeft class="h-6 w-6 text-indigo-900" />
+            <Calendar class="h-5 w-5" />
+            <span class="text-base font-medium">{formattedDate}</span>
           </button>
 
           <button
             onclick={nextDay}
-            class="flex h-12 w-[52px] items-center justify-center rounded-full bg-indigo-100 transition-colors hover:bg-indigo-200"
+            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 active:bg-gray-300"
             aria-label="Next day"
           >
-            <ChevronRight class="h-6 w-6 text-indigo-900" />
+            <ChevronRight class="h-6 w-6" />
           </button>
         </div>
       </div>
 
-      <!-- Mood Entry Cards -->
-      <div class="flex w-full flex-col gap-4">
-        {#if moodEntryStore.entries.length === 0}
-          <div class="flex flex-col items-center justify-center gap-4 py-16 text-center">
-            <div class="text-6xl opacity-50">📝</div>
-            <div class="flex flex-col gap-2">
-              <h2 class="text-xl font-medium text-gray-900">No mood entries yet</h2>
-              <p class="text-sm text-gray-600">
-                Start tracking your mood by adding your first entry for this day
+      <!-- Mood Entries List -->
+      <div class="flex w-full flex-col gap-3">
+        <h2 class="text-base font-medium text-gray-900">Reflections</h2>
+        {#if moodEntryStore.filteredEntries.length === 0}
+          <div class="flex flex-col items-center gap-3 py-8 text-center">
+            <div class="rounded-full bg-gray-100 p-4">
+              <Calendar class="h-8 w-8 text-gray-400" />
+            </div>
+            <div class="flex flex-col gap-1">
+              <p class="text-base font-medium text-gray-900">No mood entries yet</p>
+              <p class="text-sm text-gray-500">
+                Tap the + button to add your first mood entry for today
               </p>
             </div>
           </div>
         {:else}
-          {#each moodEntryStore.entries as entry (entry.id)}
+          {#each moodEntryStore.filteredEntries as entry (entry.id)}
             <MoodEntryCard {entry} />
           {/each}
+        {/if}
+
+        <!-- Daily Reflection Section -->
+        {#if reflectionStore.dailyReflection}
+          {@const reflection = reflectionStore.dailyReflection}
+          <div class="mt-6 flex w-full flex-col gap-3">
+            <h2 class="text-base font-medium text-gray-900">Daily Reflection</h2>
+            <a
+              href={`${base}/reflection/${reflection.id}`}
+              class="flex w-full cursor-pointer flex-col gap-3 rounded-xl bg-[#f4f3fa] p-4 shadow-md transition-shadow hover:shadow-lg"
+            >
+              <div class="flex items-center justify-between">
+                <h3 class="text-base font-medium text-gray-900">Reflection</h3>
+                <span class="text-xs font-medium text-gray-500">
+                  {reflection.date.toLocaleDateString('en-GB')}
+                </span>
+              </div>
+              {#if reflection.notes}
+                <p class="line-clamp-2 text-sm text-gray-700">{reflection.notes}</p>
+              {/if}
+            </a>
+          </div>
+        {:else}
+          <div class="mt-6 flex w-full flex-col gap-3">
+            <h2 class="text-base font-medium text-gray-900">Daily Reflection</h2>
+            <a
+              href={`${base}/reflection/create`}
+              class="flex w-full cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-6 transition-colors hover:border-indigo-300 hover:bg-indigo-50"
+            >
+              <Plus class="h-8 w-8 text-gray-400" />
+              <p class="text-sm font-medium text-gray-600">Create today's reflection</p>
+            </a>
+          </div>
         {/if}
       </div>
     </div>
 
-    <!-- Bottom Buttons -->
-    <div class="flex w-full items-end justify-between py-4">
-      <button
-        onclick={handleReflection}
-        class="flex items-center justify-center rounded-full px-6 py-4 transition-colors {hasReflection
-          ? 'bg-[#485e92] hover:bg-[#3d4f7a]'
-          : 'bg-indigo-100 hover:bg-indigo-200'}"
-      >
-        <span
-          class="text-base font-medium tracking-[0.15px] {hasReflection
-            ? 'text-white'
-            : 'text-indigo-900'}"
-        >
-          {hasReflection ? 'Reflection' : 'Start Reflection'}
-        </span>
-      </button>
-
-      <FloatingActionButton icon={Plus} onclick={addMoodEntry} label="Add mood entry" />
-    </div>
+    <FloatingActionButton icon={Plus} onclick={addMoodEntry} label="Add mood entry" />
   </main>
 
   <Navigation currentTab="reflections" />
+</div>
 
+{#if isDatePickerOpen}
   <DatePicker
-    isOpen={isDatePickerOpen}
     selectedDate={moodEntryStore.selectedDate}
     onClose={closeDatePicker}
-    onSelectDate={handleDateSelect}
+    onSelect={handleDateSelect}
   />
-</div>
+{/if}

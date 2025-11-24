@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
+  import { goto } from '$lib/navigation';
   import { page } from '$app/stores';
   import { Save, Trash2 } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
