@@ -1,0 +1,118 @@
+# MoodLog - Cursor Agent Rules
+
+## Project Overview
+
+MoodLog is a frontend-only SvelteKit application for mood tracking. All backend functionality should be mocked using Svelte stores or local state management. Never implement real backend APIs - use Svelte runes and stores to simulate data persistence.
+
+### Data Model Distinction
+
+- **Mood Entries**: Quick logs recorded throughout the day to capture mood and context (title, description, labels, mood level). These are the primary data points users create multiple times per day.
+  - **Mood Level**: Stored as a number from **-10 to +10** (negative to positive)
+  - **UI Slider**: Uses range **-100 to +100** for better UX (converted to -10 to +10 by dividing by 10)
+  - **Color Coding**: 5 levels based on mood value:
+    - **≤ -7**: Red (#e57373) - Very negative
+    - **-6 to -3**: Orange (#ffb74d) - Negative
+    - **-2 to +2**: Yellow (#fff176) - Neutral
+    - **+3 to +6**: Light green (#aed581) - Positive
+    - **≥ +7**: Green (#66bb6a) - Very positive
+- **Daily Reflections**: Comprehensive end-of-day reflections created based on the mood entries from that day. These provide deeper insights and analysis of the day's mood patterns.
+
+## Build/Lint/Test Commands
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run check` - Type-check TypeScript and Svelte files
+- `npm run check:watch` - Type-check in watch mode
+- `npm run lint` - Run Prettier and ESLint checks
+- `npm run format` - Format code with Prettier
+
+## Code Style Requirements
+
+- **Framework**: SvelteKit with Svelte 5 (use runes: $state, $derived, $effect)
+- **TypeScript**: Strict mode enabled. All code must be fully typed with explicit types
+- **Formatting**: Prettier with single quotes, all trailing commas, 100 char width, 2 spaces
+  - **CRITICAL**: ALWAYS run `npm run format` after making any code changes
+- **Imports**: Use `$lib` alias for src/lib imports (e.g., `import { foo } from '$lib/utils'`)
+- **Naming Conventions**: 
+  - camelCase for variables and functions
+  - PascalCase for components and types
+- **Components**: Use `.svelte` extension; TypeScript in `<script lang="ts">` tags
+- **Error Handling**: Use try-catch for async operations; provide user-friendly error messages
+- **Linting**: Follow ESLint config (typescript-eslint + eslint-plugin-svelte)
+
+## Svelte 5 Runes (ALWAYS USE)
+
+- `$state()` - For reactive state
+- `$derived()` - For computed values
+- `$effect()` - For side effects
+- `$props()` - For component props
+- NO legacy stores (writable, readable, derived) unless absolutely necessary
+
+## Svelte MCP Tools Workflow
+
+### 1. list-sections (ALWAYS START HERE)
+
+Use this FIRST to discover all available documentation sections. Returns a structured list with titles, use_cases, and paths.
+When asked about Svelte or SvelteKit topics, ALWAYS use this tool at the start of the chat to find relevant sections.
+
+### 2. get-documentation (FETCH ALL RELEVANT DOCS)
+
+Retrieves full documentation content for specific sections. Accepts single or multiple sections.
+After calling the list-sections tool, you MUST analyze the returned documentation sections (especially the use_cases field) and then use the get-documentation tool to fetch ALL documentation sections that are relevant for the user's task.
+
+### 3. svelte-autofixer (ALWAYS VALIDATE CODE)
+
+Analyzes Svelte code and returns issues and suggestions.
+You MUST use this tool whenever writing Svelte code before sending it to the user. Keep calling it until no issues or suggestions are returned.
+
+### 4. playground-link (ONLY AFTER USER CONFIRMATION)
+
+Generates a Svelte Playground link with the provided code.
+After completing the code, ask the user if they want a playground link. Only call this tool after user confirmation and NEVER if code was written to files in their project.
+
+## Figma MCP Integration
+
+When working with designs:
+- Use Figma MCP tools to extract design specifications
+- Convert Figma designs to Svelte components
+- Maintain design system consistency
+- **DO NOT implement mobile status bars** (WiFi, battery, time in top bar) - these are only in Figma to show how the app looks on mobile devices, but should not be implemented in code
+
+## Backend Mocking Strategy
+
+Since this is frontend-only:
+- Use Svelte runes ($state, $derived) for data management
+- Create mock stores in `$lib/stores` for shared state
+- Use `$effect()` for simulating async operations with setTimeout
+- Store data in localStorage/sessionStorage for persistence simulation
+- Create mock API functions in `$lib/api` that return Promises with fake data
+
+## Quality Standards
+
+- Every component must be fully typed
+- All props must use `$props()` with TypeScript interfaces
+- Provide meaningful error messages to users
+- Handle loading states explicitly
+- Test all interactive features manually
+- Ensure responsive design works on mobile and desktop
+
+## File Organization
+
+- Components: `src/lib/components/`
+- Utilities: `src/lib/utils.ts`
+- Mock stores: `src/lib/stores/`
+- Mock API: `src/lib/api/`
+- Types: Define in same file or `src/lib/types/`
+- Routes: `src/routes/`
+
+## Development Workflow
+
+1. For ANY Svelte-related task, start with `list-sections` MCP tool
+2. Fetch relevant documentation with `get-documentation`
+3. Write code following Svelte 5 patterns
+4. Validate with `svelte-autofixer` until clean
+5. Run `npm run format` after changes
+6. Test the functionality manually
+7. Only offer playground link if user confirms and code isn't in project files
+
