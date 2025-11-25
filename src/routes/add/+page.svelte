@@ -79,7 +79,7 @@
         </label>
       </div>
 
-      <!-- Mood Slider -->
+      <p class="text-sm font-medium text-black">How are you feeling?</p>
       <MoodSlider value={moodValue} onValueChange={(val) => (moodValue = val)} />
 
       <!-- Context Labels -->
