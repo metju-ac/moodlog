@@ -16,7 +16,10 @@
   ];
 </script>
 
-<nav class="flex w-full items-center bg-gray-100">
+<nav
+  class="sticky bottom-0 z-50 flex w-full items-center border-t border-gray-200 bg-gray-100"
+  style="padding-bottom: max(env(safe-area-inset-bottom, 0), 0.5rem);"
+>
   {#each tabs as tab (tab.id)}
     {@const Icon = tab.icon}
     <a
