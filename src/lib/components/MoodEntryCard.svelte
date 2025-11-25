@@ -5,9 +5,10 @@
 
   type Props = {
     entry: MoodEntry;
+    clickable?: boolean;
   };
 
-  let { entry }: Props = $props();
+  let { entry, clickable = true }: Props = $props();
 
   // Calculate color based on numeric mood value (-10 to +10)
   // 5 color levels: Red, Orange, Yellow, Light Green, Green
@@ -28,10 +29,7 @@
   });
 </script>
 
-<a
-  href={`${base}/entry/${entry.id}`}
-  class="flex w-full cursor-pointer items-start overflow-hidden rounded-xl bg-[#f4f3fa] shadow-md transition-shadow hover:shadow-lg"
->
+{#snippet cardContent()}
   <div class="flex flex-1 flex-col gap-1 p-4">
     <div class="flex items-center justify-between">
       <h3 class="text-base font-medium text-gray-900">{entry.title}</h3>
@@ -45,7 +43,7 @@
         <div
           class="flex h-8 items-center gap-2 rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700"
         >
-          <svelte:component this={IconComponent} class="h-4 w-4" strokeWidth={2} />
+          <IconComponent class="h-4 w-4" strokeWidth={2} />
           <span>{label.name}</span>
         </div>
       {/each}
@@ -53,4 +51,17 @@
   </div>
 
   <div class="h-full w-20 {moodColor} border-t border-r border-b"></div>
-</a>
+{/snippet}
+
+{#if clickable}
+  <a
+    href={`${base}/entry/${entry.id}`}
+    class="flex w-full cursor-pointer items-start overflow-hidden rounded-xl bg-[#f4f3fa] shadow-md transition-shadow hover:shadow-lg"
+  >
+    {@render cardContent()}
+  </a>
+{:else}
+  <div class="flex w-full items-start overflow-hidden rounded-xl bg-[#f4f3fa] shadow-md">
+    {@render cardContent()}
+  </div>
+{/if}

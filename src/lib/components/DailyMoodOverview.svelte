@@ -78,7 +78,7 @@
 
     <!-- Entry Card -->
     {#if currentEntry}
-      <MoodEntryCard entry={currentEntry} />
+      <MoodEntryCard entry={currentEntry} clickable={false} />
     {/if}
   </div>
 
