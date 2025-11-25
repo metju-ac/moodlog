@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { base } from '$app/paths';
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
   import { Save, Trash2 } from '@lucide/svelte';
@@ -30,7 +31,7 @@
     const foundReflection = reflectionStore.all.find((r) => r.id === reflectionId);
     if (!foundReflection) {
       // If reflection not found, redirect to home
-      goto('/');
+      goto(`${base}/`);
       return;
     }
 
@@ -66,7 +67,7 @@
     };
 
     reflectionStore.updateReflection(reflection.id, updatedReflection);
-    goto('/');
+    goto(`${base}/`);
   }
 
   function handleDelete() {
@@ -77,7 +78,7 @@
     if (!reflection) return;
     reflectionStore.deleteReflection(reflection.id);
     showDeleteDialog = false;
-    goto('/');
+    goto(`${base}/`);
   }
 
   function cancelDelete() {

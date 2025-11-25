@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { LineChart, Edit3, Tag } from '@lucide/svelte';
   import type { NavigationTab } from '$lib/types';
 
@@ -9,9 +10,9 @@
   let { currentTab = 'reflections' }: Props = $props();
 
   const tabs = [
-    { id: 'insights' as const, label: 'Insights', icon: LineChart, href: '/insights' },
-    { id: 'reflections' as const, label: 'Reflections', icon: Edit3, href: '/' },
-    { id: 'labels' as const, label: 'Labels', icon: Tag, href: '/labels' },
+    { id: 'insights' as const, label: 'Insights', icon: LineChart, href: `${base}/insights` },
+    { id: 'reflections' as const, label: 'Reflections', icon: Edit3, href: `${base}/` },
+    { id: 'labels' as const, label: 'Labels', icon: Tag, href: `${base}/labels` },
   ];
 </script>
 

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
+  import { base } from '$app/paths';
   import { Calendar, ChevronLeft, ChevronRight, Plus } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodEntryCard from '$lib/components/MoodEntryCard.svelte';
@@ -54,15 +56,15 @@
   function handleReflection() {
     if (currentReflection) {
       // Navigate to view/edit reflection page
-      window.location.href = `/reflection/${currentReflection.id}`;
+      goto(`${base}/reflection/${currentReflection.id}`);
     } else {
       // Navigate to create reflection page
-      window.location.href = '/reflection/create';
+      goto(`${base}/reflection/create`);
     }
   }
 
   function addMoodEntry() {
-    window.location.href = '/add';
+    goto(`${base}/add`);
   }
 </script>
 

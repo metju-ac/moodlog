@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { base } from '$app/paths';
   import { onMount } from 'svelte';
   import { Save } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
@@ -20,7 +21,7 @@
     const stored = sessionStorage.getItem('reflectionData');
     if (!stored) {
       // If no data, redirect back to create page
-      goto('/reflection/create');
+      goto(`${base}/reflection/create`);
       return;
     }
 
@@ -46,7 +47,7 @@
     sessionStorage.removeItem('reflectionData');
 
     // Navigate back to main page
-    goto('/');
+    goto(`${base}/`);
   }
 
   const formattedDate = $derived(

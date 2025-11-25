@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { base } from '$app/paths';
   import { ChevronRight } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import ReflectionSliders from '$lib/components/ReflectionSliders.svelte';
@@ -33,7 +34,7 @@
         date: moodEntryStore.selectedDate.toISOString(),
       }),
     );
-    goto('/reflection/notes');
+    goto(`${base}/reflection/notes`);
   }
 </script>
 

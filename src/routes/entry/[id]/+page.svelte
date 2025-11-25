@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { base } from '$app/paths';
   import { page } from '$app/stores';
   import { Save, Trash2 } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
@@ -21,7 +22,7 @@
   // If entry not found, redirect to home
   $effect(() => {
     if (!entry || !entryId) {
-      goto('/');
+      goto(`${base}/`);
     }
   });
 
@@ -74,7 +75,7 @@
       date: entry.date,
     });
 
-    goto('/');
+    goto(`${base}/`);
   }
 
   function handleDelete() {
@@ -84,7 +85,7 @@
   function confirmDelete() {
     moodEntryStore.deleteEntry(entryId);
     showDeleteDialog = false;
-    goto('/');
+    goto(`${base}/`);
   }
 
   function cancelDelete() {

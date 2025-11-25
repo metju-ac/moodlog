@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { base } from '$app/paths';
   import { Save } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodSlider from '$lib/components/MoodSlider.svelte';
@@ -49,7 +50,7 @@
       date: entryDate,
     });
 
-    goto('/');
+    goto(`${base}/`);
   }
 </script>
 
