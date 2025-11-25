@@ -128,7 +128,7 @@
     <div class="flex w-full items-end justify-between py-4">
       <button
         onclick={handleReflection}
-        class="flex items-center justify-center rounded-full px-6 py-4 transition-colors {hasReflection
+        class="fixed bottom-20 left-6 z-50 lex items-center justify-center rounded-full px-6 py-4 transition-colors {hasReflection
           ? 'bg-[#485e92] hover:bg-[#3d4f7a]'
           : 'bg-indigo-100 hover:bg-indigo-200'}"
       >

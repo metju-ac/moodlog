@@ -20,7 +20,7 @@
 <button
   type="button"
   {onclick}
-  class="flex h-14 w-[72px] items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95 {variantClasses}"
+  class="fixed bottom-20 right-6 z-50 flex h-14 w-[72px] items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95 {variantClasses}"
   aria-label={label}
 >
   <svelte:component this={IconComponent} class="h-6 w-6" strokeWidth={2} />
