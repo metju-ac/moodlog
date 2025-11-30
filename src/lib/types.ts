@@ -23,4 +23,4 @@ export type Reflection = {
   notes: string;
 };
 
-export type NavigationTab = 'insights' | 'reflections' | 'labels';
+export type NavigationTab = 'insights' | 'mood-entries' | 'labels';

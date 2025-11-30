@@ -7,11 +7,11 @@
     currentTab?: NavigationTab;
   };
 
-  let { currentTab = 'reflections' }: Props = $props();
+  let { currentTab = 'mood-entries' }: Props = $props();
 
   const tabs = [
     { id: 'insights' as const, label: 'Insights', icon: LineChart, href: `${base}/insights` },
-    { id: 'reflections' as const, label: 'Reflections', icon: Edit3, href: `${base}/` },
+    { id: 'mood-entries' as const, label: 'Mood entries', icon: Edit3, href: `${base}/` },
     { id: 'labels' as const, label: 'Labels', icon: Tag, href: `${base}/labels` },
   ];
 </script>
