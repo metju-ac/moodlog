@@ -124,5 +124,5 @@
     </div>
   </main>
 
-  <Navigation currentTab="reflections" />
+  <Navigation currentTab="mood-entries" />
 </div>
