@@ -29,16 +29,18 @@
     'December',
   ];
 
-  const dayNames = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+  const dayNames = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
   // Get days in month
   function getDaysInMonth(month: number, year: number): number {
     return new Date(year, month + 1, 0).getDate();
   }
 
-  // Get first day of month (0 = Sunday, 6 = Saturday)
+  // Get first day of month (0 = Monday, 6 = Sunday)
   function getFirstDayOfMonth(month: number, year: number): number {
-    return new Date(year, month, 1).getDay();
+    const day = new Date(year, month, 1).getDay();
+    // Convert from Sunday-first (0=Sun) to Monday-first (0=Mon)
+    return day === 0 ? 6 : day - 1;
   }
 
   // Generate calendar grid
