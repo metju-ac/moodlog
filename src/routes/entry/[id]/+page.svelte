@@ -159,7 +159,7 @@
     <div class="flex w-full items-center justify-between pb-4">
       <button
         onclick={handleDelete}
-        class="flex h-14 w-[72px] items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105 hover:bg-red-700 active:scale-95"
+        class="flex h-14 w-[72px] items-center justify-center rounded-full bg-red-700 text-white shadow-lg transition-transform hover:scale-105 hover:bg-red-800 active:scale-95"
         aria-label="Delete mood entry"
       >
         <Trash2 class="h-6 w-6" strokeWidth={2} />
