@@ -79,25 +79,32 @@
         </label>
       </div>
 
-      <p class="text-sm font-medium text-black">How are you feeling?</p>
-      <MoodSlider value={moodValue} onValueChange={(val) => (moodValue = val)} />
+      <!-- Mood Section -->
+      <div class="flex flex-col gap-2">
+        <p class="text-sm font-medium text-black">How are you feeling?</p>
+        <MoodSlider value={moodValue} onValueChange={(val) => (moodValue = val)} />
+      </div>
 
-      <!-- Context Labels -->
-      <div class="flex h-12 w-full flex-wrap items-center gap-1 py-2">
-        {#each labelStore.all as label (label.id)}
-          {@const IconComponent = getIconComponent(label.icon)}
-          <button
-            onclick={() => toggleLabel(label.id)}
-            class="flex h-8 items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors {selectedLabels.has(
-              label.id,
-            )
-              ? 'border-indigo-700 bg-indigo-50 text-indigo-900'
-              : 'border-gray-300 text-gray-700 hover:bg-gray-50'}"
-          >
-            <IconComponent class="h-4 w-4" strokeWidth={2} />
-            <span>{label.name}</span>
-          </button>
-        {/each}
+      <!-- Context Section -->
+      <div class="flex flex-col gap-2">
+        <p class="text-sm font-medium text-black">What's the context?</p>
+        <!-- Context Labels -->
+        <div class="flex w-full flex-wrap items-center gap-1 py-2">
+          {#each labelStore.all as label (label.id)}
+            {@const IconComponent = getIconComponent(label.icon)}
+            <button
+              onclick={() => toggleLabel(label.id)}
+              class="flex h-8 items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors {selectedLabels.has(
+                label.id,
+              )
+                ? 'border-indigo-700 bg-indigo-50 text-indigo-900'
+                : 'border-gray-300 text-gray-700 hover:bg-gray-50'}"
+            >
+              <IconComponent class="h-4 w-4" strokeWidth={2} />
+              <span>{label.name}</span>
+            </button>
+          {/each}
+        </div>
       </div>
 
       <!-- Notes Textarea -->
