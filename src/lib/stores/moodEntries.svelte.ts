@@ -65,7 +65,7 @@ function generateTestData(): MoodEntry[] {
 
   let entryId = 0;
 
-  for (let dayOffset = 0; dayOffset < daysToGenerate; dayOffset++) {
+  for (let dayOffset = 1; dayOffset <= daysToGenerate; dayOffset++) {
     // Base date for this day
     const dayDate = new SvelteDate(today);
     dayDate.setDate(today.getDate() - dayOffset);

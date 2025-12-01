@@ -1,14 +1,15 @@
 import type { Reflection } from '$lib/types';
 import { SvelteDate } from 'svelte/reactivity';
 
-// Generate reflections for today and the day before yesterday
+// Generate reflections for yesterday and 3 days ago
 function generateReflections(): Reflection[] {
-  const today = new SvelteDate();
-  today.setHours(0, 0, 0, 0);
+  const yesterday = new SvelteDate();
+  yesterday.setDate(yesterday.getDate() - 1);
+  yesterday.setHours(0, 0, 0, 0);
 
-  const dayBeforeYesterday = new SvelteDate();
-  dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2);
-  dayBeforeYesterday.setHours(0, 0, 0, 0);
+  const threeDaysAgo = new SvelteDate();
+  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+  threeDaysAgo.setHours(0, 0, 0, 0);
 
   const reflectionNotes = [
     'Had a productive day overall. Managed to balance work and personal time well. Feeling accomplished and ready for tomorrow.',
@@ -22,7 +23,7 @@ function generateReflections(): Reflection[] {
   return [
     {
       id: '1',
-      date: today,
+      date: yesterday,
       sleepQuality: Math.floor(Math.random() * 13) - 6, // Random between -6 and 6
       physicalActivity: Math.floor(Math.random() * 13) - 6,
       socialInteractions: Math.floor(Math.random() * 13) - 6,
@@ -31,7 +32,7 @@ function generateReflections(): Reflection[] {
     },
     {
       id: '2',
-      date: dayBeforeYesterday,
+      date: threeDaysAgo,
       sleepQuality: Math.floor(Math.random() * 13) - 6,
       physicalActivity: Math.floor(Math.random() * 13) - 6,
       socialInteractions: Math.floor(Math.random() * 13) - 6,
