@@ -21,7 +21,7 @@
   <div class="flex flex-1 items-center gap-4 p-4">
     <!-- Icon -->
     <div class="flex h-10 w-10 shrink-0 items-center justify-center overflow-clip rounded-lg">
-      <svelte:component this={IconComponent} class="h-10 w-10 text-[#485e92]" strokeWidth={1.5} />
+      <IconComponent class="h-10 w-10 text-[#485e92]" strokeWidth={1.5} />
     </div>
 
     <!-- Text -->

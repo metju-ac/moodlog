@@ -130,14 +130,14 @@
         onclick={handleReflection}
         class="lex fixed bottom-20 left-6 z-50 items-center justify-center rounded-full px-6 py-4 transition-colors {hasReflection
           ? 'bg-[#485e92] hover:bg-[#3d4f7a]'
-          : 'bg-indigo-100 hover:bg-indigo-200'}"
+          : 'bg-red-700 hover:bg-red-800'}"
       >
         <span
           class="text-base font-medium tracking-[0.15px] {hasReflection
             ? 'text-white'
-            : 'text-indigo-900'}"
+            : 'text-white'}"
         >
-          {hasReflection ? 'Reflection' : 'Start Reflection'}
+          {hasReflection ? 'Reflection' : 'No reflection yet'}
         </span>
       </button>
 

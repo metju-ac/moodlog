@@ -131,7 +131,7 @@
               ? 'border-indigo-700 bg-indigo-50 text-indigo-900'
               : 'border-gray-300 text-gray-700 hover:bg-gray-50'}"
           >
-            <svelte:component this={IconComponent} class="h-4 w-4" strokeWidth={2} />
+            <IconComponent class="h-4 w-4" strokeWidth={2} />
             <span>{label.name}</span>
           </button>
         {/each}
@@ -159,7 +159,7 @@
     <div class="flex w-full items-center justify-between pb-4">
       <button
         onclick={handleDelete}
-        class="flex h-14 w-[72px] items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105 hover:bg-red-700 active:scale-95"
+        class="flex h-14 w-[72px] items-center justify-center rounded-full bg-red-700 text-white shadow-lg transition-transform hover:scale-105 hover:bg-red-800 active:scale-95"
         aria-label="Delete mood entry"
       >
         <Trash2 class="h-6 w-6" strokeWidth={2} />

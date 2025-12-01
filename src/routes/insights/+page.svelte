@@ -197,7 +197,7 @@
             ? 'bg-[#d9dff6] text-[#404659]'
             : 'bg-white text-[#44464f] hover:bg-gray-50'}"
         >
-          <svelte:component this={IconComponent} class="h-4 w-4" strokeWidth={2} />
+          <IconComponent class="h-4 w-4" strokeWidth={2} />
           <span>{label.name}</span>
         </button>
       {/each}

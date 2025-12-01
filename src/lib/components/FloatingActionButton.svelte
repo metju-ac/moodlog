@@ -8,9 +8,7 @@
     variant?: 'primary' | 'success';
   };
 
-  let { icon, onclick, label, variant = 'primary' }: Props = $props();
-
-  const IconComponent = icon;
+  let { icon: IconComponent, onclick, label, variant = 'primary' }: Props = $props();
 
   const variantClasses = $derived(
     variant === 'success' ? 'bg-[#485e92] hover:bg-[#3d4f7a]' : 'bg-[#485e92] hover:bg-[#3d4f7a]',
@@ -23,5 +21,5 @@
   class="fixed right-6 bottom-20 z-50 flex h-14 w-[72px] items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95 {variantClasses}"
   aria-label={label}
 >
-  <svelte:component this={IconComponent} class="h-6 w-6" strokeWidth={2} />
+  <IconComponent class="h-6 w-6" strokeWidth={2} />
 </button>
