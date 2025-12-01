@@ -180,8 +180,7 @@
                 : 'border-gray-200 hover:border-gray-300'}"
               aria-label="Select {iconOption.label} icon"
             >
-              <svelte:component
-                this={IconComponent}
+              <IconComponent
                 class="h-8 w-8 {selectedIcon === iconOption.name
                   ? 'text-[#485e92]'
                   : 'text-gray-600'}"

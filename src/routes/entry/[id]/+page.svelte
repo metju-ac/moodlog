@@ -131,7 +131,7 @@
               ? 'border-indigo-700 bg-indigo-50 text-indigo-900'
               : 'border-gray-300 text-gray-700 hover:bg-gray-50'}"
           >
-            <svelte:component this={IconComponent} class="h-4 w-4" strokeWidth={2} />
+            <IconComponent class="h-4 w-4" strokeWidth={2} />
             <span>{label.name}</span>
           </button>
         {/each}
