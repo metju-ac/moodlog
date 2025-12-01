@@ -69,41 +69,43 @@
 </script>
 
 <div class="flex h-screen flex-col bg-white">
+  <!-- Date Bar - Sticky at top -->
+  <div class="sticky top-0 z-10 bg-white px-4 py-2.5 shadow-sm">
+    <div class="flex items-center justify-between">
+      <h1 class="text-[28px] leading-9 font-normal text-black">
+        {formattedDate}
+      </h1>
+
+      <div class="flex items-center gap-1.5">
+        <button
+          onclick={openDatePicker}
+          class="flex h-12 w-[52px] items-center justify-center rounded-full bg-indigo-100 transition-colors hover:bg-indigo-200"
+          aria-label="Open date picker"
+        >
+          <Calendar class="h-6 w-6 text-indigo-900" />
+        </button>
+
+        <button
+          onclick={previousDay}
+          class="flex h-12 w-[52px] items-center justify-center rounded-full bg-indigo-100 transition-colors hover:bg-indigo-200"
+          aria-label="Previous day"
+        >
+          <ChevronLeft class="h-6 w-6 text-indigo-900" />
+        </button>
+
+        <button
+          onclick={nextDay}
+          class="flex h-12 w-[52px] items-center justify-center rounded-full bg-indigo-100 transition-colors hover:bg-indigo-200"
+          aria-label="Next day"
+        >
+          <ChevronRight class="h-6 w-6 text-indigo-900" />
+        </button>
+      </div>
+    </div>
+  </div>
+
   <main class="flex flex-1 flex-col justify-between overflow-y-auto px-4 py-2.5">
     <div class="flex w-full flex-col">
-      <!-- Date Bar -->
-      <div class="flex items-center justify-between px-0 py-2.5">
-        <h1 class="text-[28px] leading-9 font-normal text-black">
-          {formattedDate}
-        </h1>
-
-        <div class="flex items-center gap-1.5">
-          <button
-            onclick={openDatePicker}
-            class="flex h-12 w-[52px] items-center justify-center rounded-full bg-indigo-100 transition-colors hover:bg-indigo-200"
-            aria-label="Open date picker"
-          >
-            <Calendar class="h-6 w-6 text-indigo-900" />
-          </button>
-
-          <button
-            onclick={previousDay}
-            class="flex h-12 w-[52px] items-center justify-center rounded-full bg-indigo-100 transition-colors hover:bg-indigo-200"
-            aria-label="Previous day"
-          >
-            <ChevronLeft class="h-6 w-6 text-indigo-900" />
-          </button>
-
-          <button
-            onclick={nextDay}
-            class="flex h-12 w-[52px] items-center justify-center rounded-full bg-indigo-100 transition-colors hover:bg-indigo-200"
-            aria-label="Next day"
-          >
-            <ChevronRight class="h-6 w-6 text-indigo-900" />
-          </button>
-        </div>
-      </div>
-
       <!-- Mood Entry Cards -->
       <div class="flex w-full flex-col gap-4">
         {#if moodEntryStore.entries.length === 0}
