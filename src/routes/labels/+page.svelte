@@ -174,7 +174,7 @@
             <button
               type="button"
               onclick={() => (selectedIcon = iconOption.name)}
-              class="flex flex-col items-center justify-center gap-2 rounded-xl border-2 p-4 transition-all {selectedIcon ===
+              class="flex flex-col items-center justify-center rounded-xl border-2 p-4 transition-all {selectedIcon ===
               iconOption.name
                 ? 'border-[#485e92] bg-[#d9dff6]'
                 : 'border-gray-200 hover:border-gray-300'}"
@@ -186,7 +186,6 @@
                   : 'text-gray-600'}"
                 strokeWidth={1.5}
               />
-              <span class="text-center text-xs text-gray-600">{iconOption.label}</span>
             </button>
           {/each}
         </div>
