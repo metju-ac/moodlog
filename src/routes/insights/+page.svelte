@@ -207,14 +207,6 @@
     <Card.Root class="w-full">
       <Card.Header>
         <Card.Title class="text-2xl">Average Mood</Card.Title>
-        <Card.Description>
-          {#if chartData.length > 0}
-            Showing {chartData.length} data {chartData.length === 1 ? 'point' : 'points'} with {filteredEntries.length}
-            {filteredEntries.length === 1 ? 'entry' : 'entries'}
-          {:else}
-            No mood entries found for the selected criteria
-          {/if}
-        </Card.Description>
       </Card.Header>
       <Card.Content>
         {#if chartData.length > 0}
