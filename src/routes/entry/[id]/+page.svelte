@@ -9,6 +9,7 @@
   import DeleteDialog from '$lib/components/DeleteDialog.svelte';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
   import { labelStore } from '$lib/stores/labels.svelte';
+  import { showToast } from '$lib/components/Toast.svelte';
   import { getIconComponent } from '$lib/utils';
   import { SvelteSet } from 'svelte/reactivity';
 
@@ -75,6 +76,7 @@
       date: entry.date,
     });
 
+    showToast('Mood entry updated', 'success');
     goto(`${base}/`);
   }
 
@@ -85,6 +87,7 @@
   function confirmDelete() {
     moodEntryStore.deleteEntry(entryId);
     showDeleteDialog = false;
+    showToast('Mood entry deleted', 'success');
     goto(`${base}/`);
   }
 

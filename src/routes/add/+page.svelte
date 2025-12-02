@@ -7,6 +7,7 @@
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
   import { labelStore } from '$lib/stores/labels.svelte';
+  import { showToast } from '$lib/components/Toast.svelte';
   import { getIconComponent } from '$lib/utils';
   import { SvelteDate, SvelteSet } from 'svelte/reactivity';
 
@@ -50,6 +51,7 @@
       date: entryDate,
     });
 
+    showToast('Mood entry created', 'success');
     goto(`${base}/`);
   }
 </script>
