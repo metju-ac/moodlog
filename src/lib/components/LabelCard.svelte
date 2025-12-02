@@ -33,22 +33,24 @@
   </div>
 
   <!-- Actions -->
-  <div class="flex h-full items-center justify-between px-2 py-6">
+  <div class="flex h-full items-center gap-3 px-3 py-4">
     <button
       type="button"
       onclick={() => onEdit(label)}
-      class="flex h-6 w-6 items-center justify-center text-[#1d1b20] transition-opacity hover:opacity-70"
+      class="flex h-10 items-center gap-1.5 rounded-full bg-[#d9dff6] px-3 text-[#485e92] transition-all hover:bg-[#c5cbe8] active:scale-95"
       aria-label="Edit {label.name}"
     >
-      <Pencil class="h-6 w-6" />
+      <Pencil class="h-4 w-4" strokeWidth={2} />
+      <span class="text-sm font-medium">Edit</span>
     </button>
     <button
       type="button"
       onclick={() => onDelete(label.id)}
-      class="flex h-6 w-6 items-center justify-center text-[#1d1b20] transition-opacity hover:opacity-70"
+      class="flex h-10 items-center gap-1.5 rounded-full bg-rose-100 px-3 text-rose-600 transition-all hover:bg-rose-200 active:scale-95"
       aria-label="Delete {label.name}"
     >
-      <Trash2 class="h-6 w-6" />
+      <Trash2 class="h-4 w-4" strokeWidth={2} />
+      <span class="text-sm font-medium">Delete</span>
     </button>
   </div>
 </div>
