@@ -67,13 +67,6 @@
 <Card.Root class="w-full">
   <Card.Header>
     <Card.Title>Daily Mood Overview</Card.Title>
-    <Card.Description>
-      {#if chartData.length > 0}
-        Showing {chartData.length} mood {chartData.length === 1 ? 'entry' : 'entries'} for today
-      {:else}
-        No mood entries recorded yet
-      {/if}
-    </Card.Description>
   </Card.Header>
   <Card.Content>
     {#if chartData.length > 0}
