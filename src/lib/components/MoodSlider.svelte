@@ -7,9 +7,10 @@
     onValueChange: (value: number) => void;
     labels: string[]; // Array of label texts to distribute evenly
     snapToCenter?: boolean; // Whether to snap to center (neutral zone)
+    disabled?: boolean; // Whether the slider is disabled
   };
 
-  let { value = 0, onValueChange, labels, snapToCenter = true }: Props = $props();
+  let { value = 0, onValueChange, labels, snapToCenter = true, disabled = false }: Props = $props();
 
   // Convert slider value (-100 to 100) to mood level (-10 to 10)
   const moodLevel = $derived(value / 10);
@@ -18,4 +19,4 @@
   const moodColor = $derived(getMoodColorGradient(moodLevel));
 </script>
 
-<Slider {value} {onValueChange} {labels} {snapToCenter} color={moodColor} />
+<Slider {value} {onValueChange} {labels} {snapToCenter} {disabled} color={moodColor} />

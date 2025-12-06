@@ -3,7 +3,7 @@
   import { base } from '$app/paths';
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
-  import { Save, Trash2 } from '@lucide/svelte';
+  import { Save, Trash2, Edit, X } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import ReflectionSliders from '$lib/components/ReflectionSliders.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
@@ -26,6 +26,9 @@
 
   // Delete dialog state
   let showDeleteDialog = $state(false);
+
+  // Edit mode state
+  let isEditMode = $state(false);
 
   // Load reflection data
   onMount(() => {
@@ -55,6 +58,21 @@
       : '',
   );
 
+  function handleEdit() {
+    isEditMode = true;
+  }
+
+  function handleCancel() {
+    if (!reflection) return;
+    // Reset all values to original reflection data
+    notes = reflection.notes;
+    sleepQuality = reflection.sleepQuality * 10;
+    physicalActivity = reflection.physicalActivity * 10;
+    socialInteractions = reflection.socialInteractions * 10;
+    pressure = reflection.pressure * 10;
+    isEditMode = false;
+  }
+
   function handleSave() {
     if (!reflection) return;
 
@@ -68,7 +86,10 @@
     };
 
     reflectionStore.updateReflection(reflection.id, updatedReflection);
+
     showToast('Reflection updated', 'success');
+    isEditMode = false;
+
     goto(`${base}/`);
   }
 
@@ -112,7 +133,8 @@
           id="reflection-notes"
           placeholder="Write your thoughts about today..."
           rows="8"
-          class="w-full resize-none rounded border-[3px] border-indigo-700 px-4 py-3 text-base text-gray-900 transition-colors outline-none focus:border-indigo-800"
+          disabled={!isEditMode}
+          class="w-full resize-none rounded border-[3px] border-indigo-700 px-4 py-3 text-base text-gray-900 transition-colors outline-none focus:border-indigo-800 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-700"
         ></textarea>
         <label
           for="reflection-notes"
@@ -129,6 +151,7 @@
           {physicalActivity}
           {socialInteractions}
           {pressure}
+          disabled={!isEditMode}
           onSleepQualityChange={(val) => (sleepQuality = val)}
           onPhysicalActivityChange={(val) => (physicalActivity = val)}
           onSocialInteractionsChange={(val) => (socialInteractions = val)}
@@ -138,15 +161,27 @@
     </div>
 
     <!-- Floating Action Buttons -->
-    <FloatingActionButton
-      icon={Trash2}
-      onclick={handleDelete}
-      label="Delete reflection"
-      variant="danger"
-      position="left"
-    />
+    {#if isEditMode}
+      <FloatingActionButton
+        icon={X}
+        onclick={handleCancel}
+        label="Cancel editing"
+        variant="secondary"
+        position="left"
+      />
 
-    <FloatingActionButton icon={Save} onclick={handleSave} label="Save reflection" />
+      <FloatingActionButton icon={Save} onclick={handleSave} label="Save reflection" />
+    {:else}
+      <FloatingActionButton
+        icon={Trash2}
+        onclick={handleDelete}
+        label="Delete reflection"
+        variant="danger"
+        position="left"
+      />
+
+      <FloatingActionButton icon={Edit} onclick={handleEdit} label="Edit reflection" />
+    {/if}
   </main>
 
   <Navigation currentTab="mood-entries" />
