@@ -56,6 +56,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>Add Mood Entry - MoodLog</title>
+</svelte:head>
+
 <div class="flex h-screen flex-col bg-white">
   <main class="flex flex-1 flex-col justify-between overflow-y-auto px-4 py-2.5">
     <div class="flex w-full flex-col gap-5 pt-2.5 pb-4">
