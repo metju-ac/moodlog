@@ -44,6 +44,13 @@
     }
   }
 
+  function handlePointClick(entryId: string) {
+    const index = dayEntries.findIndex((entry) => entry.id === entryId);
+    if (index !== -1) {
+      currentEntryIndex = index;
+    }
+  }
+
   // Reset index when date changes
   $effect(() => {
     void date; // Track date changes
@@ -52,38 +59,49 @@
 </script>
 
 {#if hasEntries}
-  <!-- Daily Card Preview -->
-  <div class="flex w-full flex-col items-end gap-2.5">
-    <!-- Navigation Arrows -->
-    <div class="flex gap-1.5">
-      <button
-        type="button"
-        onclick={previousEntry}
-        disabled={!canGoPrevious}
-        class="flex h-12 w-[52px] items-center justify-center rounded-full bg-[#d9dff6] transition-colors hover:bg-[#c5cbe8] disabled:cursor-not-allowed disabled:opacity-50"
-        aria-label="Previous entry"
-      >
-        <ChevronLeft class="h-6 w-6 text-[#404659]" strokeWidth={2} />
-      </button>
-      <button
-        type="button"
-        onclick={nextEntry}
-        disabled={!canGoNext}
-        class="flex h-12 w-[52px] items-center justify-center rounded-full bg-[#d9dff6] transition-colors hover:bg-[#c5cbe8] disabled:cursor-not-allowed disabled:opacity-50"
-        aria-label="Next entry"
-      >
-        <ChevronRight class="h-6 w-6 text-[#404659]" strokeWidth={2} />
-      </button>
+  <div class="flex w-full flex-col gap-4">
+    <!-- Mood Graph -->
+    <div class="w-full">
+      <MoodGraph
+        entries={dayEntries}
+        selectedEntryId={currentEntry?.id}
+        onPointClick={handlePointClick}
+      />
     </div>
 
     <!-- Entry Card -->
     {#if currentEntry}
       <MoodEntryCard entry={currentEntry} clickable={false} />
     {/if}
-  </div>
 
-  <!-- Mood Graph -->
-  <div class="w-full">
-    <MoodGraph entries={dayEntries} selectedEntryId={currentEntry?.id} />
+    <!-- Card Counter and Navigation -->
+    <div class="flex w-full items-center justify-between">
+      <!-- Card Counter Text -->
+      <p class="text-sm text-gray-600">
+        Entry {currentEntryIndex + 1} of {dayEntries.length}
+      </p>
+
+      <!-- Navigation Buttons -->
+      <div class="flex gap-1.5">
+        <button
+          type="button"
+          onclick={previousEntry}
+          disabled={!canGoPrevious}
+          class="flex h-12 w-[52px] items-center justify-center rounded-full bg-[#d9dff6] transition-colors hover:bg-[#c5cbe8] disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label="Previous entry"
+        >
+          <ChevronLeft class="h-6 w-6 text-[#404659]" strokeWidth={2} />
+        </button>
+        <button
+          type="button"
+          onclick={nextEntry}
+          disabled={!canGoNext}
+          class="flex h-12 w-[52px] items-center justify-center rounded-full bg-[#d9dff6] transition-colors hover:bg-[#c5cbe8] disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label="Next entry"
+        >
+          <ChevronRight class="h-6 w-6 text-[#404659]" strokeWidth={2} />
+        </button>
+      </div>
+    </div>
   </div>
 {/if}
