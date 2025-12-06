@@ -1,5 +1,5 @@
 <script lang="ts">
-  import MoodSlider from './MoodSlider.svelte';
+  import Slider from './Slider.svelte';
 
   type Props = {
     sleepQuality: number;
@@ -28,7 +28,7 @@
   <!-- Sleep Quality -->
   <div class="flex flex-col gap-1">
     <p class="text-sm font-medium text-black">How was your sleep?</p>
-    <MoodSlider
+    <Slider
       value={sleepQuality}
       onValueChange={onSleepQualityChange}
       labels={['Very poor', 'Excellent']}
@@ -39,7 +39,7 @@
   <!-- Physical Activity -->
   <div class="flex flex-col gap-1">
     <p class="text-sm font-medium text-black">How physically active were you?</p>
-    <MoodSlider
+    <Slider
       value={physicalActivity}
       onValueChange={onPhysicalActivityChange}
       labels={['Sedentary', 'Intense']}
@@ -50,7 +50,7 @@
   <!-- Social Interactions -->
   <div class="flex flex-col gap-1">
     <p class="text-sm font-medium text-black">How were your social interactions?</p>
-    <MoodSlider
+    <Slider
       value={socialInteractions}
       onValueChange={onSocialInteractionsChange}
       labels={['Draining', 'Energizing']}
@@ -61,7 +61,7 @@
   <!-- Pressure -->
   <div class="flex flex-col gap-1">
     <p class="text-sm font-medium text-black">Work/School pressure level?</p>
-    <MoodSlider
+    <Slider
       value={pressure}
       onValueChange={onPressureChange}
       labels={['None', 'Overwhelming']}
