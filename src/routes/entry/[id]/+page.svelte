@@ -122,7 +122,11 @@
       <!-- Mood Section -->
       <div class="flex flex-col gap-2">
         <p class="text-sm font-medium text-black">How are you feeling?</p>
-        <MoodSlider value={moodValue} onValueChange={(val) => (moodValue = val)} />
+        <MoodSlider
+          value={moodValue}
+          onValueChange={(val) => (moodValue = val)}
+          labels={['Negative', 'Neutral', 'Positive']}
+        />
       </div>
 
       <!-- Context Section -->

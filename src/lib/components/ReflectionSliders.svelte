@@ -31,8 +31,7 @@
     <MoodSlider
       value={sleepQuality}
       onValueChange={onSleepQualityChange}
-      leftLabel="Very poor"
-      rightLabel="Excellent"
+      labels={['Very poor', 'Excellent']}
       snapToCenter={false}
     />
   </div>
@@ -43,8 +42,7 @@
     <MoodSlider
       value={physicalActivity}
       onValueChange={onPhysicalActivityChange}
-      leftLabel="Sedentary"
-      rightLabel="Intense"
+      labels={['Sedentary', 'Intense']}
       snapToCenter={false}
     />
   </div>
@@ -55,8 +53,7 @@
     <MoodSlider
       value={socialInteractions}
       onValueChange={onSocialInteractionsChange}
-      leftLabel="Draining"
-      rightLabel="Energizing"
+      labels={['Draining', 'Energizing']}
       snapToCenter={false}
     />
   </div>
@@ -67,8 +64,7 @@
     <MoodSlider
       value={pressure}
       onValueChange={onPressureChange}
-      leftLabel="None"
-      rightLabel="Overwhelming"
+      labels={['None', 'Overwhelming']}
       snapToCenter={false}
     />
   </div>

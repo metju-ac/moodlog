@@ -2,18 +2,24 @@
   type Props = {
     value: number; // -100 to 100
     onValueChange: (value: number) => void;
-    leftLabel?: string;
-    rightLabel?: string;
+    labels: string[]; // Array of label texts to distribute evenly
     snapToCenter?: boolean; // Whether to snap to center (neutral zone)
   };
 
-  let {
-    value = 0,
-    onValueChange,
-    leftLabel = 'Negative',
-    rightLabel = 'Positive',
-    snapToCenter = true,
-  }: Props = $props();
+  let { value = 0, onValueChange, labels, snapToCenter = true }: Props = $props();
+
+  // Calculate evenly distributed positions for labels
+  const labelPositions = $derived(
+    labels.map((text, index) => {
+      const position =
+        index === 0
+          ? -100
+          : index === labels.length - 1
+            ? 100
+            : -100 + (200 / (labels.length - 1)) * index;
+      return { text, position };
+    }),
+  );
 
   let isDragging = $state(false);
   let sliderRef: HTMLDivElement;
@@ -66,9 +72,8 @@
     onValueChange(Math.round(newValue));
   }
 
-  // Snap to neutral zone (-10 to 10)
   function snapToCenterValue(val: number): number {
-    if (val >= -10 && val <= 10) {
+    if (val >= -5 && val <= 5) {
       return 0;
     }
     return val;
@@ -86,9 +91,20 @@
 
 <div class="flex w-full flex-col gap-2">
   <!-- Labels -->
-  <div class="flex items-center justify-between px-2.5 text-xs font-medium text-black">
-    <span>{leftLabel}</span>
-    <span>{rightLabel}</span>
+  <div class="relative w-full px-2.5 text-xs font-medium text-black" style="height: 20px;">
+    {#each labelPositions as label (label.position)}
+      {@const labelPercentage = (label.position + 100) / 2}
+      {@const isLeftEdge = label.position === -100}
+      {@const isRightEdge = label.position === 100}
+      {@const translateClass = isLeftEdge
+        ? ''
+        : isRightEdge
+          ? '-translate-x-full'
+          : '-translate-x-1/2'}
+      <span class="absolute whitespace-nowrap {translateClass}" style="left: {labelPercentage}%">
+        {label.text}
+      </span>
+    {/each}
   </div>
 
   <!-- Slider Track -->
@@ -132,14 +148,6 @@
         ? 'shadow-[0_0_0_2px_white,0_4px_6px_-1px_rgba(0,0,0,0.1)]'
         : ''}"
       style="left: {percentage}%"
-    ></div>
-
-    <!-- Stop indicators -->
-    <div
-      class="pointer-events-none absolute top-1/2 left-3 h-1 w-1 -translate-y-1/2 rounded-full bg-indigo-900"
-    ></div>
-    <div
-      class="pointer-events-none absolute top-1/2 right-3 h-1 w-1 -translate-y-1/2 rounded-full bg-indigo-900"
     ></div>
   </div>
 </div>
