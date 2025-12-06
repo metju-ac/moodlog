@@ -21,6 +21,8 @@ import {
   Camera,
   type Icon,
 } from '@lucide/svelte';
+import { SvelteMap } from 'svelte/reactivity';
+import type { MoodEntry } from './types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -139,4 +141,50 @@ export function getMoodColorGradient(moodLevel: number): string {
   }
 
   return MOOD_COLOR_LEVELS[MOOD_COLOR_LEVELS.length - 1].color;
+}
+
+/**
+ * Group mood entries by day
+ *
+ * @param entries - Array of mood entries to group
+ * @returns Map where keys are date strings (YYYY-MM-DD) and values are arrays of entries for that day
+ */
+export function groupEntriesByDay(entries: MoodEntry[]): SvelteMap<string, MoodEntry[]> {
+  const dayMap = new SvelteMap<string, MoodEntry[]>();
+
+  entries.forEach((entry) => {
+    const dateKey = entry.date.toISOString().split('T')[0];
+    if (!dayMap.has(dateKey)) {
+      dayMap.set(dateKey, []);
+    }
+    dayMap.get(dateKey)!.push(entry);
+  });
+
+  return dayMap;
+}
+
+export type DayAverage = {
+  date: Date;
+  averageMood: number;
+  entryCount: number;
+};
+
+/**
+ * Calculate average mood per day from grouped entries
+ *
+ * @param dayMap - Map of date strings to mood entries
+ * @returns Array of day averages sorted by date
+ */
+export function calculateDayAverages(dayMap: SvelteMap<string, MoodEntry[]>): DayAverage[] {
+  return Array.from(dayMap.entries())
+    .map(([dateKey, dayEntries]) => {
+      const averageMood =
+        dayEntries.reduce((sum, entry) => sum + entry.moodLevel, 0) / dayEntries.length;
+      return {
+        date: new Date(dateKey + 'T12:00:00'),
+        averageMood,
+        entryCount: dayEntries.length,
+      };
+    })
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
 }

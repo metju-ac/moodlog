@@ -6,8 +6,9 @@
   import { SvelteDate, SvelteMap, SvelteSet } from 'svelte/reactivity';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
   import { labelStore } from '$lib/stores/labels.svelte';
-  import { getIconComponent } from '$lib/utils';
+  import { getIconComponent, groupEntriesByDay, calculateDayAverages } from '$lib/utils';
   import Navigation from '$lib/components/Navigation.svelte';
+  import HighlightsCard from '$lib/components/HighlightsCard.svelte';
   import type { MoodEntry } from '$lib/types';
 
   type TimeRange = 'week' | 'month' | '3months' | 'year';
@@ -64,28 +65,8 @@
     const groupByDay = selectedTimeRange === 'week' || selectedTimeRange === 'month';
 
     if (groupByDay) {
-      // Group by day
-      const dayMap = new SvelteMap<string, MoodEntry[]>();
-
-      filteredEntries.forEach((entry) => {
-        const dateKey = entry.date.toISOString().split('T')[0];
-        if (!dayMap.has(dateKey)) {
-          dayMap.set(dateKey, []);
-        }
-        dayMap.get(dateKey)!.push(entry);
-      });
-
-      return Array.from(dayMap.entries())
-        .map(([dateKey, entries]) => {
-          const averageMood =
-            entries.reduce((sum, entry) => sum + entry.moodLevel, 0) / entries.length;
-          return {
-            date: new Date(dateKey + 'T12:00:00'),
-            averageMood,
-            entryCount: entries.length,
-          };
-        })
-        .sort((a, b) => a.date.getTime() - b.date.getTime());
+      const dayMap = groupEntriesByDay(filteredEntries);
+      return calculateDayAverages(dayMap);
     } else {
       // Group by week
       const weekMap = new SvelteMap<string, MoodEntry[]>();
@@ -102,17 +83,7 @@
         weekMap.get(weekKey)!.push(entry);
       });
 
-      return Array.from(weekMap.entries())
-        .map(([weekKey, entries]) => {
-          const averageMood =
-            entries.reduce((sum, entry) => sum + entry.moodLevel, 0) / entries.length;
-          return {
-            date: new Date(weekKey + 'T12:00:00'),
-            averageMood,
-            entryCount: entries.length,
-          };
-        })
-        .sort((a, b) => a.date.getTime() - b.date.getTime());
+      return calculateDayAverages(weekMap);
     }
   });
 
@@ -202,6 +173,9 @@
         </button>
       {/each}
     </div>
+
+    <!-- Highlights Card -->
+    <HighlightsCard entries={filteredEntries} />
 
     <!-- Average Mood Chart -->
     <Card.Root class="w-full">
