@@ -10,7 +10,7 @@
 
   let { entry, clickable = true }: Props = $props();
 
-  const moodColor = $derived(`bg-[${getMoodColor(entry.moodLevel)}]`);
+  const moodColor = $derived(getMoodColor(entry.moodLevel));
 
   // Format time as HH:mm
   const formattedTime = $derived.by(() => {
@@ -41,18 +41,21 @@
     </div>
   </div>
 
-  <div class="h-full w-20 {moodColor} border-t border-r border-b"></div>
+  <div
+    class="w-20 flex-shrink-0 border-t border-r border-b"
+    style="background-color: {moodColor};"
+  ></div>
 {/snippet}
 
 {#if clickable}
   <a
     href={`${base}/entry/${entry.id}`}
-    class="flex w-full cursor-pointer items-start overflow-hidden rounded-xl bg-[#f4f3fa] shadow-md transition-shadow hover:shadow-lg"
+    class="flex w-full cursor-pointer items-stretch overflow-hidden rounded-xl bg-[#f4f3fa] shadow-md transition-shadow hover:shadow-lg"
   >
     {@render cardContent()}
   </a>
 {:else}
-  <div class="flex w-full items-start overflow-hidden rounded-xl bg-[#f4f3fa] shadow-md">
+  <div class="flex w-full items-stretch overflow-hidden rounded-xl bg-[#f4f3fa] shadow-md">
     {@render cardContent()}
   </div>
 {/if}
