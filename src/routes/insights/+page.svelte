@@ -8,6 +8,7 @@
   import { labelStore } from '$lib/stores/labels.svelte';
   import { getIconComponent } from '$lib/utils';
   import Navigation from '$lib/components/Navigation.svelte';
+  import HighlightsCard from '$lib/components/HighlightsCard.svelte';
   import type { MoodEntry } from '$lib/types';
 
   type TimeRange = 'week' | 'month' | '3months' | 'year';
@@ -202,6 +203,9 @@
         </button>
       {/each}
     </div>
+
+    <!-- Highlights Card -->
+    <HighlightsCard entries={filteredEntries} />
 
     <!-- Average Mood Chart -->
     <Card.Root class="w-full">
