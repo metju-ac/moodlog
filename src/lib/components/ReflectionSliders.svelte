@@ -6,6 +6,7 @@
     physicalActivity: number;
     socialInteractions: number;
     pressure: number;
+    disabled?: boolean;
     onSleepQualityChange: (value: number) => void;
     onPhysicalActivityChange: (value: number) => void;
     onSocialInteractionsChange: (value: number) => void;
@@ -17,6 +18,7 @@
     physicalActivity,
     socialInteractions,
     pressure,
+    disabled = false,
     onSleepQualityChange,
     onPhysicalActivityChange,
     onSocialInteractionsChange,
@@ -33,6 +35,7 @@
       onValueChange={onSleepQualityChange}
       labels={['Very poor', 'Excellent']}
       snapToCenter={false}
+      {disabled}
     />
   </div>
 
@@ -44,6 +47,7 @@
       onValueChange={onPhysicalActivityChange}
       labels={['Sedentary', 'Intense']}
       snapToCenter={false}
+      {disabled}
     />
   </div>
 
@@ -55,6 +59,7 @@
       onValueChange={onSocialInteractionsChange}
       labels={['Draining', 'Energizing']}
       snapToCenter={false}
+      {disabled}
     />
   </div>
 
@@ -66,6 +71,7 @@
       onValueChange={onPressureChange}
       labels={['None', 'Overwhelming']}
       snapToCenter={false}
+      {disabled}
     />
   </div>
 </div>

@@ -5,6 +5,7 @@
     labels: string[]; // Array of label texts to distribute evenly
     snapToCenter?: boolean; // Whether to snap to center (neutral zone)
     color?: string; // Color for the slider (default indigo)
+    disabled?: boolean; // Whether the slider is disabled
   };
 
   let {
@@ -13,6 +14,7 @@
     labels,
     snapToCenter = true,
     color = '#485e92',
+    disabled = false,
   }: Props = $props();
 
   // Calculate evenly distributed positions for labels
@@ -35,6 +37,7 @@
   const percentage = $derived((value + 100) / 2);
 
   function handleMouseDown(event: MouseEvent) {
+    if (disabled) return;
     isDragging = true;
     updateValue(event.clientX);
     document.addEventListener('mousemove', handleMouseMove);
@@ -54,6 +57,7 @@
   }
 
   function handleTouchStart(event: TouchEvent) {
+    if (disabled) return;
     isDragging = true;
     updateValue(event.touches[0].clientX);
   }
@@ -117,12 +121,15 @@
   <!-- Slider Track -->
   <div
     bind:this={sliderRef}
-    class="relative h-14 w-full cursor-pointer touch-none"
+    class="relative h-14 w-full touch-none {disabled
+      ? 'cursor-not-allowed opacity-60'
+      : 'cursor-pointer'}"
     role="slider"
-    tabindex="0"
+    tabindex={disabled ? -1 : 0}
     aria-valuemin="-100"
     aria-valuemax="100"
     aria-valuenow={value}
+    aria-disabled={disabled}
     onmousedown={handleMouseDown}
     ontouchstart={handleTouchStart}
     ontouchmove={handleTouchMove}

@@ -6,7 +6,7 @@
     label: string;
     icon?: typeof Icon;
     text?: string;
-    variant?: 'primary' | 'danger';
+    variant?: 'primary' | 'danger' | 'secondary';
     position?: 'left' | 'right';
   };
 
@@ -19,9 +19,13 @@
     position = 'right',
   }: Props = $props();
 
-  const variantClasses = $derived(
-    variant === 'danger' ? 'bg-[#914b43] hover:bg-[#9e372c]' : 'bg-[#485e92] hover:bg-[#3d4f7a]',
-  );
+  const variantMap = {
+    primary: 'bg-[#485e92] hover:bg-[#3d4f7a]',
+    danger: 'bg-[#914b43] hover:bg-[#9e372c]',
+    secondary: 'bg-[#6b7280] hover:bg-[#4b5563]',
+  };
+
+  const variantClasses = $derived(variantMap[variant]);
 
   const positionClasses = $derived(position === 'left' ? 'left-6' : 'right-6');
 </script>
