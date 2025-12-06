@@ -104,9 +104,9 @@
 
 <div class="flex min-h-screen flex-col bg-white">
   <!-- Main Content -->
-  <main class="flex flex-1 flex-col items-end justify-between px-4 py-3 pb-6">
+  <main class="flex flex-1 flex-col items-end overflow-y-auto px-4 py-3">
     <!-- Label Cards -->
-    <div class="flex w-full flex-col gap-4 py-3">
+    <div class="flex w-full flex-col gap-4 pt-3 pb-24">
       {#each labelStore.all as label (label.id)}
         <LabelCard {label} onEdit={openEditDialog} onDelete={deleteLabel} />
       {/each}
