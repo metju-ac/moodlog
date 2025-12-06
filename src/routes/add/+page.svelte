@@ -69,20 +69,15 @@
       </h1>
 
       <!-- Title Input -->
-      <div class="relative w-full">
+      <div class="flex flex-col gap-2">
+        <p class="text-sm font-medium text-black">What happened?</p>
         <input
           bind:value={title}
           type="text"
           id="title-input"
-          placeholder="Input"
+          placeholder="Brief description..."
           class="h-14 w-full rounded border-[3px] border-indigo-700 px-4 text-base text-gray-900 transition-colors outline-none focus:border-indigo-800"
         />
-        <label
-          for="title-input"
-          class="absolute -top-2.5 left-3 bg-white px-1 text-xs text-indigo-700"
-        >
-          Title
-        </label>
       </div>
 
       <!-- Mood Section -->
@@ -118,20 +113,15 @@
       </div>
 
       <!-- Notes Textarea -->
-      <div class="relative w-full">
+      <div class="flex flex-col gap-2">
+        <p class="text-sm font-medium text-black">Any additional thoughts?</p>
         <textarea
           bind:value={description}
           id="notes-textarea"
-          placeholder="Input"
+          placeholder="Add any details..."
           rows="12"
           class="w-full resize-none rounded border-[3px] border-indigo-700 px-4 py-3 text-base text-gray-900 transition-colors outline-none focus:border-indigo-800"
         ></textarea>
-        <label
-          for="notes-textarea"
-          class="absolute -top-2.5 left-3 bg-white px-1 text-xs text-indigo-700"
-        >
-          Notes for this entry
-        </label>
       </div>
     </div>
 
