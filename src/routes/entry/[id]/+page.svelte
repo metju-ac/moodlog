@@ -101,8 +101,8 @@
 </svelte:head>
 
 <div class="flex h-screen flex-col bg-white">
-  <main class="flex flex-1 flex-col justify-between overflow-y-auto px-4 py-2.5">
-    <div class="flex w-full flex-col gap-5 pt-2.5 pb-4">
+`  <main class="flex flex-1 flex-col overflow-y-auto px-4 py-2.5">
+    <div class="flex w-full flex-col gap-5 pt-2.5 pb-24">
       <!-- Title -->
       <h1 class="text-center text-[22px] leading-7 font-normal text-black">Edit your mood entry</h1>
 
@@ -173,18 +173,16 @@
       </div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="flex w-full items-center justify-between pb-4">
-      <button
-        onclick={handleDelete}
-        class="flex h-14 w-[72px] items-center justify-center rounded-full bg-red-700 text-white shadow-lg transition-transform hover:scale-105 hover:bg-red-800 active:scale-95"
-        aria-label="Delete mood entry"
-      >
-        <Trash2 class="h-6 w-6" strokeWidth={2} />
-      </button>
+    <!-- Floating Action Buttons -->
+    <FloatingActionButton
+      icon={Trash2}
+      onclick={handleDelete}
+      label="Delete mood entry"
+      variant="danger"
+      position="left"
+    />
 
-      <FloatingActionButton icon={Save} onclick={handleSave} label="Save mood entry" />
-    </div>
+    <FloatingActionButton icon={Save} onclick={handleSave} label="Save mood entry" />
   </main>
 
   <Navigation currentTab="mood-entries" />

@@ -108,8 +108,8 @@
     </div>
   </div>
 
-  <main class="flex flex-1 flex-col justify-between overflow-y-auto px-4 py-2.5">
-    <div class="flex w-full flex-col">
+  <main class="flex flex-1 flex-col overflow-y-auto px-4 py-2.5">
+    <div class="flex w-full flex-col pb-24">
       <!-- Mood Entry Cards -->
       <div class="flex w-full flex-col gap-4">
         {#if moodEntryStore.entries.length === 0}
@@ -130,25 +130,16 @@
       </div>
     </div>
 
-    <!-- Bottom Buttons -->
-    <div class="flex w-full items-end justify-between py-4">
-      <button
-        onclick={handleReflection}
-        class="lex fixed bottom-20 left-6 z-50 items-center justify-center rounded-full px-6 py-4 transition-colors {hasReflection
-          ? 'bg-[#485e92] hover:bg-[#3d4f7a]'
-          : 'bg-red-700 hover:bg-red-800'}"
-      >
-        <span
-          class="text-base font-medium tracking-[0.15px] {hasReflection
-            ? 'text-white'
-            : 'text-white'}"
-        >
-          {hasReflection ? 'Reflection' : 'No reflection yet'}
-        </span>
-      </button>
+    <!-- Floating Action Buttons -->
+    <FloatingActionButton
+      onclick={handleReflection}
+      label={hasReflection ? 'View reflection' : 'Add reflection'}
+      text={hasReflection ? 'Reflection' : 'No reflection yet'}
+      variant={hasReflection ? 'primary' : 'danger'}
+      position="left"
+    />
 
-      <FloatingActionButton icon={Plus} onclick={addMoodEntry} label="Add mood entry" />
-    </div>
+    <FloatingActionButton icon={Plus} onclick={addMoodEntry} label="Add mood entry" />
   </main>
 
   <Navigation currentTab="mood-entries" />
