@@ -7,6 +7,7 @@
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
   import DailyMoodOverview from '$lib/components/DailyMoodOverview.svelte';
   import { reflectionStore } from '$lib/stores/reflections.svelte';
+  import { showToast } from '$lib/components/Toast.svelte';
 
   let notes = $state('');
   let reflectionData = $state<{
@@ -45,6 +46,8 @@
 
     // Clear session storage
     sessionStorage.removeItem('reflectionData');
+
+    showToast('Reflection created', 'success');
 
     // Navigate back to main page
     goto(`${base}/`);
