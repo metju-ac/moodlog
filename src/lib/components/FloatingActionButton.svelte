@@ -2,24 +2,42 @@
   import type { Icon } from '@lucide/svelte';
 
   type Props = {
-    icon: typeof Icon;
     onclick: () => void;
     label: string;
-    variant?: 'primary' | 'success';
+    icon?: typeof Icon;
+    text?: string;
+    variant?: 'primary' | 'danger';
+    position?: 'left' | 'right';
   };
 
-  let { icon: IconComponent, onclick, label, variant = 'primary' }: Props = $props();
+  let {
+    onclick,
+    label,
+    icon: IconComponent,
+    text,
+    variant = 'primary',
+    position = 'right',
+  }: Props = $props();
 
   const variantClasses = $derived(
-    variant === 'success' ? 'bg-[#485e92] hover:bg-[#3d4f7a]' : 'bg-[#485e92] hover:bg-[#3d4f7a]',
+    variant === 'danger' ? 'bg-[#914b43] hover:bg-[#9e372c]' : 'bg-[#485e92] hover:bg-[#3d4f7a]',
   );
+
+  const positionClasses = $derived(position === 'left' ? 'left-6' : 'right-6');
 </script>
 
 <button
   type="button"
   {onclick}
-  class="fixed right-6 bottom-20 z-50 flex h-14 w-[72px] items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95 {variantClasses}"
+  class="fixed bottom-20 z-50 flex h-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95 {variantClasses} {positionClasses} {text
+    ? 'px-6'
+    : 'w-[72px]'}"
   aria-label={label}
 >
-  <IconComponent class="h-6 w-6" strokeWidth={2} />
+  {#if IconComponent}
+    <IconComponent class="h-6 w-6" strokeWidth={2} />
+  {/if}
+  {#if text}
+    <span class="text-base font-medium tracking-[0.15px]">{text}</span>
+  {/if}
 </button>

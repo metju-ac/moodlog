@@ -134,18 +134,16 @@
       </div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="flex w-full items-center justify-between pb-4">
-      <button
-        onclick={handleDelete}
-        class="flex h-14 w-14 items-center justify-center rounded-full bg-red-700 text-white shadow-lg transition-transform hover:scale-105 hover:bg-red-800 active:scale-95"
-        aria-label="Delete reflection"
-      >
-        <Trash2 class="h-6 w-6" strokeWidth={2} />
-      </button>
+    <!-- Floating Action Buttons -->
+    <FloatingActionButton
+      icon={Trash2}
+      onclick={handleDelete}
+      label="Delete reflection"
+      variant="danger"
+      position="left"
+    />
 
-      <FloatingActionButton icon={Save} onclick={handleSave} label="Save reflection" />
-    </div>
+    <FloatingActionButton icon={Save} onclick={handleSave} label="Save reflection" />
   </main>
 
   <Navigation currentTab="mood-entries" />
