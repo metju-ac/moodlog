@@ -68,6 +68,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>Mood Entries - MoodLog</title>
+</svelte:head>
+
 <div class="flex h-screen flex-col bg-white">
   <!-- Date Bar - Sticky at top -->
   <div class="sticky top-0 z-10 bg-white px-4 py-2.5 shadow-sm">
