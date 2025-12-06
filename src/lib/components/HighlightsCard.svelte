@@ -1,6 +1,6 @@
 <script lang="ts">
   import * as Card from '$lib/components/ui/card/index.js';
-  import { getIconComponent } from '$lib/utils';
+  import { getIconComponent, groupEntriesByDay, calculateDayAverages } from '$lib/utils';
   import type { MoodEntry } from '$lib/types';
   import { SvelteMap } from 'svelte/reactivity';
 
@@ -30,24 +30,11 @@
       };
     }
 
-    const dayMap = new SvelteMap<string, MoodEntry[]>();
-    entries.forEach((entry) => {
-      const dateKey = entry.date.toISOString().split('T')[0];
-      if (!dayMap.has(dateKey)) {
-        dayMap.set(dateKey, []);
-      }
-      dayMap.get(dateKey)!.push(entry);
-    });
+    // Use utility functions to group entries by day and calculate averages
+    const dayMap = groupEntriesByDay(entries);
+    const dayAverages = calculateDayAverages(dayMap);
 
-    const dayAverages = Array.from(dayMap.entries()).map(([dateKey, dayEntries]) => {
-      const averageMood =
-        dayEntries.reduce((sum, entry) => sum + entry.moodLevel, 0) / dayEntries.length;
-      return {
-        date: new Date(dateKey + 'T12:00:00'),
-        averageMood,
-      };
-    });
-
+    // Find best and worst day
     let bestDay: DayHighlight = dayAverages[0];
     let worstDay: DayHighlight = dayAverages[0];
 
