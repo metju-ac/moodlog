@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation';
   import { base } from '$app/paths';
   import { page } from '$app/stores';
-  import { Save, Trash2 } from '@lucide/svelte';
+  import { Save, Trash2, Edit } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodSlider from '$lib/components/MoodSlider.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
@@ -19,6 +19,9 @@
 
   // Delete dialog state
   let showDeleteDialog = $state(false);
+
+  // Edit mode state
+  let isEditMode = $state(false);
 
   // If entry not found, redirect to home
   $effect(() => {
@@ -55,6 +58,10 @@
     selectedLabels = newSet;
   }
 
+  function handleEdit() {
+    isEditMode = true;
+  }
+
   function handleSave() {
     if (!title.trim()) {
       alert('Please enter a title');
@@ -77,6 +84,7 @@
     });
 
     showToast('Mood entry updated', 'success');
+    isEditMode = false;
     goto(`${base}/`);
   }
 
@@ -101,10 +109,12 @@
 </svelte:head>
 
 <div class="flex h-screen flex-col bg-white">
-  ` <main class="flex flex-1 flex-col overflow-y-auto px-4 py-2.5">
+  <main class="flex flex-1 flex-col overflow-y-auto px-4 py-2.5">
     <div class="flex w-full flex-col gap-5 pt-2.5 pb-24">
       <!-- Title -->
-      <h1 class="text-center text-[22px] leading-7 font-normal text-black">Edit your mood entry</h1>
+      <h1 class="text-center text-[22px] leading-7 font-normal text-black">
+        {isEditMode ? 'Edit your mood entry' : 'View your mood entry'}
+      </h1>
 
       <!-- Title Input -->
       <div class="relative w-full">
@@ -113,7 +123,8 @@
           type="text"
           id="title-input"
           placeholder="Input"
-          class="h-14 w-full rounded border-[3px] border-indigo-700 px-4 text-base text-gray-900 transition-colors outline-none focus:border-indigo-800"
+          disabled={!isEditMode}
+          class="h-14 w-full rounded border-[3px] border-indigo-700 px-4 text-base text-gray-900 transition-colors outline-none focus:border-indigo-800 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-700"
         />
         <label
           for="title-input"
@@ -130,6 +141,7 @@
           value={moodValue}
           onValueChange={(val) => (moodValue = val)}
           labels={['Negative', 'Neutral', 'Positive']}
+          disabled={!isEditMode}
         />
       </div>
 
@@ -142,7 +154,8 @@
             {@const IconComponent = getIconComponent(label.icon)}
             <button
               onclick={() => toggleLabel(label.id)}
-              class="flex h-8 items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors {selectedLabels.has(
+              disabled={!isEditMode}
+              class="flex h-8 items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors disabled:cursor-not-allowed {selectedLabels.has(
                 label.id,
               )
                 ? 'border-indigo-700 bg-indigo-50 text-indigo-900'
@@ -162,7 +175,8 @@
           id="notes-textarea"
           placeholder="Input"
           rows="12"
-          class="w-full resize-none rounded border-[3px] border-indigo-700 px-4 py-3 text-base text-gray-900 transition-colors outline-none focus:border-indigo-800"
+          disabled={!isEditMode}
+          class="w-full resize-none rounded border-[3px] border-indigo-700 px-4 py-3 text-base text-gray-900 transition-colors outline-none focus:border-indigo-800 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-700"
         ></textarea>
         <label
           for="notes-textarea"
@@ -174,15 +188,27 @@
     </div>
 
     <!-- Floating Action Buttons -->
-    <FloatingActionButton
-      icon={Trash2}
-      onclick={handleDelete}
-      label="Delete mood entry"
-      variant="danger"
-      position="left"
-    />
+    {#if isEditMode}
+      <FloatingActionButton
+        icon={Trash2}
+        onclick={handleDelete}
+        label="Delete mood entry"
+        variant="danger"
+        position="left"
+      />
 
-    <FloatingActionButton icon={Save} onclick={handleSave} label="Save mood entry" />
+      <FloatingActionButton icon={Save} onclick={handleSave} label="Save mood entry" />
+    {:else}
+      <FloatingActionButton
+        icon={Trash2}
+        onclick={handleDelete}
+        label="Delete mood entry"
+        variant="danger"
+        position="left"
+      />
+
+      <FloatingActionButton icon={Edit} onclick={handleEdit} label="Edit mood entry" />
+    {/if}
   </main>
 
   <Navigation currentTab="mood-entries" />
