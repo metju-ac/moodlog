@@ -44,6 +44,13 @@
     }
   }
 
+  function handlePointClick(entryId: string) {
+    const index = dayEntries.findIndex((entry) => entry.id === entryId);
+    if (index !== -1) {
+      currentEntryIndex = index;
+    }
+  }
+
   // Reset index when date changes
   $effect(() => {
     void date; // Track date changes
@@ -55,7 +62,11 @@
   <div class="flex w-full flex-col gap-4">
     <!-- Mood Graph -->
     <div class="w-full">
-      <MoodGraph entries={dayEntries} selectedEntryId={currentEntry?.id} />
+      <MoodGraph
+        entries={dayEntries}
+        selectedEntryId={currentEntry?.id}
+        onPointClick={handlePointClick}
+      />
     </div>
 
     <!-- Entry Card -->

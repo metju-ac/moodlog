@@ -9,6 +9,7 @@
   type Props = {
     entries: MoodEntry[];
     selectedEntryId?: string;
+    onPointClick?: (entryId: string) => void;
   };
 
   type ChartPoint = {
@@ -23,7 +24,7 @@
     };
   };
 
-  let { entries, selectedEntryId }: Props = $props();
+  let { entries, selectedEntryId, onPointClick }: Props = $props();
 
   // Prepare data for LayerChart
   const chartData = $derived.by(() => {
@@ -118,15 +119,38 @@
               {#snippet children({ points }: { points: ChartPoint[] })}
                 {#each points as point (point.data.id)}
                   {@const pointData = point.data}
-                  <circle
-                    cx={point.x}
-                    cy={point.y}
-                    r={pointData.isSelected ? 9 : 4}
-                    fill="#485e92"
-                    stroke={pointData.isSelected ? 'white' : 'none'}
-                    stroke-width={pointData.isSelected ? 3 : 0}
-                    class="transition-all duration-200"
-                  />
+                  <g
+                    role="button"
+                    tabindex="0"
+                    aria-label="Select entry: {pointData.title}"
+                    class="cursor-pointer"
+                    onclick={() => onPointClick?.(pointData.id)}
+                    onkeydown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        onPointClick?.(pointData.id);
+                      }
+                    }}
+                  >
+                    <!-- Invisible larger touch target (48x48px) -->
+                    <circle
+                      cx={point.x}
+                      cy={point.y}
+                      r="24"
+                      fill="transparent"
+                      class="touch-manipulation"
+                    />
+                    <!-- Visible data point with touch feedback -->
+                    <circle
+                      cx={point.x}
+                      cy={point.y}
+                      r={pointData.isSelected ? 9 : 4}
+                      fill="#485e92"
+                      stroke={pointData.isSelected ? 'white' : 'none'}
+                      stroke-width={pointData.isSelected ? 3 : 0}
+                      class="group-active:r-[8] pointer-events-none transition-all duration-200"
+                    />
+                  </g>
                 {/each}
               {/snippet}
             </Points>
