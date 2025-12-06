@@ -5,6 +5,7 @@
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
   import DeleteDialog from '$lib/components/DeleteDialog.svelte';
   import { labelStore } from '$lib/stores/labels.svelte';
+  import { showToast } from '$lib/components/Toast.svelte';
   import type { Label } from '$lib/types';
   import { getIconComponent } from '$lib/utils';
 
@@ -68,12 +69,14 @@
         name: labelName.trim(),
         icon: selectedIcon,
       });
+      showToast('Label updated', 'success');
     } else {
       labelStore.addLabel({
         id: labelStore.generateId(),
         name: labelName.trim(),
         icon: selectedIcon,
       });
+      showToast('Label created', 'success');
     }
 
     closeDialog();
@@ -88,6 +91,7 @@
     if (deletingLabelId) {
       labelStore.deleteLabel(deletingLabelId);
       deletingLabelId = null;
+      showToast('Label deleted', 'success');
     }
     showDeleteDialog = false;
   }
