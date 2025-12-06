@@ -3,7 +3,7 @@
   import { base } from '$app/paths';
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
-  import { Save, Trash2, Edit } from '@lucide/svelte';
+  import { Save, Trash2, Edit, X } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import ReflectionSliders from '$lib/components/ReflectionSliders.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
@@ -59,6 +59,17 @@
 
   function handleEdit() {
     isEditMode = true;
+  }
+
+  function handleCancel() {
+    if (!reflection) return;
+    // Reset all values to original reflection data
+    notes = reflection.notes;
+    sleepQuality = reflection.sleepQuality * 10;
+    physicalActivity = reflection.physicalActivity * 10;
+    socialInteractions = reflection.socialInteractions * 10;
+    pressure = reflection.pressure * 10;
+    isEditMode = false;
   }
 
   function handleSave() {
@@ -147,10 +158,10 @@
     <!-- Floating Action Buttons -->
     {#if isEditMode}
       <FloatingActionButton
-        icon={Trash2}
-        onclick={handleDelete}
-        label="Delete reflection"
-        variant="danger"
+        icon={X}
+        onclick={handleCancel}
+        label="Cancel editing"
+        variant="secondary"
         position="left"
       />
 

@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation';
   import { base } from '$app/paths';
   import { page } from '$app/stores';
-  import { Save, Trash2, Edit } from '@lucide/svelte';
+  import { Save, Trash2, Edit, X } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import MoodSlider from '$lib/components/MoodSlider.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
@@ -60,6 +60,16 @@
 
   function handleEdit() {
     isEditMode = true;
+  }
+
+  function handleCancel() {
+    if (!entry) return;
+    // Reset all values to original entry data
+    title = entry.title;
+    description = entry.description;
+    moodValue = entry.moodLevel * 10;
+    selectedLabels = new Set(entry.labels.map((label) => label.id));
+    isEditMode = false;
   }
 
   function handleSave() {
@@ -190,10 +200,10 @@
     <!-- Floating Action Buttons -->
     {#if isEditMode}
       <FloatingActionButton
-        icon={Trash2}
-        onclick={handleDelete}
-        label="Delete mood entry"
-        variant="danger"
+        icon={X}
+        onclick={handleCancel}
+        label="Cancel editing"
+        variant="secondary"
         position="left"
       />
 
