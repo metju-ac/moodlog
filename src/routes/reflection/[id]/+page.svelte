@@ -10,6 +10,7 @@
   import DeleteDialog from '$lib/components/DeleteDialog.svelte';
   import DailyMoodOverview from '$lib/components/DailyMoodOverview.svelte';
   import { reflectionStore } from '$lib/stores/reflections.svelte';
+  import { showToast } from '$lib/components/Toast.svelte';
   import type { Reflection } from '$lib/types';
 
   // Get reflection ID from URL
@@ -85,7 +86,10 @@
     };
 
     reflectionStore.updateReflection(reflection.id, updatedReflection);
+
+    showToast('Reflection updated', 'success');
     isEditMode = false;
+
     goto(`${base}/`);
   }
 
@@ -97,6 +101,7 @@
     if (!reflection) return;
     reflectionStore.deleteReflection(reflection.id);
     showDeleteDialog = false;
+    showToast('Reflection deleted', 'success');
     goto(`${base}/`);
   }
 
