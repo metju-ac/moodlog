@@ -7,11 +7,14 @@
   import { groupEntriesByDay } from '$lib/utils';
   import type { MoodEntry } from '$lib/types';
 
+  type TimeRange = 'week' | 'month' | '3months' | 'year';
+
   type Props = {
     entries: MoodEntry[];
+    selectedTimeRange: TimeRange;
   };
 
-  let { entries }: Props = $props();
+  let { entries, selectedTimeRange }: Props = $props();
 
   type ChartDataItem = {
     date: Date;
@@ -20,21 +23,14 @@
     endDate?: Date;
   };
 
-  // Determine grouping strategy based on date range
+  // Determine grouping strategy based on selected time range
   const groupingStrategy = $derived.by(() => {
-    if (entries.length === 0) return 'day';
-
-    const dayMap = groupEntriesByDay(entries);
-    const dates = Array.from(dayMap.keys()).sort();
-    if (dates.length === 0) return 'day';
-
-    const firstDate = new Date(dates[0] + 'T12:00:00');
-    const lastDate = new Date(dates[dates.length - 1] + 'T12:00:00');
-    const daysDiff = Math.ceil((lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (daysDiff <= 14) return 'day';
-    if (daysDiff <= 60) return 'week';
-    return 'month';
+    // Use day grouping for week and month, week grouping for longer periods
+    if (selectedTimeRange === 'week' || selectedTimeRange === 'month') {
+      return 'day';
+    } else {
+      return 'week';
+    }
   });
 
   // Calculate average mood data with adaptive grouping
@@ -58,36 +54,24 @@
       return sortedDays.map((day) => ({ ...day, endDate: undefined }));
     }
 
-    // Group by week or month
+    // Group by week
     const grouped = new Map<
       string,
       { date: Date; endDate: Date; totalMood: number; entryCount: number }
     >();
 
     sortedDays.forEach((day) => {
-      let groupKey: string;
-      let groupDate: Date;
-      let endDate: Date;
-
-      if (groupingStrategy === 'week') {
-        // Get the Monday of the week
-        const d = new Date(day.date);
-        const dayOfWeek = d.getDay();
-        const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust to Monday
-        groupDate = new Date(d);
-        groupDate.setDate(d.getDate() + diff);
-        groupDate.setHours(12, 0, 0, 0);
-        // End date is Sunday
-        endDate = new Date(groupDate);
-        endDate.setDate(groupDate.getDate() + 6);
-        groupKey = groupDate.toISOString().split('T')[0];
-      } else {
-        // Group by month
-        groupDate = new Date(day.date.getFullYear(), day.date.getMonth(), 1, 12, 0, 0);
-        // End date is last day of month
-        endDate = new Date(day.date.getFullYear(), day.date.getMonth() + 1, 0, 12, 0, 0);
-        groupKey = `${groupDate.getFullYear()}-${String(groupDate.getMonth() + 1).padStart(2, '0')}`;
-      }
+      // Get the Monday of the week
+      const d = new Date(day.date);
+      const dayOfWeek = d.getDay();
+      const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust to Monday
+      const groupDate = new Date(d);
+      groupDate.setDate(d.getDate() + diff);
+      groupDate.setHours(12, 0, 0, 0);
+      // End date is Sunday
+      const endDate = new Date(groupDate);
+      endDate.setDate(groupDate.getDate() + 6);
+      const groupKey = groupDate.toISOString().split('T')[0];
 
       if (!grouped.has(groupKey)) {
         grouped.set(groupKey, { date: groupDate, endDate, totalMood: 0, entryCount: 0 });
@@ -114,6 +98,23 @@
     const dates = chartData.map((d) => d.date.getTime());
     return [new Date(Math.min(...dates)), new Date(Math.max(...dates))];
   });
+
+  // Select up to 7 evenly spaced ticks for x-axis
+  const xAxisTicks = $derived.by(() => {
+    if (chartData.length === 0) return [];
+    if (chartData.length <= 7) return chartData.map((d) => d.date);
+
+    // Select evenly spaced ticks
+    const ticks: Date[] = [];
+    const step = (chartData.length - 1) / 6; // 7 ticks total (including first and last)
+
+    for (let i = 0; i < 7; i++) {
+      const index = Math.round(i * step);
+      ticks.push(chartData[index].date);
+    }
+
+    return ticks;
+  });
 </script>
 
 <Card.Root class="w-full">
@@ -122,8 +123,6 @@
       Average Mood
       {#if groupingStrategy === 'week'}
         (by week)
-      {:else if groupingStrategy === 'month'}
-        (by month)
       {/if}
     </Card.Title>
   </Card.Header>
@@ -159,7 +158,7 @@
             <Axis
               placement="bottom"
               rule={false}
-              ticks={chartData.map((d) => d.date)}
+              ticks={xAxisTicks}
               format={(d: Date) => {
                 const item = chartData.find((item) => item.date.getTime() === d.getTime());
                 if (!item) return '';
@@ -169,8 +168,8 @@
                     month: 'short',
                     day: 'numeric',
                   });
-                } else if (groupingStrategy === 'week') {
-                  // Show week date range: "Jan 1-7"
+                } else {
+                  // Week grouping: Show week date range: "Jan 1-7"
                   const startDay = item.date.getDate();
                   const endDay = item.endDate!.getDate();
                   const startMonth = item.date.toLocaleDateString('en-GB', { month: 'short' });
@@ -182,12 +181,6 @@
                   } else {
                     return `${startMonth} ${startDay}-${endMonth} ${endDay}`;
                   }
-                } else {
-                  // Show month date range: "Jan 1-31"
-                  const startDay = item.date.getDate();
-                  const endDay = item.endDate!.getDate();
-                  const month = item.date.toLocaleDateString('en-GB', { month: 'short' });
-                  return `${month} ${startDay}-${endDay}`;
                 }
               }}
               class="text-xs text-muted-foreground"
@@ -209,18 +202,6 @@
                     {data.date.toLocaleDateString('en-GB', {
                       month: 'short',
                       day: 'numeric',
-                      year: 'numeric',
-                    })}
-                  {:else if groupingStrategy === 'week'}
-                    {data.date.toLocaleDateString('en-GB', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })}
-                    -
-                    {data.endDate.toLocaleDateString('en-GB', {
-                      day: 'numeric',
-                      month: 'short',
                       year: 'numeric',
                     })}
                   {:else}
