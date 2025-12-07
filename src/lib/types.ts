@@ -24,3 +24,5 @@ export type Reflection = {
 };
 
 export type NavigationTab = 'insights' | 'mood-entries' | 'labels';
+
+export type TimeRange = 'week' | 'month' | '3months' | 'year';

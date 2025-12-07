@@ -5,9 +5,7 @@
   import { curveNatural } from 'd3-shape';
   import { SvelteDate, SvelteMap } from 'svelte/reactivity';
   import { groupEntriesByDay } from '$lib/utils';
-  import type { MoodEntry } from '$lib/types';
-
-  type TimeRange = 'week' | 'month' | '3months' | 'year';
+  import type { MoodEntry, TimeRange } from '$lib/types';
 
   type Props = {
     entries: MoodEntry[];

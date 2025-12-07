@@ -4,44 +4,25 @@
   import { Chart as LayerChart, Svg, Axis, Bars } from 'layerchart';
   import { SvelteDate, SvelteMap } from 'svelte/reactivity';
   import { groupEntriesByDay } from '$lib/utils';
-  import type { MoodEntry } from '$lib/types';
-
-  type TimeRange = 'week' | 'month' | '3months' | 'year';
+  import type { MoodEntry, TimeRange } from '$lib/types';
 
   type Props = {
     entries: MoodEntry[];
-    selectedTimeRange?: TimeRange;
+    selectedTimeRange: TimeRange;
   };
 
   let { entries, selectedTimeRange }: Props = $props();
 
-  // Determine grouping strategy based on selected time range or date range
+  // Determine grouping strategy based on selected time range
   const groupingStrategy = $derived.by(() => {
-    if (entries.length === 0) return 'day';
-
-    // If selectedTimeRange is provided, use it to determine grouping
-    if (selectedTimeRange) {
-      if (selectedTimeRange === 'week' || selectedTimeRange === 'month') {
-        return 'day';
-      } else if (selectedTimeRange === '3months') {
-        return 'week';
-      } else {
-        return 'month'; // For year
-      }
+    // Use day grouping for week and month, week grouping for 3 months, month grouping for year
+    if (selectedTimeRange === 'week' || selectedTimeRange === 'month') {
+      return 'day';
+    } else if (selectedTimeRange === '3months') {
+      return 'week';
+    } else {
+      return 'month'; // For year
     }
-
-    // Otherwise, calculate based on actual data range
-    const dayMap = groupEntriesByDay(entries);
-    const dates = Array.from(dayMap.keys()).sort();
-    if (dates.length === 0) return 'day';
-
-    const firstDate = new Date(dates[0] + 'T12:00:00');
-    const lastDate = new Date(dates[dates.length - 1] + 'T12:00:00');
-    const daysDiff = Math.ceil((lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (daysDiff <= 14) return 'day';
-    if (daysDiff <= 90) return 'week'; // Changed from 60 to 90 (3 months)
-    return 'month'; // For year and longer periods
   });
 
   // Calculate entry count data with adaptive grouping
