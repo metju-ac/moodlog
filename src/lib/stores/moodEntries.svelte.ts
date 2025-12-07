@@ -7,13 +7,12 @@ function getLabelsById(ids: string[]) {
   return ids.map((id) => labelStore.getLabelById(id)).filter((label) => label !== undefined);
 }
 
-// Generate test data: 5 entries per day for the last 3 months
+// Generate test data: random entries per day for the last 3 months
 function generateTestData(): MoodEntry[] {
   const entries: MoodEntry[] = [];
   const today = new SvelteDate();
   today.setHours(0, 0, 0, 0);
   const daysToGenerate = 90; // 3 months
-  const entriesPerDay = 5;
 
   const titles = [
     'Morning routine',
@@ -70,19 +69,23 @@ function generateTestData(): MoodEntry[] {
     const dayDate = new SvelteDate(today);
     dayDate.setDate(today.getDate() - dayOffset);
 
-    // Create 5 entries for this day at different times
-    const entryTimes = [
-      { hour: 7, minute: 30 }, // Morning
-      { hour: 11, minute: 15 }, // Late morning
-      { hour: 14, minute: 0 }, // Afternoon
-      { hour: 17, minute: 45 }, // Late afternoon
-      { hour: 20, minute: 30 }, // Evening
-    ];
+    // Random number of entries per day (3 to 7)
+    const entriesForDay = 3 + Math.floor(Math.random() * 5); // 3, 4, 5, 6, or 7
 
-    for (let i = 0; i < entriesPerDay; i++) {
+    // Generate random times for entries, spread throughout the day
+    const usedHours: number[] = [];
+    for (let i = 0; i < entriesForDay; i++) {
       const entryDate = new SvelteDate(dayDate);
-      const time = entryTimes[i];
-      entryDate.setHours(time.hour, time.minute + Math.floor(Math.random() * 30), 0, 0);
+
+      // Random hour between 7 and 22, avoiding duplicates
+      let hour: number;
+      do {
+        hour = 7 + Math.floor(Math.random() * 16); // 7 AM to 10 PM
+      } while (usedHours.includes(hour) && usedHours.length < 16);
+      usedHours.push(hour);
+
+      const minute = Math.floor(Math.random() * 60);
+      entryDate.setHours(hour, minute, 0, 0);
 
       // Random mood level between -10 and 10
       const moodLevel = Math.floor(Math.random() * 21) - 10;
