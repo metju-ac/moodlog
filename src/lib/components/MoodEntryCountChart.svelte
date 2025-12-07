@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as Card from '$lib/components/ui/card/index.js';
   import { scaleBand } from 'd3-scale';
-  import { Chart as LayerChart, Svg, Axis, Bars, Tooltip } from 'layerchart';
+  import { Chart as LayerChart, Svg, Axis, Bars, Tooltip, Highlight } from 'layerchart';
   import { groupEntriesByDay } from '$lib/utils';
   import type { MoodEntry } from '$lib/types';
 
@@ -131,6 +131,7 @@
           y="count"
           yDomain={[0, maxCount]}
           padding={{ top: 16, bottom: 32, left: 48, right: 16 }}
+          tooltip={{ mode: 'band' }}
         >
           <Svg>
             <!-- Y-axis with count labels -->
@@ -181,58 +182,58 @@
             />
 
             <!-- Bar chart -->
-            <Bars radius={4} strokeWidth={1} class="fill-[#485e92]" />
-
-            <!-- Tooltip -->
-            <Tooltip.Root variant="none">
-              {#snippet children({ data })}
-                <div
-                  class="rounded-lg border border-border/50 bg-background px-3 py-2 text-xs shadow-xl"
-                >
-                  <div class="font-medium">
-                    {#if groupingStrategy === 'day'}
-                      {data.dateObj.toLocaleDateString('en-GB', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })}
-                    {:else if groupingStrategy === 'week'}
-                      {data.dateObj.toLocaleDateString('en-GB', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                      -
-                      {data.endDate.toLocaleDateString('en-GB', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                    {:else}
-                      {data.dateObj.toLocaleDateString('en-GB', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                      -
-                      {data.endDate.toLocaleDateString('en-GB', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                    {/if}
-                  </div>
-                  <div class="mt-1 flex items-center gap-2">
-                    <div class="h-2 w-2 rounded-full bg-[#485e92]"></div>
-                    <span class="text-muted-foreground">
-                      {data.count}
-                      {data.count === 1 ? 'entry' : 'entries'}
-                    </span>
-                  </div>
-                </div>
-              {/snippet}
-            </Tooltip.Root>
+            <Bars radius={4} strokeWidth={0} class="fill-[#485e92]" />
           </Svg>
+
+          <!-- Tooltip -->
+          <Tooltip.Root>
+            {#snippet children({ data })}
+              <div
+                class="rounded-lg border border-border/50 bg-background px-3 py-2 text-xs shadow-xl"
+              >
+                <div class="font-medium">
+                  {#if groupingStrategy === 'day'}
+                    {data.dateObj.toLocaleDateString('en-GB', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  {:else if groupingStrategy === 'week'}
+                    {data.dateObj.toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                    -
+                    {data.endDate.toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  {:else}
+                    {data.dateObj.toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                    -
+                    {data.endDate.toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  {/if}
+                </div>
+                <div class="mt-1 flex items-center gap-2">
+                  <div class="h-2 w-2 rounded-full bg-[#485e92]"></div>
+                  <span class="text-muted-foreground">
+                    {data.count}
+                    {data.count === 1 ? 'entry' : 'entries'}
+                  </span>
+                </div>
+              </div>
+            {/snippet}
+          </Tooltip.Root>
         </LayerChart>
       </div>
     {:else}
