@@ -102,7 +102,7 @@
   // Select up to 5 evenly spaced ticks for x-axis (mobile-friendly)
   const xAxisTicks = $derived.by(() => {
     if (chartData.length === 0) return [];
-    if (chartData.length <= 5) return chartData.map((d) => d.date);
+    if (selectedTimeRange === 'week' || chartData.length <= 5) return chartData.map((d) => d.date);
 
     // Select evenly spaced ticks
     const ticks: string[] = [];
