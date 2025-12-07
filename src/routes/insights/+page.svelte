@@ -6,6 +6,7 @@
   import Navigation from '$lib/components/Navigation.svelte';
   import HighlightsCard from '$lib/components/HighlightsCard.svelte';
   import AverageMoodChart from '$lib/components/AverageMoodChart.svelte';
+  import MoodEntryCountChart from '$lib/components/MoodEntryCountChart.svelte';
   import type { MoodEntry } from '$lib/types';
 
   type TimeRange = 'week' | 'month' | '3months' | 'year';
@@ -139,6 +140,9 @@
 
     <!-- Average Mood Chart -->
     <AverageMoodChart entries={filteredEntries} {selectedTimeRange} {dateRange} />
+
+    <!-- Mood Entry Count Chart -->
+    <MoodEntryCountChart entries={filteredEntries} />
   </main>
 
   <Navigation currentTab="insights" />
