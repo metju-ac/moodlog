@@ -3,7 +3,7 @@
   import { scaleTime, scaleLinear } from 'd3-scale';
   import { Chart as LayerChart, Svg, Axis, Spline, Tooltip, Highlight } from 'layerchart';
   import { curveNatural } from 'd3-shape';
-  import { SvelteDate } from 'svelte/reactivity';
+  import { SvelteDate, SvelteMap } from 'svelte/reactivity';
   import { groupEntriesByDay } from '$lib/utils';
   import type { MoodEntry } from '$lib/types';
 
@@ -16,20 +16,15 @@
 
   let { entries, selectedTimeRange }: Props = $props();
 
-  type ChartDataItem = {
-    date: Date;
-    averageMood: number;
-    entryCount: number;
-    endDate?: Date;
-  };
-
   // Determine grouping strategy based on selected time range
   const groupingStrategy = $derived.by(() => {
-    // Use day grouping for week and month, week grouping for longer periods
+    // Use day grouping for week and month, week grouping for 3 months, month grouping for year
     if (selectedTimeRange === 'week' || selectedTimeRange === 'month') {
       return 'day';
-    } else {
+    } else if (selectedTimeRange === '3months') {
       return 'week';
+    } else {
+      return 'month'; // For year
     }
   });
 
@@ -54,24 +49,36 @@
       return sortedDays.map((day) => ({ ...day, endDate: undefined }));
     }
 
-    // Group by week
-    const grouped = new Map<
+    // Group by week or month
+    const grouped = new SvelteMap<
       string,
       { date: Date; endDate: Date; totalMood: number; entryCount: number }
     >();
 
     sortedDays.forEach((day) => {
-      // Get the Monday of the week
-      const d = new Date(day.date);
-      const dayOfWeek = d.getDay();
-      const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust to Monday
-      const groupDate = new Date(d);
-      groupDate.setDate(d.getDate() + diff);
-      groupDate.setHours(12, 0, 0, 0);
-      // End date is Sunday
-      const endDate = new Date(groupDate);
-      endDate.setDate(groupDate.getDate() + 6);
-      const groupKey = groupDate.toISOString().split('T')[0];
+      let groupKey: string;
+      let groupDate: Date;
+      let endDate: Date;
+
+      if (groupingStrategy === 'week') {
+        // Get the Monday of the week
+        const d = new SvelteDate(day.date);
+        const dayOfWeek = d.getDay();
+        const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust to Monday
+        groupDate = new SvelteDate(d);
+        groupDate.setDate(d.getDate() + diff);
+        groupDate.setHours(12, 0, 0, 0);
+        // End date is Sunday
+        endDate = new SvelteDate(groupDate);
+        endDate.setDate(groupDate.getDate() + 6);
+        groupKey = groupDate.toISOString().split('T')[0];
+      } else {
+        // Group by month
+        groupDate = new SvelteDate(day.date.getFullYear(), day.date.getMonth(), 1, 12, 0, 0, 0);
+        // End date is last day of month
+        endDate = new SvelteDate(day.date.getFullYear(), day.date.getMonth() + 1, 0, 12, 0, 0, 0);
+        groupKey = `${groupDate.getFullYear()}-${String(groupDate.getMonth() + 1).padStart(2, '0')}`;
+      }
 
       if (!grouped.has(groupKey)) {
         grouped.set(groupKey, { date: groupDate, endDate, totalMood: 0, entryCount: 0 });
@@ -123,6 +130,8 @@
       Average Mood
       {#if groupingStrategy === 'week'}
         (by week)
+      {:else if groupingStrategy === 'month'}
+        (by month)
       {/if}
     </Card.Title>
   </Card.Header>
@@ -168,7 +177,7 @@
                     month: 'short',
                     day: 'numeric',
                   });
-                } else {
+                } else if (groupingStrategy === 'week') {
                   // Week grouping: Show week date range: "Jan 1-7"
                   const startDay = item.date.getDate();
                   const endDay = item.endDate!.getDate();
@@ -181,6 +190,12 @@
                   } else {
                     return `${startMonth} ${startDay}-${endMonth} ${endDay}`;
                   }
+                } else {
+                  // Month grouping: Show month and year: "Jan 2024"
+                  return item.date.toLocaleDateString('en-GB', {
+                    month: 'short',
+                    year: 'numeric',
+                  });
                 }
               }}
               class="text-xs text-muted-foreground"

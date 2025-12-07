@@ -1,27 +1,36 @@
 <script lang="ts">
   import * as Card from '$lib/components/ui/card/index.js';
   import { scaleBand } from 'd3-scale';
-  import { Chart as LayerChart, Svg, Axis, Bars, Tooltip, Highlight } from 'layerchart';
+  import { Chart as LayerChart, Svg, Axis, Bars } from 'layerchart';
+  import { SvelteDate, SvelteMap } from 'svelte/reactivity';
   import { groupEntriesByDay } from '$lib/utils';
   import type { MoodEntry } from '$lib/types';
 
+  type TimeRange = 'week' | 'month' | '3months' | 'year';
+
   type Props = {
     entries: MoodEntry[];
+    selectedTimeRange?: TimeRange;
   };
 
-  let { entries }: Props = $props();
+  let { entries, selectedTimeRange }: Props = $props();
 
-  type ChartDataItem = {
-    date: string;
-    count: number;
-    dateObj: Date;
-    endDate?: Date;
-  };
-
-  // Determine grouping strategy based on date range
+  // Determine grouping strategy based on selected time range or date range
   const groupingStrategy = $derived.by(() => {
     if (entries.length === 0) return 'day';
 
+    // If selectedTimeRange is provided, use it to determine grouping
+    if (selectedTimeRange) {
+      if (selectedTimeRange === 'week' || selectedTimeRange === 'month') {
+        return 'day';
+      } else if (selectedTimeRange === '3months') {
+        return 'week';
+      } else {
+        return 'month'; // For year
+      }
+    }
+
+    // Otherwise, calculate based on actual data range
     const dayMap = groupEntriesByDay(entries);
     const dates = Array.from(dayMap.keys()).sort();
     if (dates.length === 0) return 'day';
@@ -32,7 +41,7 @@
 
     if (daysDiff <= 14) return 'day';
     if (daysDiff <= 90) return 'week'; // Changed from 60 to 90 (3 months)
-    return 'month';
+    return 'month'; // For year and longer periods
   });
 
   // Calculate entry count data with adaptive grouping
@@ -53,7 +62,7 @@
     }
 
     // Group by week or month
-    const grouped = new Map<
+    const grouped = new SvelteMap<
       string,
       { dateObj: Date; endDate: Date; count: number; entries: number[] }
     >();
@@ -65,21 +74,21 @@
 
       if (groupingStrategy === 'week') {
         // Get the Monday of the week
-        const d = new Date(day.dateObj);
+        const d = new SvelteDate(day.dateObj);
         const dayOfWeek = d.getDay();
         const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust to Monday
-        groupDate = new Date(d);
+        groupDate = new SvelteDate(d);
         groupDate.setDate(d.getDate() + diff);
         groupDate.setHours(0, 0, 0, 0);
         // End date is Sunday
-        endDate = new Date(groupDate);
+        endDate = new SvelteDate(groupDate);
         endDate.setDate(groupDate.getDate() + 6);
         groupKey = groupDate.toISOString().split('T')[0];
       } else {
         // Group by month
-        groupDate = new Date(day.dateObj.getFullYear(), day.dateObj.getMonth(), 1);
+        groupDate = new SvelteDate(day.dateObj.getFullYear(), day.dateObj.getMonth(), 1);
         // End date is last day of month
-        endDate = new Date(day.dateObj.getFullYear(), day.dateObj.getMonth() + 1, 0);
+        endDate = new SvelteDate(day.dateObj.getFullYear(), day.dateObj.getMonth() + 1, 0);
         groupKey = `${groupDate.getFullYear()}-${String(groupDate.getMonth() + 1).padStart(2, '0')}`;
       }
 
@@ -188,11 +197,11 @@
                     return `${startMonth} ${startDay}-${endMonth} ${endDay}`;
                   }
                 } else {
-                  // Show month date range: "Jan 1-31"
-                  const startDay = item.dateObj.getDate();
-                  const endDay = item.endDate!.getDate();
-                  const month = item.dateObj.toLocaleDateString('en-GB', { month: 'short' });
-                  return `${month} ${startDay}-${endDay}`;
+                  // Month grouping: Show month and year: "Jan 2024"
+                  return item.dateObj.toLocaleDateString('en-GB', {
+                    month: 'short',
+                    year: 'numeric',
+                  });
                 }
               }}
               class="text-xs text-muted-foreground"

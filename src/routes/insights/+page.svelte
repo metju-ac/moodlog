@@ -142,7 +142,7 @@
     <AverageMoodChart entries={filteredEntries} {selectedTimeRange} />
 
     <!-- Mood Entry Count Chart -->
-    <MoodEntryCountChart entries={filteredEntries} />
+    <MoodEntryCountChart entries={filteredEntries} {selectedTimeRange} />
   </main>
 
   <Navigation currentTab="insights" />
