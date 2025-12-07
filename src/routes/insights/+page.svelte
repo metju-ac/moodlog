@@ -139,7 +139,7 @@
     <HighlightsCard entries={filteredEntries} />
 
     <!-- Average Mood Chart -->
-    <AverageMoodChart entries={filteredEntries} {selectedTimeRange} {dateRange} />
+    <AverageMoodChart entries={filteredEntries} />
 
     <!-- Mood Entry Count Chart -->
     <MoodEntryCountChart entries={filteredEntries} />
