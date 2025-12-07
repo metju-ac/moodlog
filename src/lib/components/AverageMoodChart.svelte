@@ -99,16 +99,16 @@
     return [new Date(Math.min(...dates)), new Date(Math.max(...dates))];
   });
 
-  // Select up to 7 evenly spaced ticks for x-axis
+  // Select up to 5 evenly spaced ticks for x-axis (mobile-friendly)
   const xAxisTicks = $derived.by(() => {
     if (chartData.length === 0) return [];
-    if (chartData.length <= 7) return chartData.map((d) => d.date);
+    if (chartData.length <= 5) return chartData.map((d) => d.date);
 
     // Select evenly spaced ticks
     const ticks: Date[] = [];
-    const step = (chartData.length - 1) / 6; // 7 ticks total (including first and last)
+    const step = (chartData.length - 1) / 4; // 5 ticks total (including first and last)
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 5; i++) {
       const index = Math.round(i * step);
       ticks.push(chartData[index].date);
     }

@@ -31,7 +31,7 @@
     const daysDiff = Math.ceil((lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24));
 
     if (daysDiff <= 14) return 'day';
-    if (daysDiff <= 60) return 'week';
+    if (daysDiff <= 90) return 'week'; // Changed from 60 to 90 (3 months)
     return 'month';
   });
 
@@ -108,6 +108,23 @@
     const max = Math.max(...chartData.map((d) => d.count));
     return Math.ceil(max * 1.1); // Add 10% padding
   });
+
+  // Select up to 5 evenly spaced ticks for x-axis (mobile-friendly)
+  const xAxisTicks = $derived.by(() => {
+    if (chartData.length === 0) return [];
+    if (chartData.length <= 5) return chartData.map((d) => d.date);
+
+    // Select evenly spaced ticks
+    const ticks: string[] = [];
+    const step = (chartData.length - 1) / 4; // 5 ticks total (including first and last)
+
+    for (let i = 0; i < 5; i++) {
+      const index = Math.round(i * step);
+      ticks.push(chartData[index].date);
+    }
+
+    return ticks;
+  });
 </script>
 
 <Card.Root class="w-full">
@@ -147,6 +164,7 @@
             <Axis
               placement="bottom"
               rule={false}
+              ticks={xAxisTicks}
               format={(d: string) => {
                 const item = chartData.find((item) => item.date === d);
                 if (!item) return d;
