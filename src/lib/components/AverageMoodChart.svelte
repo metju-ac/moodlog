@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as Card from '$lib/components/ui/card/index.js';
   import { scaleTime, scaleLinear } from 'd3-scale';
-  import { Chart as LayerChart, Svg, Axis, Spline, Tooltip } from 'layerchart';
+  import { Chart as LayerChart, Svg, Axis, Spline, Tooltip, Highlight } from 'layerchart';
   import { curveNatural } from 'd3-shape';
   import { SvelteDate, SvelteMap } from 'svelte/reactivity';
   import { groupEntriesByDay, calculateDayAverages } from '$lib/utils';
@@ -68,6 +68,7 @@
           yScale={scaleLinear()}
           yDomain={[-10, 10]}
           padding={{ top: 16, bottom: 32, left: 48, right: 16 }}
+          tooltip={{ mode: 'bisect-x' }}
         >
           <Svg>
             <!-- Y-axis with mood level labels -->
@@ -107,34 +108,35 @@
 
             <!-- Line chart -->
             <Spline curve={curveNatural} class="fill-none stroke-[#485e92] stroke-2" />
-
-            <!-- Tooltip -->
-            <Tooltip.Root variant="none">
-              {#snippet children({ data })}
-                <div
-                  class="rounded-lg border border-border/50 bg-background px-3 py-2 text-xs shadow-xl"
-                >
-                  <div class="font-medium">
-                    {data.date.toLocaleDateString('en-GB', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
-                    })}
-                  </div>
-                  <div class="mt-1 flex items-center gap-2">
-                    <div class="h-2 w-2 rounded-full bg-[#485e92]"></div>
-                    <span class="text-muted-foreground">
-                      Avg Mood: {data.averageMood > 0 ? '+' : ''}{data.averageMood.toFixed(1)}
-                    </span>
-                  </div>
-                  <div class="mt-0.5 text-[10px] text-muted-foreground">
-                    {data.entryCount}
-                    {data.entryCount === 1 ? 'entry' : 'entries'}
-                  </div>
-                </div>
-              {/snippet}
-            </Tooltip.Root>
+            <Highlight points lines />
           </Svg>
+
+          <!-- Tooltip -->
+          <Tooltip.Root variant="none">
+            {#snippet children({ data })}
+              <div
+                class="rounded-lg border border-border/50 bg-background px-3 py-2 text-xs shadow-xl"
+              >
+                <div class="font-medium">
+                  {data.date.toLocaleDateString('en-GB', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </div>
+                <div class="mt-1 flex items-center gap-2">
+                  <div class="h-2 w-2 rounded-full bg-[#485e92]"></div>
+                  <span class="text-muted-foreground">
+                    Avg Mood: {data.averageMood > 0 ? '+' : ''}{data.averageMood.toFixed(1)}
+                  </span>
+                </div>
+                <div class="mt-0.5 text-[10px] text-muted-foreground">
+                  {data.entryCount}
+                  {data.entryCount === 1 ? 'entry' : 'entries'}
+                </div>
+              </div>
+            {/snippet}
+          </Tooltip.Root>
         </LayerChart>
       </div>
     {:else}
