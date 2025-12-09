@@ -7,7 +7,7 @@ Chces si ulozit zaznam o svojich aktualnych pocitoch.
 
 ## Tasky:
 
-- [ ] Pouzi svoj telefon a chod na stranku pico.vyhul.me
+- [ ] Pouzi svoj telefon, chod na stranku pico.vyhul.me a tam si precitaj about
 - [ ] Vytvor si zaznam o svojich pocitoch
   - Dava ti zmysel slider na zadavanie nalady?
 - [ ] Vytvor si custom label
@@ -19,5 +19,5 @@ Chces si ulozit zaznam o svojich aktualnych pocitoch.
   - Dava ti zmysel rychly prehlad dennych karticiek a graf nalady?
 - [ ] Zmaz dnesnu reflexiu
   - Je dostatocne viditelny rozdiel medzi hotovou a neexistujucou reflexiou?
-- [ ] Pozri si stranku insights
+- [ ] Pozri si stranku insights, vyfiltruj si zaznamy tykajuci sa tagov "Work" a "Free time" za posledny mesiac
   - Pochopil si filtre?
