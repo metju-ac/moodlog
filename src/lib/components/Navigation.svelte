@@ -1,6 +1,6 @@
 <script lang="ts">
   import { base } from '$app/paths';
-  import { LineChart, Edit3, Tag } from '@lucide/svelte';
+  import { ChartLine, PenLine, Tag } from '@lucide/svelte';
   import type { NavigationTab } from '$lib/types';
 
   type Props = {
@@ -10,8 +10,8 @@
   let { currentTab = 'mood-entries' }: Props = $props();
 
   const tabs = [
-    { id: 'insights' as const, label: 'Insights', icon: LineChart, href: `${base}/insights` },
-    { id: 'mood-entries' as const, label: 'Mood entries', icon: Edit3, href: `${base}/` },
+    { id: 'insights' as const, label: 'Insights', icon: ChartLine, href: `${base}/insights` },
+    { id: 'mood-entries' as const, label: 'Mood Entries', icon: PenLine, href: `${base}/` },
     { id: 'labels' as const, label: 'Labels', icon: Tag, href: `${base}/labels` },
   ];
 </script>

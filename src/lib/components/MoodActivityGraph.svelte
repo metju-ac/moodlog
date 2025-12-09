@@ -15,6 +15,86 @@
 
   let { entries, selectedTimeRange }: Props = $props();
 
+  // Tooltip state
+  type TooltipData = {
+    date: Date;
+    avgMood: number | null;
+    count: number;
+    x: number;
+    y: number;
+  } | null;
+
+  let tooltipData = $state<TooltipData>(null);
+  let tooltipTimeout: ReturnType<typeof setTimeout> | null = null;
+  let cardRef = $state<HTMLDivElement | null>(null);
+
+  function showTooltip(
+    day: { date: Date; avgMood: number | null; count: number },
+    event: MouseEvent | TouchEvent,
+  ) {
+    if (tooltipTimeout) {
+      clearTimeout(tooltipTimeout);
+      tooltipTimeout = null;
+    }
+
+    const rect = cardRef?.getBoundingClientRect();
+    let x: number, y: number;
+
+    if ('touches' in event) {
+      x = event.touches[0].clientX - (rect?.left ?? 0);
+      y = event.touches[0].clientY - (rect?.top ?? 0);
+    } else {
+      x = event.clientX - (rect?.left ?? 0);
+      y = event.clientY - (rect?.top ?? 0);
+    }
+
+    tooltipData = {
+      date: day.date,
+      avgMood: day.avgMood,
+      count: day.count,
+      x,
+      y,
+    };
+  }
+
+  function hideTooltip() {
+    tooltipTimeout = setTimeout(() => {
+      tooltipData = null;
+    }, 100);
+  }
+
+  function handlePointerEnter(
+    day: { date: Date; avgMood: number | null; count: number; isEmpty?: boolean },
+    event: MouseEvent,
+  ) {
+    if (day.isEmpty) return;
+    showTooltip(day, event);
+  }
+
+  function handlePointerMove(
+    day: { date: Date; avgMood: number | null; count: number; isEmpty?: boolean },
+    event: MouseEvent,
+  ) {
+    if (day.isEmpty) return;
+    showTooltip(day, event);
+  }
+
+  function handlePointerLeave() {
+    hideTooltip();
+  }
+
+  function handleTouchStart(
+    day: { date: Date; avgMood: number | null; count: number; isEmpty?: boolean },
+    event: TouchEvent,
+  ) {
+    if (day.isEmpty) return;
+    showTooltip(day, event);
+  }
+
+  function handleTouchEnd() {
+    hideTooltip();
+  }
+
   // Calculate the number of days based on time range
   const daysToShow = $derived.by(() => {
     switch (selectedTimeRange) {
@@ -308,7 +388,7 @@
   });
 </script>
 
-<Card.Root class="w-full">
+<Card.Root class="relative w-full" bind:ref={cardRef}>
   <Card.Header>
     <Card.Title class="text-2xl">Mood Activity</Card.Title>
   </Card.Header>
@@ -321,13 +401,17 @@
             <button
               type="button"
               onclick={() => handleDayClick(day.date)}
+              onmouseenter={(e) => handlePointerEnter(day, e)}
+              onmousemove={(e) => handlePointerMove(day, e)}
+              onmouseleave={handlePointerLeave}
+              ontouchstart={(e) => handleTouchStart(day, e)}
+              ontouchend={handleTouchEnd}
               class="flex flex-1 flex-col items-center gap-1"
             >
               <span class="text-[10px] text-[#44464f]">{getShortDayLabel(day.date)}</span>
               <div
                 class="aspect-square w-full max-w-10 rounded-md transition-transform hover:scale-105"
                 style="background-color: {getCellColor(day.avgMood)};"
-                title={`${formatDate(day.date)}\n${day.count > 0 ? `Entries: ${day.count}\nAverage mood: ${day.avgMood?.toFixed(1)}` : 'No entries'}`}
               ></div>
               <span class="text-[10px] text-[#44464f]">{day.date.getDate()}</span>
             </button>
@@ -351,6 +435,11 @@
               <button
                 type="button"
                 onclick={() => handleDayClick(day.date, day.isEmpty)}
+                onmouseenter={(e) => handlePointerEnter(day, e)}
+                onmousemove={(e) => handlePointerMove(day, e)}
+                onmouseleave={handlePointerLeave}
+                ontouchstart={(e) => handleTouchStart(day, e)}
+                ontouchend={handleTouchEnd}
                 class="flex flex-1 flex-col items-center gap-0.5"
                 disabled={day.isEmpty}
               >
@@ -359,9 +448,6 @@
                     ? ''
                     : 'cursor-pointer hover:scale-105'}"
                   style="background-color: {getCellColor(day.avgMood, day.isEmpty)};"
-                  title={day.isEmpty
-                    ? ''
-                    : `${formatDate(day.date)}\n${day.count > 0 ? `Entries: ${day.count}\nAverage mood: ${day.avgMood?.toFixed(1)}` : 'No entries'}`}
                 ></div>
                 <span class="text-[10px] text-[#44464f] {day.isEmpty ? 'invisible' : ''}"
                   >{day.date.getDate()}</span
@@ -418,6 +504,11 @@
                     <button
                       type="button"
                       onclick={() => handleDayClick(day.date, day.isEmpty)}
+                      onmouseenter={(e) => handlePointerEnter(day, e)}
+                      onmousemove={(e) => handlePointerMove(day, e)}
+                      onmouseleave={handlePointerLeave}
+                      ontouchstart={(e) => handleTouchStart(day, e)}
+                      ontouchend={handleTouchEnd}
                       class="rounded-sm {day.isEmpty
                         ? 'cursor-default'
                         : 'cursor-pointer'} transition-transform {day.isEmpty
@@ -427,9 +518,6 @@
                         day.avgMood,
                         day.isEmpty,
                       )};"
-                      title={day.isEmpty
-                        ? ''
-                        : `${formatDate(day.date)}\n${day.count > 0 ? `Entries: ${day.count}\nAverage mood: ${day.avgMood?.toFixed(1)}` : 'No entries'}`}
                       disabled={day.isEmpty}
                       aria-label={day.isEmpty ? '' : `View entries for ${formatDate(day.date)}`}
                     ></button>
@@ -454,4 +542,40 @@
       <span>Good</span>
     </div>
   </Card.Content>
+
+  <!-- Custom Tooltip -->
+  {#if tooltipData}
+    <div
+      class="pointer-events-none absolute z-50 rounded-lg border border-border/50 bg-background px-3 py-2 text-xs shadow-xl"
+      style="left: {tooltipData.x + 10}px; top: {tooltipData.y + 10}px;"
+    >
+      <div class="font-medium">
+        {tooltipData.date.toLocaleDateString('en-GB', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        })}
+      </div>
+      {#if tooltipData.count > 0}
+        <div class="mt-1 flex items-center gap-2">
+          <div
+            class="h-2 w-2 rounded-full"
+            style="background-color: {getCellColor(tooltipData.avgMood)};"
+          ></div>
+          <span class="text-muted-foreground">
+            Avg Mood: {tooltipData.avgMood !== null
+              ? (tooltipData.avgMood > 0 ? '+' : '') + tooltipData.avgMood.toFixed(1)
+              : 'N/A'}
+          </span>
+        </div>
+        <div class="mt-0.5 text-[10px] text-muted-foreground">
+          {tooltipData.count}
+          {tooltipData.count === 1 ? 'entry' : 'entries'}
+        </div>
+      {:else}
+        <div class="mt-1 text-muted-foreground">No entries</div>
+      {/if}
+    </div>
+  {/if}
 </Card.Root>

@@ -4,6 +4,7 @@
   import LabelCard from '$lib/components/LabelCard.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
   import DeleteDialog from '$lib/components/DeleteDialog.svelte';
+  import HelpIcon from '$lib/components/HelpIcon.svelte';
   import { labelStore } from '$lib/stores/labels.svelte';
   import { showToast } from '$lib/components/Toast.svelte';
   import type { Label } from '$lib/types';
@@ -106,11 +107,17 @@
   <title>Labels - MoodLog</title>
 </svelte:head>
 
-<div class="flex min-h-screen flex-col bg-white">
+<div class="flex h-screen flex-col bg-white">
   <!-- Main Content -->
-  <main class="flex flex-1 flex-col items-end overflow-y-auto px-4 py-3">
+  <main class="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-4">
+    <!-- Header with Help Icon -->
+    <div class="flex items-center justify-between">
+      <h1 class="text-xl font-medium text-black">Labels</h1>
+      <HelpIcon />
+    </div>
+
     <!-- Label Cards -->
-    <div class="flex w-full flex-col gap-4 pt-3 pb-24">
+    <div class="flex w-full flex-col gap-4 pb-24">
       {#each labelStore.all as label (label.id)}
         <LabelCard {label} onEdit={openEditDialog} onDelete={deleteLabel} />
       {/each}

@@ -6,6 +6,7 @@
   import MoodEntryCard from '$lib/components/MoodEntryCard.svelte';
   import DatePicker from '$lib/components/DatePicker.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
+  import HelpIcon from '$lib/components/HelpIcon.svelte';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
   import { reflectionStore } from '$lib/stores/reflections.svelte';
   import { SvelteDate } from 'svelte/reactivity';
@@ -120,6 +121,10 @@
               <p class="text-sm text-gray-600">
                 Start tracking your mood by adding your first entry for this day
               </p>
+            </div>
+            <div class="flex items-center gap-1 text-sm text-gray-500">
+              <span>New to MoodLog?</span>
+              <HelpIcon size="sm" />
             </div>
           </div>
         {:else}

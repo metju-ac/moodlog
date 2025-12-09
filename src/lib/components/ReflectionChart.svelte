@@ -153,7 +153,7 @@
           xDomain={[new SvelteDate(xDomain[0]), new SvelteDate(xDomain[1])]}
           y="value"
           yScale={scaleLinear()}
-          yDomain={[-6, 6]}
+          yDomain={[-10, 10]}
           padding={{ top: 16, bottom: 32, left: 64, right: 16 }}
           tooltip={{ mode: 'bisect-x' }}
         >
@@ -163,12 +163,12 @@
               placement="left"
               grid
               rule={false}
-              ticks={[-6, 0, 6]}
+              ticks={[-10, 0, 10]}
               format={(d: number) => {
                 const val = Math.round(d);
-                if (val >= 5) return currentConfig.highLabel;
-                if (val <= -5) return currentConfig.lowLabel;
-                if (val >= -1 && val <= 1) return 'Neutral';
+                if (val >= 7) return currentConfig.highLabel;
+                if (val <= -7) return currentConfig.lowLabel;
+                if (val >= -3 && val <= 3) return 'Neutral';
                 return '';
               }}
               class="text-xs text-muted-foreground"
