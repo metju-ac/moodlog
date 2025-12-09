@@ -90,73 +90,78 @@
 </svelte:head>
 
 <div class="flex h-screen flex-col bg-white">
-  <main class="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-4">
+  <main class="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-4 pb-24">
     <!-- Header with Help Icon -->
     <div class="flex items-center justify-between">
       <h1 class="text-xl font-medium text-black">Insights</h1>
       <HelpIcon />
     </div>
 
-    <!-- Time Range Selector -->
-    <div class="flex flex-wrap gap-2 py-2">
-      <button
-        type="button"
-        onclick={() => (selectedTimeRange = 'week')}
-        class="rounded-lg border border-[#c5c6d0] px-3 py-1.5 text-sm font-medium transition-colors {selectedTimeRange ===
-        'week'
-          ? 'bg-[#d9dff6] text-[#404659]'
-          : 'bg-white text-[#44464f] hover:bg-gray-50'}"
-      >
-        Week
-      </button>
-      <button
-        type="button"
-        onclick={() => (selectedTimeRange = 'month')}
-        class="rounded-lg border border-[#c5c6d0] px-3 py-1.5 text-sm font-medium transition-colors {selectedTimeRange ===
-        'month'
-          ? 'bg-[#d9dff6] text-[#404659]'
-          : 'bg-white text-[#44464f] hover:bg-gray-50'}"
-      >
-        Month
-      </button>
-      <button
-        type="button"
-        onclick={() => (selectedTimeRange = '3months')}
-        class="rounded-lg border border-[#c5c6d0] px-3 py-1.5 text-sm font-medium transition-colors {selectedTimeRange ===
-        '3months'
-          ? 'bg-[#d9dff6] text-[#404659]'
-          : 'bg-white text-[#44464f] hover:bg-gray-50'}"
-      >
-        3 Months
-      </button>
-      <button
-        type="button"
-        onclick={() => (selectedTimeRange = 'year')}
-        class="rounded-lg border border-[#c5c6d0] px-3 py-1.5 text-sm font-medium transition-colors {selectedTimeRange ===
-        'year'
-          ? 'bg-[#d9dff6] text-[#404659]'
-          : 'bg-white text-[#44464f] hover:bg-gray-50'}"
-      >
-        Year
-      </button>
-    </div>
-
-    <!-- Label Filter -->
-    <div class="flex flex-wrap gap-2">
-      {#each labelStore.all as label (label.id)}
-        {@const IconComponent = getIconComponent(label.icon)}
-        {@const isSelected = selectedLabelIds.has(label.id)}
+    <!-- Filters (Sticky) -->
+    <div class="sticky top-0 z-10 -mx-4 flex flex-col gap-2 px-4 py-2">
+      <!-- Time Range Selector -->
+      <div class="flex flex-wrap gap-2">
         <button
           type="button"
-          onclick={() => toggleLabel(label.id)}
-          class="flex items-center gap-2 rounded-lg border border-[#c5c6d0] px-3 py-1.5 text-sm font-medium transition-colors {isSelected
+          onclick={() => (selectedTimeRange = 'week')}
+          class="rounded-lg border border-[#c5c6d0] px-3 py-1.5 text-sm font-medium transition-colors {selectedTimeRange ===
+          'week'
             ? 'bg-[#d9dff6] text-[#404659]'
             : 'bg-white text-[#44464f] hover:bg-gray-50'}"
         >
-          <IconComponent class="h-4 w-4" strokeWidth={2} />
-          <span>{label.name}</span>
+          Week
         </button>
-      {/each}
+        <button
+          type="button"
+          onclick={() => (selectedTimeRange = 'month')}
+          class="rounded-lg border border-[#c5c6d0] px-3 py-1.5 text-sm font-medium transition-colors {selectedTimeRange ===
+          'month'
+            ? 'bg-[#d9dff6] text-[#404659]'
+            : 'bg-white text-[#44464f] hover:bg-gray-50'}"
+        >
+          Month
+        </button>
+        <button
+          type="button"
+          onclick={() => (selectedTimeRange = '3months')}
+          class="rounded-lg border border-[#c5c6d0] px-3 py-1.5 text-sm font-medium transition-colors {selectedTimeRange ===
+          '3months'
+            ? 'bg-[#d9dff6] text-[#404659]'
+            : 'bg-white text-[#44464f] hover:bg-gray-50'}"
+        >
+          3 Months
+        </button>
+        <button
+          type="button"
+          onclick={() => (selectedTimeRange = 'year')}
+          class="rounded-lg border border-[#c5c6d0] px-3 py-1.5 text-sm font-medium transition-colors {selectedTimeRange ===
+          'year'
+            ? 'bg-[#d9dff6] text-[#404659]'
+            : 'bg-white text-[#44464f] hover:bg-gray-50'}"
+        >
+          Year
+        </button>
+      </div>
+
+      <!-- Label Filter (horizontally scrollable) -->
+      <div class="-mx-4 overflow-x-auto px-4">
+        <div class="flex gap-2">
+          {#each labelStore.all as label (label.id)}
+            {@const IconComponent = getIconComponent(label.icon)}
+            {@const isSelected = selectedLabelIds.has(label.id)}
+            <button
+              type="button"
+              onclick={() => toggleLabel(label.id)}
+              class="flex shrink-0 items-center gap-2 rounded-lg border border-[#c5c6d0] px-3 py-1.5 text-sm font-medium transition-colors {isSelected
+                ? 'bg-[#d9dff6] text-[#404659]'
+                : 'bg-white text-[#44464f] hover:bg-gray-50'}"
+            >
+              <IconComponent class="h-4 w-4" strokeWidth={2} />
+              <span>{label.name}</span>
+            </button>
+          {/each}
+        </div>
+      </div>
     </div>
 
     <!-- Highlights Card -->
