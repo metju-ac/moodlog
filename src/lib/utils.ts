@@ -21,8 +21,8 @@ import {
   Camera,
   type Icon,
 } from '@lucide/svelte';
-import { SvelteMap } from 'svelte/reactivity';
-import type { MoodEntry } from './types';
+import { SvelteDate, SvelteMap } from 'svelte/reactivity';
+import type { MoodEntry, TimeRange } from './types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -187,4 +187,160 @@ export function calculateDayAverages(dayMap: SvelteMap<string, MoodEntry[]>): Da
       };
     })
     .sort((a, b) => a.date.getTime() - b.date.getTime());
+}
+
+// ============================================================================
+// Chart Utilities
+// ============================================================================
+
+export type GroupingStrategy = 'day' | 'week' | 'month';
+
+/**
+ * Determine how to group data based on the selected time range
+ */
+export function getGroupingStrategy(timeRange: TimeRange): GroupingStrategy {
+  if (timeRange === 'week' || timeRange === 'month') {
+    return 'day';
+  } else if (timeRange === '3months') {
+    return 'week';
+  } else {
+    return 'month';
+  }
+}
+
+/**
+ * Get the date range covered by entries
+ */
+export function getDataDateRange(entries: { date: Date }[]): { start: Date; end: Date } {
+  if (entries.length === 0) {
+    return { start: new Date(), end: new Date() };
+  }
+  const dates = entries.map((e) => e.date.getTime());
+  return {
+    start: new Date(Math.min(...dates)),
+    end: new Date(Math.max(...dates)),
+  };
+}
+
+/**
+ * Get the Monday-Sunday bounds for a given date's week
+ */
+export function getWeekBounds(date: Date): { start: Date; end: Date } {
+  const d = new SvelteDate(date);
+  const dayOfWeek = d.getDay();
+  const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust to Monday
+
+  const start = new SvelteDate(d);
+  start.setDate(d.getDate() + diff);
+  start.setHours(12, 0, 0, 0);
+
+  const end = new SvelteDate(start);
+  end.setDate(start.getDate() + 6);
+
+  return { start, end };
+}
+
+/**
+ * Get the first and last day bounds for a given date's month
+ */
+export function getMonthBounds(date: Date): { start: Date; end: Date } {
+  const start = new SvelteDate(date.getFullYear(), date.getMonth(), 1, 12, 0, 0, 0);
+  const end = new SvelteDate(date.getFullYear(), date.getMonth() + 1, 0, 12, 0, 0, 0);
+  return { start, end };
+}
+
+/**
+ * Check if a period is partial (doesn't fully overlap with data range)
+ */
+export function isPartialPeriod(
+  periodStart: Date,
+  periodEnd: Date,
+  dataRange: { start: Date; end: Date },
+): { isPartial: boolean; actualStart: Date; actualEnd: Date } {
+  const actualStart = new Date(Math.max(periodStart.getTime(), dataRange.start.getTime()));
+  const actualEnd = new Date(Math.min(periodEnd.getTime(), dataRange.end.getTime()));
+  const isPartial =
+    actualStart.getTime() > periodStart.getTime() || actualEnd.getTime() < periodEnd.getTime();
+  return { isPartial, actualStart, actualEnd };
+}
+
+/**
+ * Format an X-axis label based on grouping strategy and time range
+ */
+export function formatXAxisLabel(
+  date: Date,
+  endDate: Date | undefined,
+  groupingStrategy: GroupingStrategy,
+  timeRange: TimeRange,
+  dataRange: { start: Date; end: Date },
+): string {
+  if (groupingStrategy === 'day') {
+    // For week view, show day name (Mon, Tue, etc.)
+    if (timeRange === 'week') {
+      return date.toLocaleDateString('en-GB', { weekday: 'short' });
+    }
+    return date.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' });
+  } else if (groupingStrategy === 'week') {
+    // Week grouping: Show compact format "d/m" for week start
+    const { isPartial, actualStart } = isPartialPeriod(date, endDate!, dataRange);
+    const displayStart = isPartial ? actualStart : date;
+    return `${displayStart.getDate()}/${displayStart.getMonth() + 1}`;
+  } else {
+    // Month grouping: Check if partial month and show actual range
+    const { isPartial, actualStart, actualEnd } = isPartialPeriod(date, endDate!, dataRange);
+
+    if (isPartial) {
+      const startDay = actualStart.getDate();
+      const endDay = actualEnd.getDate();
+      const month = actualStart.toLocaleDateString('en-GB', { month: 'short' });
+      return `${month} ${startDay}-${endDay}`;
+    } else {
+      return date.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+    }
+  }
+}
+
+/**
+ * Select which indices of the data array should be shown as X-axis ticks
+ */
+export function selectXAxisTickIndices(
+  dataLength: number,
+  timeRange: TimeRange,
+  groupingStrategy: GroupingStrategy,
+): number[] {
+  if (dataLength === 0) return [];
+
+  // For week view: show all days
+  if (timeRange === 'week') {
+    return Array.from({ length: dataLength }, (_, i) => i);
+  }
+
+  // For month view with day grouping: show reasonable number of ticks
+  if (timeRange === 'month' && groupingStrategy === 'day') {
+    if (dataLength <= 7) {
+      return Array.from({ length: dataLength }, (_, i) => i);
+    }
+    // Show weekly ticks (every 7 days approximately)
+    const indices: number[] = [];
+    const step = Math.max(1, Math.floor(dataLength / 5));
+    for (let i = 0; i < dataLength; i += step) {
+      indices.push(i);
+    }
+    return indices;
+  }
+
+  // For other groupings, show all data points if 7 or fewer
+  if (dataLength <= 7) {
+    return Array.from({ length: dataLength }, (_, i) => i);
+  }
+
+  // Select evenly spaced ticks for larger datasets
+  const indices: number[] = [];
+  const step = (dataLength - 1) / 4; // 5 ticks total
+
+  for (let i = 0; i < 5; i++) {
+    indices.push(Math.round(i * step));
+  }
+
+  return indices;
 }
