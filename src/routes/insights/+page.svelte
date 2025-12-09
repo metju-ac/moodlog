@@ -7,6 +7,7 @@
   import HighlightsCard from '$lib/components/HighlightsCard.svelte';
   import AverageMoodChart from '$lib/components/AverageMoodChart.svelte';
   import MoodEntryCountChart from '$lib/components/MoodEntryCountChart.svelte';
+  import MoodActivityGraph from '$lib/components/MoodActivityGraph.svelte';
   import type { MoodEntry, TimeRange } from '$lib/types';
 
   // State
@@ -135,6 +136,9 @@
 
     <!-- Highlights Card -->
     <HighlightsCard entries={filteredEntries} />
+
+    <!-- Mood Activity Graph -->
+    <MoodActivityGraph entries={filteredEntries} {selectedTimeRange} />
 
     <!-- Average Mood Chart -->
     <AverageMoodChart entries={filteredEntries} {selectedTimeRange} />
