@@ -88,19 +88,22 @@
               placement="left"
               grid
               rule={false}
-              ticks={[-10, -5, 0, 5, 10]}
+              ticks={[-10, 0, 10]}
               format={(d: number) => {
                 const val = Math.round(d);
-                return val > 0 ? `+${val}` : String(val);
+                if (val >= 7) return 'Good';
+                if (val <= -7) return 'Bad';
+                if (val >= -3 && val <= 3) return 'Neutral';
+                return '';
               }}
               class="text-xs text-muted-foreground"
             />
 
-            <!-- X-axis with time labels -->
+            <!-- X-axis with time labels (every 2 hours for better granularity) -->
             <Axis
               placement="bottom"
               rule={false}
-              ticks={7}
+              ticks={13}
               format={(d: Date) => {
                 return d.toLocaleTimeString('en-GB', {
                   hour: '2-digit',

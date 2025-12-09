@@ -2,8 +2,16 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import { scaleBand } from 'd3-scale';
   import { Chart as LayerChart, Svg, Axis, Bars } from 'layerchart';
-  import { SvelteDate, SvelteMap } from 'svelte/reactivity';
-  import { groupEntriesByDay } from '$lib/utils';
+  import { SvelteMap } from 'svelte/reactivity';
+  import {
+    groupEntriesByDay,
+    getGroupingStrategy,
+    getDataDateRange,
+    getWeekBounds,
+    getMonthBounds,
+    formatXAxisLabel,
+    selectXAxisTickIndices,
+  } from '$lib/utils';
   import type { MoodEntry, TimeRange } from '$lib/types';
 
   type Props = {
@@ -13,17 +21,8 @@
 
   let { entries, selectedTimeRange }: Props = $props();
 
-  // Determine grouping strategy based on selected time range
-  const groupingStrategy = $derived.by(() => {
-    // Use day grouping for week and month, week grouping for 3 months, month grouping for year
-    if (selectedTimeRange === 'week' || selectedTimeRange === 'month') {
-      return 'day';
-    } else if (selectedTimeRange === '3months') {
-      return 'week';
-    } else {
-      return 'month'; // For year
-    }
-  });
+  const groupingStrategy = $derived(getGroupingStrategy(selectedTimeRange));
+  const dataDateRange = $derived(getDataDateRange(entries));
 
   // Calculate entry count data with adaptive grouping
   const chartData = $derived.by(() => {
@@ -49,32 +48,20 @@
     >();
 
     sortedDays.forEach((day) => {
-      let groupKey: string;
-      let groupDate: Date;
-      let endDate: Date;
-
-      if (groupingStrategy === 'week') {
-        // Get the Monday of the week
-        const d = new SvelteDate(day.dateObj);
-        const dayOfWeek = d.getDay();
-        const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust to Monday
-        groupDate = new SvelteDate(d);
-        groupDate.setDate(d.getDate() + diff);
-        groupDate.setHours(0, 0, 0, 0);
-        // End date is Sunday
-        endDate = new SvelteDate(groupDate);
-        endDate.setDate(groupDate.getDate() + 6);
-        groupKey = groupDate.toISOString().split('T')[0];
-      } else {
-        // Group by month
-        groupDate = new SvelteDate(day.dateObj.getFullYear(), day.dateObj.getMonth(), 1);
-        // End date is last day of month
-        endDate = new SvelteDate(day.dateObj.getFullYear(), day.dateObj.getMonth() + 1, 0);
-        groupKey = `${groupDate.getFullYear()}-${String(groupDate.getMonth() + 1).padStart(2, '0')}`;
-      }
+      const bounds =
+        groupingStrategy === 'week' ? getWeekBounds(day.dateObj) : getMonthBounds(day.dateObj);
+      const groupKey =
+        groupingStrategy === 'week'
+          ? bounds.start.toISOString().split('T')[0]
+          : `${bounds.start.getFullYear()}-${String(bounds.start.getMonth() + 1).padStart(2, '0')}`;
 
       if (!grouped.has(groupKey)) {
-        grouped.set(groupKey, { dateObj: groupDate, endDate, count: 0, entries: [] });
+        grouped.set(groupKey, {
+          dateObj: bounds.start,
+          endDate: bounds.end,
+          count: 0,
+          entries: [],
+        });
       }
 
       const group = grouped.get(groupKey)!;
@@ -99,21 +86,10 @@
     return Math.ceil(max * 1.1); // Add 10% padding
   });
 
-  // Select up to 5 evenly spaced ticks for x-axis (mobile-friendly)
+  // Select ticks for x-axis
   const xAxisTicks = $derived.by(() => {
-    if (chartData.length === 0) return [];
-    if (selectedTimeRange === 'week' || chartData.length <= 5) return chartData.map((d) => d.date);
-
-    // Select evenly spaced ticks
-    const ticks: string[] = [];
-    const step = (chartData.length - 1) / 4; // 5 ticks total (including first and last)
-
-    for (let i = 0; i < 5; i++) {
-      const index = Math.round(i * step);
-      ticks.push(chartData[index].date);
-    }
-
-    return ticks;
+    const indices = selectXAxisTickIndices(chartData.length, selectedTimeRange, groupingStrategy);
+    return indices.map((i) => chartData[i].date);
   });
 </script>
 
@@ -158,32 +134,13 @@
               format={(d: string) => {
                 const item = chartData.find((item) => item.date === d);
                 if (!item) return d;
-
-                if (groupingStrategy === 'day') {
-                  return item.dateObj.toLocaleDateString('en-GB', {
-                    month: 'short',
-                    day: 'numeric',
-                  });
-                } else if (groupingStrategy === 'week') {
-                  // Show week date range: "Jan 1-7"
-                  const startDay = item.dateObj.getDate();
-                  const endDay = item.endDate!.getDate();
-                  const startMonth = item.dateObj.toLocaleDateString('en-GB', { month: 'short' });
-                  const endMonth = item.endDate!.toLocaleDateString('en-GB', { month: 'short' });
-
-                  // If same month, show "Jan 1-7", otherwise show "Jan 29-Feb 4"
-                  if (startMonth === endMonth) {
-                    return `${startMonth} ${startDay}-${endDay}`;
-                  } else {
-                    return `${startMonth} ${startDay}-${endMonth} ${endDay}`;
-                  }
-                } else {
-                  // Month grouping: Show month and year: "Jan 2024"
-                  return item.dateObj.toLocaleDateString('en-GB', {
-                    month: 'short',
-                    year: 'numeric',
-                  });
-                }
+                return formatXAxisLabel(
+                  item.dateObj,
+                  item.endDate,
+                  groupingStrategy,
+                  selectedTimeRange,
+                  dataDateRange,
+                );
               }}
               class="text-xs text-muted-foreground"
             />
