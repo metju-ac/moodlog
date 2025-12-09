@@ -77,12 +77,9 @@
   <!-- Date Bar - Sticky at top -->
   <div class="sticky top-0 z-10 bg-white px-4 py-2.5 shadow-sm">
     <div class="flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <h1 class="text-[28px] leading-9 font-normal text-black">
-          {formattedDate}
-        </h1>
-        <HelpIcon />
-      </div>
+      <h1 class="text-[28px] leading-9 font-normal text-black">
+        {formattedDate}
+      </h1>
 
       <div class="flex items-center gap-1.5">
         <button
@@ -124,6 +121,10 @@
               <p class="text-sm text-gray-600">
                 Start tracking your mood by adding your first entry for this day
               </p>
+            </div>
+            <div class="flex items-center gap-1 text-sm text-gray-500">
+              <span>New to MoodLog?</span>
+              <HelpIcon size="sm" />
             </div>
           </div>
         {:else}
