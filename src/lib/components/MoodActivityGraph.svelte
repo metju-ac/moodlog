@@ -321,7 +321,7 @@
           >
             <span class="text-[10px] text-[#44464f]">{getShortDayLabel(day.date)}</span>
             <div
-              class="aspect-square w-full max-w-[40px] rounded-md transition-transform hover:scale-105"
+              class="aspect-square w-full max-w-10 rounded-md transition-transform hover:scale-105"
               style="background-color: {getCellColor(day.avgMood)};"
               title={`${formatDate(day.date)}\n${day.count > 0 ? `Entries: ${day.count}\nAverage mood: ${day.avgMood?.toFixed(1)}` : 'No entries'}`}
             ></div>
@@ -351,7 +351,7 @@
               disabled={day.isEmpty}
             >
               <div
-                class="aspect-square w-full max-w-[40px] rounded-md transition-transform {day.isEmpty
+                class="aspect-square w-full max-w-10 rounded-md transition-transform {day.isEmpty
                   ? ''
                   : 'cursor-pointer hover:scale-105'}"
                 style="background-color: {getCellColor(day.avgMood, day.isEmpty)};"
@@ -391,7 +391,7 @@
         <div class="flex" style="gap: {gapSize}px;">
           <!-- Day labels -->
           <div
-            class="flex flex-shrink-0 flex-col text-xs text-[#44464f]"
+            class="flex shrink-0 flex-col text-xs text-[#44464f]"
             style="gap: {gapSize}px; margin-right: {gapSize}px;"
           >
             {#each dayLabels as label, index (index)}
