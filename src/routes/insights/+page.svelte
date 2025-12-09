@@ -1,17 +1,28 @@
 <script lang="ts">
   import { SvelteDate, SvelteSet } from 'svelte/reactivity';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
+  import { reflectionStore } from '$lib/stores/reflections.svelte';
   import { labelStore } from '$lib/stores/labels.svelte';
   import { getIconComponent } from '$lib/utils';
   import Navigation from '$lib/components/Navigation.svelte';
   import HighlightsCard from '$lib/components/HighlightsCard.svelte';
   import AverageMoodChart from '$lib/components/AverageMoodChart.svelte';
   import MoodEntryCountChart from '$lib/components/MoodEntryCountChart.svelte';
-  import type { MoodEntry, TimeRange } from '$lib/types';
+  import ReflectionChart from '$lib/components/ReflectionChart.svelte';
+  import type { MoodEntry, Reflection, TimeRange, ReflectionMetric } from '$lib/types';
 
   // State
   let selectedTimeRange = $state<TimeRange>('3months');
   let selectedLabelIds = $state<Set<string>>(new Set());
+  let selectedReflectionMetric = $state<ReflectionMetric>('sleepQuality');
+
+  // Reflection metric options for the selector
+  const reflectionMetricOptions: { value: ReflectionMetric; label: string }[] = [
+    { value: 'sleepQuality', label: 'Sleep' },
+    { value: 'physicalActivity', label: 'Activity' },
+    { value: 'socialInteractions', label: 'Social' },
+    { value: 'pressure', label: 'Pressure' },
+  ];
 
   // Calculate date range based on selected time range
   const dateRange = $derived.by(() => {
@@ -51,6 +62,13 @@
 
       // Check if entry has any of the selected labels
       return entry.labels.some((label) => selectedLabelIds.has(label.id));
+    });
+  });
+
+  // Filter reflections based on date range only (no label filtering)
+  const filteredReflections = $derived.by(() => {
+    return reflectionStore.all.filter((reflection: Reflection) => {
+      return reflection.date >= dateRange.start && reflection.date <= dateRange.end;
     });
   });
 
@@ -141,6 +159,32 @@
 
     <!-- Mood Entry Count Chart -->
     <MoodEntryCountChart entries={filteredEntries} {selectedTimeRange} />
+
+    <!-- Reflection Chart with Metric Selector -->
+    <div class="flex flex-col gap-3">
+      <!-- Reflection Metric Selector -->
+      <div class="flex flex-wrap gap-2">
+        {#each reflectionMetricOptions as option (option.value)}
+          <button
+            type="button"
+            onclick={() => (selectedReflectionMetric = option.value)}
+            class="rounded-lg border border-[#c5c6d0] px-3 py-1.5 text-sm font-medium transition-colors {selectedReflectionMetric ===
+            option.value
+              ? 'bg-[#d9dff6] text-[#404659]'
+              : 'bg-white text-[#44464f] hover:bg-gray-50'}"
+          >
+            {option.label}
+          </button>
+        {/each}
+      </div>
+
+      <!-- Reflection Chart -->
+      <ReflectionChart
+        reflections={filteredReflections}
+        {selectedTimeRange}
+        selectedMetric={selectedReflectionMetric}
+      />
+    </div>
   </main>
 
   <Navigation currentTab="insights" />
