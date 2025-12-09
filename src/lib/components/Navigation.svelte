@@ -11,7 +11,7 @@
 
   const tabs = [
     { id: 'insights' as const, label: 'Insights', icon: LineChart, href: `${base}/insights` },
-    { id: 'mood-entries' as const, label: 'Mood entries', icon: Edit3, href: `${base}/` },
+    { id: 'mood-entries' as const, label: 'Mood Entries', icon: Edit3, href: `${base}/` },
     { id: 'labels' as const, label: 'Labels', icon: Tag, href: `${base}/labels` },
   ];
 </script>

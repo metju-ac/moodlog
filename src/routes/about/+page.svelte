@@ -2,6 +2,7 @@
   import { base } from '$app/paths';
   import { ArrowLeft, Zap, BookOpen, LineChart } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
+  import favicon from '$lib/assets/favicon.svg';
 </script>
 
 <svelte:head>
@@ -19,6 +20,7 @@
       >
         <ArrowLeft class="h-5 w-5 text-indigo-900" />
       </a>
+      <img src={favicon} alt="MoodLog logo" class="h-8 w-8" />
       <h1 class="text-xl font-medium text-black">About MoodLog</h1>
     </div>
   </div>
