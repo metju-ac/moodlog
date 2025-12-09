@@ -119,3 +119,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Fix layerchart tooltip hit areas being black */
+.lc-tooltip-rect,
+.lc-tooltip-rects-g rect {
+  fill: transparent !important;
+}
