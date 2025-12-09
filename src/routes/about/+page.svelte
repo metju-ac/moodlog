@@ -110,6 +110,36 @@
         </li>
       </ul>
     </div>
+
+    <!-- Scale Information Section -->
+    <div class="flex flex-col gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4">
+      <h2 class="text-lg font-medium text-gray-900">Understanding the Scale</h2>
+      <p class="text-sm leading-relaxed text-gray-700">
+        All mood and reflection values in MoodLog use a scale from <strong>-10 to +10</strong>:
+      </p>
+      <ul class="flex flex-col gap-2 text-sm leading-relaxed text-gray-700">
+        <li class="flex gap-2">
+          <span class="text-red-500">•</span>
+          <span
+            ><strong>-10 to -7:</strong> Negative/Low (Bad mood, poor sleep, draining, etc.)</span
+          >
+        </li>
+        <li class="flex gap-2">
+          <span class="text-yellow-500">•</span>
+          <span><strong>-3 to +3:</strong> Neutral (Average, balanced)</span>
+        </li>
+        <li class="flex gap-2">
+          <span class="text-green-500">•</span>
+          <span
+            ><strong>+7 to +10:</strong> Positive/High (Good mood, excellent sleep, energizing, etc.)</span
+          >
+        </li>
+      </ul>
+      <p class="text-sm leading-relaxed text-gray-700">
+        This consistent scale across mood entries and daily reflections makes it easy to compare and
+        correlate different aspects of your well-being in the Insights charts.
+      </p>
+    </div>
   </main>
 
   <Navigation currentTab="mood-entries" />
