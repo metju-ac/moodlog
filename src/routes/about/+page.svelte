@@ -1,6 +1,6 @@
 <script lang="ts">
   import { base } from '$app/paths';
-  import { ArrowLeft, Zap, BookOpen, LineChart } from '@lucide/svelte';
+  import { ArrowLeft, Zap, BookOpen, ChartLine } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import favicon from '$lib/assets/favicon.svg';
 </script>
@@ -76,7 +76,7 @@
         <div
           class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"
         >
-          <LineChart class="h-5 w-5" />
+          <ChartLine class="h-5 w-5" />
         </div>
         <h2 class="text-lg font-medium text-emerald-900">Insights</h2>
       </div>

@@ -3,7 +3,7 @@
   import { base } from '$app/paths';
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
-  import { Save, Trash2, Edit, X } from '@lucide/svelte';
+  import { Save, Trash2, SquarePen, X } from '@lucide/svelte';
   import Navigation from '$lib/components/Navigation.svelte';
   import ReflectionSliders from '$lib/components/ReflectionSliders.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
@@ -180,7 +180,7 @@
         position="left"
       />
 
-      <FloatingActionButton icon={Edit} onclick={handleEdit} label="Edit reflection" />
+      <FloatingActionButton icon={SquarePen} onclick={handleEdit} label="Edit reflection" />
     {/if}
   </main>
 
