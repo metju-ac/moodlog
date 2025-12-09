@@ -1,6 +1,10 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
+  import { base } from '$app/paths';
   import type { MoodEntry, TimeRange } from '$lib/types';
   import { getMoodColorGradient, groupEntriesByDay } from '$lib/utils';
+  import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
+  import { reflectionStore } from '$lib/stores/reflections.svelte';
 
   type Props = {
     entries: MoodEntry[];
@@ -138,6 +142,14 @@
 
     return labels;
   });
+
+  // Navigate to mood entries page for a specific day
+  function handleDayClick(date: Date, isInRange: boolean) {
+    if (!isInRange) return;
+    moodEntryStore.setDate(date);
+    reflectionStore.setDate(date);
+    goto(`${base}/`);
+  }
 </script>
 
 <div class="rounded-xl border border-[#c5c6d0] bg-white p-4">
@@ -173,15 +185,19 @@
         {#each calendarData as week, weekIndex (weekIndex)}
           <div class="flex flex-col gap-0.5">
             {#each week as day (day.dateKey)}
-              <div
+              <button
+                type="button"
+                onclick={() => handleDayClick(day.date, day.isInRange)}
                 class="h-[11px] w-[11px] rounded-sm {day.isInRange
                   ? 'cursor-pointer'
-                  : ''} transition-transform hover:scale-110"
+                  : 'cursor-default'} transition-transform hover:scale-110"
                 style="background-color: {getCellColor(day.avgMood, day.isInRange)};"
                 title={day.isInRange
                   ? `${formatDate(day.date)}\n${day.count > 0 ? `Entries: ${day.count}\nAverage mood: ${day.avgMood?.toFixed(1)}` : 'No entries'}`
                   : ''}
-              ></div>
+                disabled={!day.isInRange}
+                aria-label={day.isInRange ? `View entries for ${formatDate(day.date)}` : ''}
+              ></button>
             {/each}
           </div>
         {/each}
