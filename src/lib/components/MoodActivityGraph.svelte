@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { base } from '$app/paths';
+  import * as Card from '$lib/components/ui/card/index.js';
   import type { MoodEntry, TimeRange } from '$lib/types';
   import { getMoodColorGradient, groupEntriesByDay } from '$lib/utils';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
@@ -306,147 +307,150 @@
   });
 </script>
 
-<div class="rounded-xl border border-[#c5c6d0] bg-white p-4">
-  <h3 class="mb-3 text-sm font-semibold text-[#1b1b1f]">Mood Activity</h3>
-
-  {#if isWeekLayout}
-    <!-- Week Layout: Horizontal row of 7 days -->
-    <div class="flex flex-col gap-2">
-      <div class="flex w-full justify-between gap-1">
-        {#each calendarData as day (day.dateKey)}
-          <button
-            type="button"
-            onclick={() => handleDayClick(day.date)}
-            class="flex flex-1 flex-col items-center gap-1"
-          >
-            <span class="text-[10px] text-[#44464f]">{getShortDayLabel(day.date)}</span>
-            <div
-              class="aspect-square w-full max-w-10 rounded-md transition-transform hover:scale-105"
-              style="background-color: {getCellColor(day.avgMood)};"
-              title={`${formatDate(day.date)}\n${day.count > 0 ? `Entries: ${day.count}\nAverage mood: ${day.avgMood?.toFixed(1)}` : 'No entries'}`}
-            ></div>
-            <span class="text-[10px] text-[#44464f]">{day.date.getDate()}</span>
-          </button>
-        {/each}
-      </div>
-    </div>
-  {:else if isMonthLayout}
-    <!-- Month Layout: Weeks as horizontal rows -->
-    <div class="flex flex-col gap-1">
-      <!-- Day labels header -->
-      <div class="flex justify-between gap-1 px-1">
-        {#each dayLabels as label (label)}
-          <span class="flex-1 text-center text-[10px] text-[#44464f]">{label}</span>
-        {/each}
-      </div>
-
-      <!-- Week rows -->
-      {#each monthWeeksData as week, weekIndex (weekIndex)}
+<Card.Root class="w-full">
+  <Card.Header>
+    <Card.Title class="text-2xl">Mood Activity</Card.Title>
+  </Card.Header>
+  <Card.Content>
+    {#if isWeekLayout}
+      <!-- Week Layout: Horizontal row of 7 days -->
+      <div class="flex flex-col gap-2">
         <div class="flex w-full justify-between gap-1">
-          {#each week as day (day.dateKey)}
+          {#each calendarData as day (day.dateKey)}
             <button
               type="button"
-              onclick={() => handleDayClick(day.date, day.isEmpty)}
-              class="flex flex-1 flex-col items-center gap-0.5"
-              disabled={day.isEmpty}
+              onclick={() => handleDayClick(day.date)}
+              class="flex flex-1 flex-col items-center gap-1"
             >
+              <span class="text-[10px] text-[#44464f]">{getShortDayLabel(day.date)}</span>
               <div
-                class="aspect-square w-full max-w-10 rounded-md transition-transform {day.isEmpty
-                  ? ''
-                  : 'cursor-pointer hover:scale-105'}"
-                style="background-color: {getCellColor(day.avgMood, day.isEmpty)};"
-                title={day.isEmpty
-                  ? ''
-                  : `${formatDate(day.date)}\n${day.count > 0 ? `Entries: ${day.count}\nAverage mood: ${day.avgMood?.toFixed(1)}` : 'No entries'}`}
+                class="aspect-square w-full max-w-10 rounded-md transition-transform hover:scale-105"
+                style="background-color: {getCellColor(day.avgMood)};"
+                title={`${formatDate(day.date)}\n${day.count > 0 ? `Entries: ${day.count}\nAverage mood: ${day.avgMood?.toFixed(1)}` : 'No entries'}`}
               ></div>
-              <span class="text-[10px] text-[#44464f] {day.isEmpty ? 'invisible' : ''}"
-                >{day.date.getDate()}</span
-              >
+              <span class="text-[10px] text-[#44464f]">{day.date.getDate()}</span>
             </button>
           {/each}
         </div>
-      {/each}
-    </div>
-  {:else}
-    <!-- Grid Layout: Calendar-style for month/3months/year -->
-    <div class="overflow-x-auto" bind:this={scrollContainer}>
-      <div class="inline-flex flex-col" style="min-width: fit-content;">
-        <!-- Month labels -->
-        <div
-          class="mb-1 flex text-xs text-[#44464f]"
-          style="padding-left: {selectedTimeRange === 'year' ? 28 : 36}px;"
-        >
-          <div class="relative flex" style="height: 16px;">
-            {#each monthLabels as label (label.weekIndex)}
-              <span
-                class="absolute text-xs whitespace-nowrap"
-                style="left: {label.weekIndex * (cellSize + gapSize)}px;"
-              >
-                {label.month}
-              </span>
-            {/each}
-          </div>
+      </div>
+    {:else if isMonthLayout}
+      <!-- Month Layout: Weeks as horizontal rows -->
+      <div class="flex flex-col gap-1">
+        <!-- Day labels header -->
+        <div class="flex justify-between gap-1 px-1">
+          {#each dayLabels as label (label)}
+            <span class="flex-1 text-center text-[10px] text-[#44464f]">{label}</span>
+          {/each}
         </div>
 
-        <div class="flex" style="gap: {gapSize}px;">
-          <!-- Day labels -->
-          <div
-            class="flex shrink-0 flex-col text-xs text-[#44464f]"
-            style="gap: {gapSize}px; margin-right: {gapSize}px;"
-          >
-            {#each dayLabels as label, index (index)}
-              <div
-                class="flex items-center justify-end pr-1"
-                style="height: {cellSize}px; width: {selectedTimeRange === 'year' ? 20 : 28}px;"
+        <!-- Week rows -->
+        {#each monthWeeksData as week, weekIndex (weekIndex)}
+          <div class="flex w-full justify-between gap-1">
+            {#each week as day (day.dateKey)}
+              <button
+                type="button"
+                onclick={() => handleDayClick(day.date, day.isEmpty)}
+                class="flex flex-1 flex-col items-center gap-0.5"
+                disabled={day.isEmpty}
               >
-                {#if index % 2 === 1}
-                  <span class="text-[10px]">{label}</span>
-                {/if}
-              </div>
+                <div
+                  class="aspect-square w-full max-w-10 rounded-md transition-transform {day.isEmpty
+                    ? ''
+                    : 'cursor-pointer hover:scale-105'}"
+                  style="background-color: {getCellColor(day.avgMood, day.isEmpty)};"
+                  title={day.isEmpty
+                    ? ''
+                    : `${formatDate(day.date)}\n${day.count > 0 ? `Entries: ${day.count}\nAverage mood: ${day.avgMood?.toFixed(1)}` : 'No entries'}`}
+                ></div>
+                <span class="text-[10px] text-[#44464f] {day.isEmpty ? 'invisible' : ''}"
+                  >{day.date.getDate()}</span
+                >
+              </button>
             {/each}
           </div>
+        {/each}
+      </div>
+    {:else}
+      <!-- Grid Layout: Calendar-style for month/3months/year -->
+      <div class="overflow-x-auto" bind:this={scrollContainer}>
+        <div class="inline-flex flex-col" style="min-width: fit-content;">
+          <!-- Month labels -->
+          <div
+            class="mb-1 flex text-xs text-[#44464f]"
+            style="padding-left: {selectedTimeRange === 'year' ? 28 : 36}px;"
+          >
+            <div class="relative flex" style="height: 16px;">
+              {#each monthLabels as label (label.weekIndex)}
+                <span
+                  class="absolute text-xs whitespace-nowrap"
+                  style="left: {label.weekIndex * (cellSize + gapSize)}px;"
+                >
+                  {label.month}
+                </span>
+              {/each}
+            </div>
+          </div>
 
-          <!-- Calendar grid -->
           <div class="flex" style="gap: {gapSize}px;">
-            {#each weeksData as week, weekIndex (weekIndex)}
-              <div class="flex flex-col" style="gap: {gapSize}px;">
-                {#each week as day (day.dateKey)}
-                  <button
-                    type="button"
-                    onclick={() => handleDayClick(day.date, day.isEmpty)}
-                    class="rounded-sm {day.isEmpty
-                      ? 'cursor-default'
-                      : 'cursor-pointer'} transition-transform {day.isEmpty
-                      ? ''
-                      : 'hover:scale-110'}"
-                    style="width: {cellSize}px; height: {cellSize}px; background-color: {getCellColor(
-                      day.avgMood,
-                      day.isEmpty,
-                    )};"
-                    title={day.isEmpty
-                      ? ''
-                      : `${formatDate(day.date)}\n${day.count > 0 ? `Entries: ${day.count}\nAverage mood: ${day.avgMood?.toFixed(1)}` : 'No entries'}`}
-                    disabled={day.isEmpty}
-                    aria-label={day.isEmpty ? '' : `View entries for ${formatDate(day.date)}`}
-                  ></button>
-                {/each}
-              </div>
-            {/each}
+            <!-- Day labels -->
+            <div
+              class="flex shrink-0 flex-col text-xs text-[#44464f]"
+              style="gap: {gapSize}px; margin-right: {gapSize}px;"
+            >
+              {#each dayLabels as label, index (index)}
+                <div
+                  class="flex items-center justify-end pr-1"
+                  style="height: {cellSize}px; width: {selectedTimeRange === 'year' ? 20 : 28}px;"
+                >
+                  {#if index % 2 === 1}
+                    <span class="text-[10px]">{label}</span>
+                  {/if}
+                </div>
+              {/each}
+            </div>
+
+            <!-- Calendar grid -->
+            <div class="flex" style="gap: {gapSize}px;">
+              {#each weeksData as week, weekIndex (weekIndex)}
+                <div class="flex flex-col" style="gap: {gapSize}px;">
+                  {#each week as day (day.dateKey)}
+                    <button
+                      type="button"
+                      onclick={() => handleDayClick(day.date, day.isEmpty)}
+                      class="rounded-sm {day.isEmpty
+                        ? 'cursor-default'
+                        : 'cursor-pointer'} transition-transform {day.isEmpty
+                        ? ''
+                        : 'hover:scale-110'}"
+                      style="width: {cellSize}px; height: {cellSize}px; background-color: {getCellColor(
+                        day.avgMood,
+                        day.isEmpty,
+                      )};"
+                      title={day.isEmpty
+                        ? ''
+                        : `${formatDate(day.date)}\n${day.count > 0 ? `Entries: ${day.count}\nAverage mood: ${day.avgMood?.toFixed(1)}` : 'No entries'}`}
+                      disabled={day.isEmpty}
+                      aria-label={day.isEmpty ? '' : `View entries for ${formatDate(day.date)}`}
+                    ></button>
+                  {/each}
+                </div>
+              {/each}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  {/if}
+    {/if}
 
-  <!-- Legend -->
-  <div class="mt-3 flex items-center justify-end gap-1 text-xs text-[#44464f]">
-    <span>Bad</span>
-    <div class="h-[11px] w-[11px] rounded-sm" style="background-color: #ebedf0;"></div>
-    <div class="h-[11px] w-[11px] rounded-sm" style="background-color: #e57373;"></div>
-    <div class="h-[11px] w-[11px] rounded-sm" style="background-color: #ffb74d;"></div>
-    <div class="h-[11px] w-[11px] rounded-sm" style="background-color: #fff176;"></div>
-    <div class="h-[11px] w-[11px] rounded-sm" style="background-color: #aed581;"></div>
-    <div class="h-[11px] w-[11px] rounded-sm" style="background-color: #66bb6a;"></div>
-    <span>Good</span>
-  </div>
-</div>
+    <!-- Legend -->
+    <div class="mt-3 flex items-center justify-end gap-1 text-xs text-[#44464f]">
+      <span>Bad</span>
+      <div class="h-[11px] w-[11px] rounded-sm" style="background-color: #ebedf0;"></div>
+      <div class="h-[11px] w-[11px] rounded-sm" style="background-color: #e57373;"></div>
+      <div class="h-[11px] w-[11px] rounded-sm" style="background-color: #ffb74d;"></div>
+      <div class="h-[11px] w-[11px] rounded-sm" style="background-color: #fff176;"></div>
+      <div class="h-[11px] w-[11px] rounded-sm" style="background-color: #aed581;"></div>
+      <div class="h-[11px] w-[11px] rounded-sm" style="background-color: #66bb6a;"></div>
+      <span>Good</span>
+    </div>
+  </Card.Content>
+</Card.Root>
