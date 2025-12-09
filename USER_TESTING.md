@@ -14,10 +14,10 @@ Chces si ulozit zaznam o svojich aktualnych pocitoch.
 - [ ] Pridaj si svoj custom label k zaznamu ktory si predtym vytvoril
 - [ ] Presun sa na vcerajsi den
 - [ ] Vymaz lubovolny zaznam
-- [ ] Vytvor reflexiu na datum 1.11.2025
+- [ ] Vytvor reflexiu na datum 1.11.2025 (nebo 2.11., podla toho, ako mame nagenerovana data)
   - Su slidery na zaciatku reflexie uzitocne, su to pre teba dolezite otazky?
   - Dava ti zmysel rychly prehlad dennych karticiek a graf nalady?
-- [ ] Zmaz dnesnu reflexiu
+- [ ] Zmaz vcerajsu reflexiu
   - Je dostatocne viditelny rozdiel medzi hotovou a neexistujucou reflexiou?
 - [ ] Pozri si stranku insights, vyfiltruj si zaznamy tykajuci sa tagov "Work" a "Free time" za posledny mesiac
   - Pochopil si filtre?
