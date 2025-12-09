@@ -9,7 +9,9 @@
   import AverageMoodChart from '$lib/components/AverageMoodChart.svelte';
   import MoodEntryCountChart from '$lib/components/MoodEntryCountChart.svelte';
   import ReflectionChart from '$lib/components/ReflectionChart.svelte';
+  import MoodActivityGraph from '$lib/components/MoodActivityGraph.svelte';
   import type { MoodEntry, Reflection, TimeRange, ReflectionMetric } from '$lib/types';
+
 
   // State
   let selectedTimeRange = $state<TimeRange>('3months');
@@ -153,6 +155,9 @@
 
     <!-- Highlights Card -->
     <HighlightsCard entries={filteredEntries} />
+
+    <!-- Mood Activity Graph -->
+    <MoodActivityGraph entries={filteredEntries} {selectedTimeRange} />
 
     <!-- Average Mood Chart -->
     <AverageMoodChart entries={filteredEntries} {selectedTimeRange} />
