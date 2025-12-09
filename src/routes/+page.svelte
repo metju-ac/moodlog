@@ -6,6 +6,7 @@
   import MoodEntryCard from '$lib/components/MoodEntryCard.svelte';
   import DatePicker from '$lib/components/DatePicker.svelte';
   import FloatingActionButton from '$lib/components/FloatingActionButton.svelte';
+  import HelpIcon from '$lib/components/HelpIcon.svelte';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
   import { reflectionStore } from '$lib/stores/reflections.svelte';
   import { SvelteDate } from 'svelte/reactivity';
@@ -76,9 +77,12 @@
   <!-- Date Bar - Sticky at top -->
   <div class="sticky top-0 z-10 bg-white px-4 py-2.5 shadow-sm">
     <div class="flex items-center justify-between">
-      <h1 class="text-[28px] leading-9 font-normal text-black">
-        {formattedDate}
-      </h1>
+      <div class="flex items-center gap-2">
+        <h1 class="text-[28px] leading-9 font-normal text-black">
+          {formattedDate}
+        </h1>
+        <HelpIcon />
+      </div>
 
       <div class="flex items-center gap-1.5">
         <button

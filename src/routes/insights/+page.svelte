@@ -5,13 +5,13 @@
   import { labelStore } from '$lib/stores/labels.svelte';
   import { getIconComponent } from '$lib/utils';
   import Navigation from '$lib/components/Navigation.svelte';
+  import HelpIcon from '$lib/components/HelpIcon.svelte';
   import HighlightsCard from '$lib/components/HighlightsCard.svelte';
   import AverageMoodChart from '$lib/components/AverageMoodChart.svelte';
   import MoodEntryCountChart from '$lib/components/MoodEntryCountChart.svelte';
   import ReflectionChart from '$lib/components/ReflectionChart.svelte';
   import MoodActivityGraph from '$lib/components/MoodActivityGraph.svelte';
   import type { MoodEntry, Reflection, TimeRange, ReflectionMetric } from '$lib/types';
-
 
   // State
   let selectedTimeRange = $state<TimeRange>('3months');
@@ -91,6 +91,12 @@
 
 <div class="flex h-screen flex-col bg-white">
   <main class="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-4">
+    <!-- Header with Help Icon -->
+    <div class="flex items-center justify-between">
+      <h1 class="text-xl font-medium text-black">Insights</h1>
+      <HelpIcon />
+    </div>
+
     <!-- Time Range Selector -->
     <div class="flex flex-wrap gap-2 py-2">
       <button
