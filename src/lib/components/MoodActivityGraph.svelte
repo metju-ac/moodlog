@@ -4,6 +4,7 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import type { MoodEntry, TimeRange } from '$lib/types';
   import { getMoodColorGradient, groupEntriesByDay } from '$lib/utils';
+  import { SvelteDate, SvelteMap } from 'svelte/reactivity';
   import { moodEntryStore } from '$lib/stores/moodEntries.svelte';
   import { reflectionStore } from '$lib/stores/reflections.svelte';
 
@@ -36,12 +37,12 @@
 
   // Generate calendar data for the activity graph
   const calendarData = $derived.by(() => {
-    const today = new Date();
+    const today = new SvelteDate();
     today.setHours(23, 59, 59, 999);
 
     // Group entries by day and calculate averages
     const dayMap = groupEntriesByDay(entries);
-    const dayAverages = new Map<string, { avgMood: number; count: number }>();
+    const dayAverages = new SvelteMap<string, { avgMood: number; count: number }>();
 
     for (const [dateKey, dayEntries] of dayMap) {
       const avgMood =
@@ -57,7 +58,7 @@
       count: number;
     }> = [];
 
-    const currentDate = new Date(today);
+    const currentDate = new SvelteDate(today);
     currentDate.setDate(currentDate.getDate() - daysToShow + 1);
 
     while (currentDate <= today) {
@@ -296,7 +297,7 @@
   // Scroll to the right (most recent data) when mounted or time range changes
   $effect(() => {
     // Access selectedTimeRange to create dependency
-    selectedTimeRange;
+    void selectedTimeRange;
 
     // Use requestAnimationFrame to ensure DOM is updated
     requestAnimationFrame(() => {
