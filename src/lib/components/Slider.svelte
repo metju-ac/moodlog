@@ -163,5 +163,13 @@
         : ''}"
       style="left: {percentage}%; background-color: {color}"
     ></div>
+
+    <!-- Current Value -->
+    <span
+      class="absolute top-15 z-10 -translate-x-1/2 rounded-sm bg-white/80 px-1 text-xs font-bold backdrop-blur-[2px]"
+      style="left: {percentage}%; color: {color}"
+    >
+      {value}
+    </span>
   </div>
 </div>
