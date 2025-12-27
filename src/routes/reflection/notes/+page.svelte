@@ -14,7 +14,7 @@
     sleepQuality: number;
     physicalActivity: number;
     socialInteractions: number;
-    pressure: number;
+    stress: number;
     date: string;
   } | null>(null);
 
@@ -38,7 +38,7 @@
       sleepQuality: reflectionData.sleepQuality,
       physicalActivity: reflectionData.physicalActivity,
       socialInteractions: reflectionData.socialInteractions,
-      pressure: reflectionData.pressure,
+      stress: reflectionData.stress,
       notes: notes.trim(),
     };
 

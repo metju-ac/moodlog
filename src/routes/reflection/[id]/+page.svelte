@@ -22,7 +22,7 @@
   let sleepQuality = $state(0); // -100 to 100 for slider
   let physicalActivity = $state(0);
   let socialInteractions = $state(0);
-  let pressure = $state(0);
+  let stress = $state(0);
 
   // Delete dialog state
   let showDeleteDialog = $state(false);
@@ -45,7 +45,7 @@
     sleepQuality = foundReflection.sleepQuality * 10;
     physicalActivity = foundReflection.physicalActivity * 10;
     socialInteractions = foundReflection.socialInteractions * 10;
-    pressure = foundReflection.pressure * 10;
+    stress = foundReflection.stress * 10;
   });
 
   const formattedDate = $derived(
@@ -69,7 +69,7 @@
     sleepQuality = reflection.sleepQuality * 10;
     physicalActivity = reflection.physicalActivity * 10;
     socialInteractions = reflection.socialInteractions * 10;
-    pressure = reflection.pressure * 10;
+    stress = reflection.stress * 10;
     isEditMode = false;
   }
 
@@ -81,7 +81,7 @@
       sleepQuality: Math.round(sleepQuality / 10),
       physicalActivity: Math.round(physicalActivity / 10),
       socialInteractions: Math.round(socialInteractions / 10),
-      pressure: Math.round(pressure / 10),
+      stress: Math.round(stress / 10),
       notes: notes.trim(),
     };
 
@@ -150,12 +150,12 @@
           {sleepQuality}
           {physicalActivity}
           {socialInteractions}
-          {pressure}
+          {stress}
           disabled={!isEditMode}
           onSleepQualityChange={(val) => (sleepQuality = val)}
           onPhysicalActivityChange={(val) => (physicalActivity = val)}
           onSocialInteractionsChange={(val) => (socialInteractions = val)}
-          onPressureChange={(val) => (pressure = val)}
+          onStressChange={(val) => (stress = val)}
         />
       </div>
     </div>
