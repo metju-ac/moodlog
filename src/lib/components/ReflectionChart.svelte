@@ -37,7 +37,7 @@
       lowLabel: 'Draining',
       highLabel: 'Energizing',
     },
-    pressure: { title: 'Pressure Level', lowLabel: 'None', highLabel: 'High' },
+    stress: { title: 'Stress Level', lowLabel: 'None', highLabel: 'High' },
   };
 
   const currentConfig = $derived(metricConfig[selectedMetric]);

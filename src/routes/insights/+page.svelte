@@ -23,7 +23,7 @@
     { value: 'sleepQuality', label: 'Sleep' },
     { value: 'physicalActivity', label: 'Activity' },
     { value: 'socialInteractions', label: 'Social' },
-    { value: 'pressure', label: 'Pressure' },
+    { value: 'stress', label: 'Stress' },
   ];
 
   // Calculate date range based on selected time range

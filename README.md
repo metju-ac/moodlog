@@ -42,7 +42,7 @@ Capture your mood in seconds throughout the day:
 
 End each day with a comprehensive reflection:
 
-- Rate sleep quality, physical activity, social interactions, and pressure levels
+- Rate sleep quality, physical activity, social interactions, and stress levels
 - Add notes about your day
 - View mood entries for that day in a graph
 - Track lifestyle factors that affect your mood
@@ -86,7 +86,7 @@ interface Reflection {
   sleepQuality: number; // -10 to +10
   physicalActivity: number; // -10 to +10
   socialInteractions: number; // -10 to +10
-  pressure: number; // -10 to +10
+  stress: number; // -10 to +10
   notes: string;
 }
 
