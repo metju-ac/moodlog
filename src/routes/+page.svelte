@@ -139,8 +139,8 @@
     <FloatingActionButton
       onclick={handleReflection}
       label={hasReflection ? 'View reflection' : 'Add reflection'}
-      text={hasReflection ? 'Reflection' : 'No reflection yet'}
-      variant={hasReflection ? 'primary' : 'danger'}
+      text={hasReflection ? 'View Reflection' : 'Add Reflection'}
+      variant={hasReflection ? 'primary' : 'secondary'}
       position="left"
     />
 
