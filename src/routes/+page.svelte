@@ -123,7 +123,7 @@
               </p>
             </div>
             <div class="flex items-center gap-1 text-sm text-gray-500">
-              <span>New to MoodLog?</span>
+              <a href="{base}/about">New to MoodLog?</a>
               <HelpIcon size="sm" />
             </div>
           </div>

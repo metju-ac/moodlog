@@ -120,7 +120,7 @@ Data is stored **client-side only** using Svelte 5 reactive stores. All data per
 | Create Daily Reflection | ✅ Complete | Two-step wizard: sliders → notes → save                        |
 | View/Edit Reflection    | ✅ Complete | View and modify existing reflections                           |
 | Delete Reflection       | ✅ Complete | Remove reflections with confirmation                           |
-| View Insights           | ✅ Complete | Charts showing different metrics with filtering filtering            |
+| View Insights           | ✅ Complete | Charts showing different metrics with filtering filtering      |
 | Manage Labels           | ✅ Complete | Create, edit, delete custom context labels                     |
 | Date Navigation         | ✅ Complete | Navigate between days, date picker                             |
 | Toast Notifications     | ✅ Complete | User feedback for all actions                                  |
@@ -140,7 +140,7 @@ Data is stored **client-side only** using Svelte 5 reactive stores. All data per
 - **Framework**: SvelteKit with Svelte 5 (using runes: `$state`, `$derived`, `$effect`)
 - **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS
-- **Component Library**: shadcn 
+- **Component Library**: shadcn
 - **Charts**: LayerChart with D3 scales and shadcn
 - **Icons**: Lucide Svelte
 
