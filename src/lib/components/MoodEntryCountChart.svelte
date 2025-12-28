@@ -98,9 +98,9 @@
     <Card.Title class="text-2xl">
       Entry Count
       {#if groupingStrategy === 'week'}
-        (by week)
+        <span class="text-base text-muted-foreground">(by week)</span>
       {:else if groupingStrategy === 'month'}
-        (by month)
+        <span class="text-base text-muted-foreground">(by month)</span>
       {/if}
     </Card.Title>
   </Card.Header>
