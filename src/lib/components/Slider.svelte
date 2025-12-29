@@ -169,7 +169,7 @@
       class="absolute top-15 z-10 -translate-x-1/2 rounded-sm bg-white/80 px-1 text-xs font-bold backdrop-blur-[2px]"
       style="left: {percentage}%; color: {color}"
     >
-      {value}
+      {Math.round(value / 10)}
     </span>
   </div>
 </div>
