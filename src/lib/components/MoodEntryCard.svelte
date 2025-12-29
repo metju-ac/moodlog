@@ -42,9 +42,11 @@
   </div>
 
   <div
-    class="w-20 flex-shrink-0 border-t border-r border-b"
-    style="background-color: {moodColor};"
-  ></div>
+    class="flex w-20 flex-shrink-0 items-center justify-center border-t border-r border-b text-xl font-bold"
+    style="background-color: {moodColor}; color: #ffffff;"
+  >
+    {entry.moodLevel}
+  </div>
 {/snippet}
 
 {#if clickable}
