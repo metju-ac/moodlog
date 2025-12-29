@@ -11,7 +11,7 @@
   let sleepQuality = $state(0);
   let physicalActivity = $state(0);
   let socialInteractions = $state(0);
-  let pressure = $state(0);
+  let stress = $state(0);
 
   // Format date like in Figma: 03-11-2025
   const formattedDate = $derived(
@@ -30,7 +30,7 @@
         sleepQuality: Math.round(sleepQuality / 10),
         physicalActivity: Math.round(physicalActivity / 10),
         socialInteractions: Math.round(socialInteractions / 10),
-        pressure: Math.round(pressure / 10),
+        stress: Math.round(stress / 10),
         date: moodEntryStore.selectedDate.toISOString(),
       }),
     );
@@ -55,11 +55,11 @@
         {sleepQuality}
         {physicalActivity}
         {socialInteractions}
-        {pressure}
+        {stress}
         onSleepQualityChange={(val) => (sleepQuality = val)}
         onPhysicalActivityChange={(val) => (physicalActivity = val)}
         onSocialInteractionsChange={(val) => (socialInteractions = val)}
-        onPressureChange={(val) => (pressure = val)}
+        onStressChange={(val) => (stress = val)}
       />
     </div>
 

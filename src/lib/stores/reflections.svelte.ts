@@ -31,7 +31,7 @@ function generateReflections(): Reflection[] {
       sleepQuality: Math.floor(Math.random() * 21) - 10, // Random between -10 and 10
       physicalActivity: Math.floor(Math.random() * 21) - 10,
       socialInteractions: Math.floor(Math.random() * 21) - 10,
-      pressure: Math.floor(Math.random() * 21) - 10,
+      stress: Math.floor(Math.random() * 21) - 10,
       notes: reflectionNotes[Math.floor(Math.random() * reflectionNotes.length)],
     });
   }

@@ -5,24 +5,24 @@
     sleepQuality: number;
     physicalActivity: number;
     socialInteractions: number;
-    pressure: number;
+    stress: number;
     disabled?: boolean;
     onSleepQualityChange: (value: number) => void;
     onPhysicalActivityChange: (value: number) => void;
     onSocialInteractionsChange: (value: number) => void;
-    onPressureChange: (value: number) => void;
+    onStressChange: (value: number) => void;
   };
 
   let {
     sleepQuality,
     physicalActivity,
     socialInteractions,
-    pressure,
+    stress,
     disabled = false,
     onSleepQualityChange,
     onPhysicalActivityChange,
     onSocialInteractionsChange,
-    onPressureChange,
+    onStressChange,
   }: Props = $props();
 </script>
 
@@ -63,12 +63,12 @@
     />
   </div>
 
-  <!-- Pressure -->
+  <!-- Stress -->
   <div class="flex flex-col gap-1">
-    <p class="text-sm font-medium text-black">Work/School pressure level?</p>
+    <p class="text-sm font-medium text-black">Work/School stress level?</p>
     <Slider
-      value={pressure}
-      onValueChange={onPressureChange}
+      value={stress}
+      onValueChange={onStressChange}
       labels={['None', 'Overwhelming']}
       snapToCenter={false}
       {disabled}

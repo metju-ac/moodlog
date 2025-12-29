@@ -19,7 +19,7 @@ export type Reflection = {
   sleepQuality: number; // -10 to +10
   physicalActivity: number; // -10 to +10
   socialInteractions: number; // -10 to +10
-  pressure: number; // -10 to +10
+  stress: number; // -10 to +10
   notes: string;
 };
 
@@ -31,4 +31,4 @@ export type ReflectionMetric =
   | 'sleepQuality'
   | 'physicalActivity'
   | 'socialInteractions'
-  | 'pressure';
+  | 'stress';
